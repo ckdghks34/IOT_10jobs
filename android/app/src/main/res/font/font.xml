@@ -4,4 +4,7 @@
     <font android:fontStyle="normal"
         android:fontWeight="400"
         android:font="@font/jalnan" />
+    <font android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/paybooc" />
 </font-family>
