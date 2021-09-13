@@ -6,78 +6,104 @@
     android:layout_height="match_parent"
     android:background="@color/mainColor">
 
-    <VideoView
-        android:id="@+id/videoView"
-        android:layout_width="353dp"
-        android:layout_height="278dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="29dp"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="409dp"
+        android:layout_height="282dp"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="346dp"
+            android:layout_height="261dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="29dp"
+            android:layout_marginEnd="29dp"
+            android:layout_marginBottom="188dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="350dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageButton
-        android:id="@+id/arrowkeys_down"
-        android:layout_width="82dp"
-        android:layout_height="82dp"
-        android:layout_marginBottom="84dp"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:contentDescription="moveDown"
-        android:padding="0sp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/arrow_key_down" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom|center"
+            android:orientation="horizontal">
 
-    <ImageButton
-        android:id="@+id/arrowkeys_up"
-        android:layout_width="82dp"
-        android:layout_height="82dp"
-        android:layout_marginBottom="20dp"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:contentDescription="moveUp"
-        android:padding="0sp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/arrowkeys_down"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/arrow_key_up" />
+            <ImageButton
+                android:id="@+id/arrowkeys_up"
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:layout_marginBottom="28dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="moveUp"
+                android:padding="0sp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/arrow_key_up" />
+        </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/arrowkeys_left"
-        android:layout_width="82dp"
-        android:layout_height="82dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="84dp"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:contentDescription="moveLeft"
-        android:padding="0sp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/arrowkeys_up"
-        app:srcCompat="@drawable/arrow_key_left" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom|center"
+            android:orientation="horizontal">
 
-    <ImageButton
-        android:id="@+id/arrowkeys_right"
-        android:layout_width="82dp"
-        android:layout_height="82dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="84dp"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:contentDescription="moveRight"
-        android:padding="0sp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/arrowkeys_up"
-        app:srcCompat="@drawable/arrow_key_right" />
+            <ImageButton
+                android:id="@+id/arrowkeys_left"
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:layout_marginEnd="28dp"
+                android:layout_marginBottom="30dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="moveLeft"
+                android:padding="0sp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/arrow_key_left" />
+
+            <ImageButton
+                android:id="@+id/arrowkeys_down"
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:layout_marginBottom="30dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="moveDown"
+                android:padding="0sp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/arrow_key_down" />
+
+            <ImageButton
+                android:id="@+id/arrowkeys_right"
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginBottom="30dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="moveRight"
+                android:padding="0sp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/arrow_key_right" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
