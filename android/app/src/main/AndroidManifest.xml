@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.10jobs">
         <activity
+            android:name=".RealtimeActivity">
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
 
