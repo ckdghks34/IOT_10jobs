@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         btn_find.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), TmpActivity.class);
+                Intent intent = new Intent(getApplicationContext(), FindActivity.class);
                 startActivity(intent);
             }
         });
