@@ -7,7 +7,10 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
         <option name="gradleHome" value="$PROJECT_DIR$/../../../../../Gradle/gradle-7.1.1" />
+=======
+>>>>>>> c420c327b67718b3a09a23c214a05a21f4a30e96
         <option name="gradleJvm" value="11" />
         <option name="modules">
           <set>
@@ -15,6 +18,7 @@
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
+        <option name="resolveExternalAnnotations" value="false" />
         <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
