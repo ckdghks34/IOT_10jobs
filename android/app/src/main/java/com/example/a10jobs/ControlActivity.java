@@ -50,7 +50,7 @@ public class ControlActivity extends AppCompatActivity {
                 if (i==0) transaction.replace(R.id.controlLayout, fragmentLivingRoom);
                 else if (i==1) transaction.replace(R.id.controlLayout, fragmentRoom1);
 
-                transaction.addToBackStack(null);
+                //transaction.addToBackStack(null);
                 transaction.commit();
             }
 
