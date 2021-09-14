@@ -10,8 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".RealtimeActivity">
-        </activity>
+            android:name=".MapActivity"
+            android:exported="true" />
+        <activity android:name=".RealtimeActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -19,6 +20,8 @@
         </activity>
         <activity android:name=".TmpActivity"/>
         <activity android:name=".ControlActivity"/>
+        <activity android:name=".FindActivity"/>
+        <activity android:name=".FindClickedActivity"/>
         <activity
             android:name=".SplashActivity"
             android:exported="true">
