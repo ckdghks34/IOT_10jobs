@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
+        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../Gradle/gradle-7.1.1" />
+=======
         <option name="gradleHome" value="$PROJECT_DIR$/../../../../../Gradle/gradle-6.7" />
+>>>>>>> e3ea6b02e42f949630cb334d00c5436c1ad63cef
         <option name="gradleJvm" value="11" />
         <option name="modules">
           <set>

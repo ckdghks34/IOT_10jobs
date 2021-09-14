@@ -32,27 +32,27 @@
 
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/aircon"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/aircon" />
-
+                    android:layout_height="90dp"
+                    app:srcCompat="@drawable/airconoff" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/airconState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:text="꺼짐" />
+
             </LinearLayout>
 
             <ToggleButton
-                android:id="@+id/toggleButton2"
+                android:id="@+id/airconButton"
                 android:layout_width="53dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:background="@drawable/onoff"
+                android:background="@drawable/power"
                 android:textOn=""
                 android:textOff="" />
 
@@ -73,31 +73,177 @@
 
 
                 <ImageView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/tv"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/aircon" />
+                    android:layout_height="90dp"
+                    app:srcCompat="@drawable/tv" />
 
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/tvState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="TextView" />
             </LinearLayout>
 
             <ToggleButton
-                android:id="@+id/toggleButton3"
+                android:id="@+id/tvButton"
                 android:layout_width="53dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:background="@drawable/onoff"
+                android:background="@drawable/power"
                 android:text="ToggleButton"
                 android:textOff="" />
 
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner_room"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_corner"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/curtain"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    app:srcCompat="@drawable/curtain" />
+
+
+                <TextView
+                    android:id="@+id/curtainState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+            </LinearLayout>
+
+            <ToggleButton
+                android:id="@+id/curtainButton"
+                android:layout_width="53dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/power"
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_corner"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/airconditioner"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    app:srcCompat="@drawable/airconditioner" />
+
+
+                <TextView
+                    android:id="@+id/airconditionerState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+            </LinearLayout>
+
+            <ToggleButton
+                android:id="@+id/airconditionerButton"
+                android:layout_width="53dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/power"
+                android:text="ToggleButton"
+                android:textOff="" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner_room"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_corner"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/light"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    app:srcCompat="@drawable/light" />
+
+
+                <TextView
+                    android:id="@+id/lightState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+            </LinearLayout>
+
+            <ToggleButton
+                android:id="@+id/lightButton"
+                android:layout_width="53dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/power"
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"/>
 
     </LinearLayout>
 

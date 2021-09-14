@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     tools:context=".MainActivity"
     >
 
@@ -49,12 +50,30 @@
                     app:nbMaxTextLength="2" />
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="363dp"
-                android:layout_height="253dp"
-                android:layout_gravity="center_horizontal"
-                app:srcCompat="@drawable/home" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView2"-->
+<!--                android:layout_width="363dp"-->
+<!--                android:layout_height="253dp"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                app:srcCompat="@drawable/home" />-->
+            <FrameLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/frameSize">
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewpager"
+                    android:clipToPadding="false"
+                    android:clipChildren="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/frameSize" />
+
+                <me.relex.circleindicator.CircleIndicator3
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom"/>
+
+            </FrameLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
