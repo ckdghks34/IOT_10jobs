@@ -13,15 +13,13 @@ import androidx.fragment.app.Fragment;
 
 import com.example.a10jobs.R;
 
-public class FragmentLivingRoom extends Fragment {
-
+public class FragmentRoom2 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_living_room, container, false);
+        View v = inflater.inflate(R.layout.fragment_room2, container, false);
 
-        // 에어컨 전원
         ToggleButton airconToggle = (ToggleButton) v.findViewById(R.id.airconButton);
         airconToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -33,21 +31,6 @@ public class FragmentLivingRoom extends Fragment {
                 } else {
                     aircon.setText("꺼짐");
                     airconImg.setImageResource(R.drawable.airconoff);
-                }
-            }
-        });
-        // TV 전원
-        ToggleButton tvToggle = (ToggleButton) v.findViewById(R.id.tvButton);
-        tvToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                TextView aircon = (TextView) v.findViewById(R.id.tvState);
-                ImageView airconImg = (ImageView) v.findViewById(R.id.tv);
-                if (isChecked) {
-                    aircon.setText("켜짐");
-                    airconImg.setImageResource(R.drawable.tv);
-                } else {
-                    aircon.setText("꺼짐");
-                    airconImg.setImageResource(R.drawable.tv);
                 }
             }
         });
@@ -68,22 +51,6 @@ public class FragmentLivingRoom extends Fragment {
             }
         });
 
-        // 공기청정기 전원
-        ToggleButton airconditionerToggle = (ToggleButton) v.findViewById(R.id.airpurifierButton);
-        airconditionerToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                TextView aircon = (TextView) v.findViewById(R.id.airpurifierState);
-                ImageView airconImg = (ImageView) v.findViewById(R.id.airpurifier);
-                if (isChecked) {
-                    aircon.setText("켜짐");
-                    airconImg.setImageResource(R.drawable.airpurifier);
-                } else {
-                    aircon.setText("꺼짐");
-                    airconImg.setImageResource(R.drawable.airpurifier);
-                }
-            }
-        });
-
         // 불 전원
         ToggleButton lightToggle = (ToggleButton) v.findViewById(R.id.lightButton);
         lightToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -99,12 +66,6 @@ public class FragmentLivingRoom extends Fragment {
                 }
             }
         });
-
-
         return v;
-
-
-
     }
-
 }
