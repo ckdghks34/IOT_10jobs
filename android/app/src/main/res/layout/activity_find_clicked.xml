@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#ffffff"
     tools:context=".FindClickedActivity">
 
 
@@ -12,10 +13,13 @@
         android:id="@+id/findclicked_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/paybooc"
         android:text="oo찾기"
+        android:textColor="@color/mainColor"
         android:textSize="24sp"
+
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -31,8 +35,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
+        android:fontFamily="@font/paybooc"
         android:gravity="center"
-        android:textSize="20sp"
-        android:text="날짜 / 시간" />
+        android:text="날짜 / 시간"
+        android:textColor="@color/mainColor"
+
+        android:textSize="20sp" />
 
 </LinearLayout>

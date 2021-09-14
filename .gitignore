@@ -142,6 +142,9 @@ install/
 log/
 build/
 
+**/.idea/
+strings.xml
+
 # android
 *.iml
 .gradle
