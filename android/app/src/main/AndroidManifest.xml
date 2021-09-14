@@ -8,9 +8,19 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.10jobs">
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".RealtimeActivity">
+        </activity>
         <activity
             android:name=".MainActivity"
+            android:exported="true">
+
+        </activity>
+        <activity android:name=".TmpActivity"/>
+        <activity android:name=".ControlActivity"/>
+        <activity
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
