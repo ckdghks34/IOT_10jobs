@@ -4,7 +4,8 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:id="@+id/rr"
+        android:layout_width="wrap_content"
         android:layout_marginLeft="@dimen/pageMarginAndOffset"
         android:layout_marginRight="@dimen/pageMarginAndOffset"
         android:layout_height="@dimen/frameSize"
@@ -14,20 +15,19 @@
             android:id="@+id/imgBanner1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffcccc"
-            android:contentDescription="@string/app_name"/>
+            android:src="@drawable/image1"
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/tvName1"
-            android:layout_width="match_parent"
+            android:layout_width="400dp"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_centerInParent="true"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="터틀봇이 원격으로 기기 제어"/>
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
