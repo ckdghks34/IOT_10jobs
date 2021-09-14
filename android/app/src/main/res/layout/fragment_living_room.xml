@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_corner"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/aircon"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    app:srcCompat="@drawable/airconoff" />
+
+                <TextView
+                    android:id="@+id/airconState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="꺼짐" />
+
+            </LinearLayout>
+
+            <ToggleButton
+                android:id="@+id/airconButton"
+                android:layout_width="53dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/power"
+                android:textOn=""
+                android:textOff="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_corner"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    app:srcCompat="@drawable/tv" />
+
+
+                <TextView
+                    android:id="@+id/tvState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="꺼짐" />
+            </LinearLayout>
+
+            <ToggleButton
+                android:id="@+id/tvButton"
+                android:layout_width="53dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/power"
+                android:text="ToggleButton"
+                android:textOn=""
+                android:textOff="" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner_room"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_corner"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/curtain"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    app:srcCompat="@drawable/curtain" />
+
+
+                <TextView
+                    android:id="@+id/curtainState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="닫힘" />
+            </LinearLayout>
+
+            <ToggleButton
+                android:id="@+id/curtainButton"
+                android:layout_width="53dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/power"
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_corner"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/airpurifier"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    app:srcCompat="@drawable/airpurifier" />
+
+
+                <TextView
+                    android:id="@+id/airpurifierState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="꺼짐" />
+            </LinearLayout>
+
+            <ToggleButton
+                android:id="@+id/airpurifierButton"
+                android:layout_width="53dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/power"
+                android:text="ToggleButton"
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="138dp"
+        android:layout_below="@id/spinner_room"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_corner"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/light"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    app:srcCompat="@drawable/light" />
+
+
+                <TextView
+                    android:id="@+id/lightState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="꺼짐" />
+            </LinearLayout>
+
+            <ToggleButton
+                android:id="@+id/lightButton"
+                android:layout_width="53dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/power"
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="169dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" />
+
+    </LinearLayout>
+
+</LinearLayout>

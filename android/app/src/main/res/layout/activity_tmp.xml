@@ -12,7 +12,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/paybooc"
         android:text="화면 전환 테스트"
-        android:textSize="24dp"
-        android:fontFamily="@font/paybooc"/>
+        android:textSize="24dp" />
 </RelativeLayout>

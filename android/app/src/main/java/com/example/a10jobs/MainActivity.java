@@ -1,18 +1,16 @@
 package com.example.a10jobs;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ToggleButton;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.example.a10jobs.Fragment.MyAdapter;
 import com.nex3z.notificationbadge.NotificationBadge;
@@ -112,14 +110,14 @@ public class MainActivity extends AppCompatActivity {
         btn_find.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), TmpActivity.class);
+                Intent intent = new Intent(getApplicationContext(), FindActivity.class);
                 startActivity(intent);
             }
         });
         btn_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), TmpActivity.class);
+                Intent intent = new Intent(getApplicationContext(), StatusActivity.class);
                 startActivity(intent);
             }
         });

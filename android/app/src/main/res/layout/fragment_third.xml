@@ -14,20 +14,8 @@
             android:id="@+id/imgBanner1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#aaff88"
+            android:src="@drawable/image3"
             android:contentDescription="@string/app_name"/>
-
-        <TextView
-            android:id="@+id/tvName1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_centerInParent="true"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="터틀봇으로 집을 실시간으로 볼 수 있어요"/>
 
     </RelativeLayout>
 
