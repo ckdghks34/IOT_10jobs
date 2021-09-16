@@ -65,14 +65,14 @@ class followTheCarrot(Node):
             if self.collision :
                 print(time.time(), '장애물만남')
                 # 라이다의 75도 방향
-                left = self.lidar_msg.ranges[50]
+                left = self.lidar_msg.ranges[45]
                 # -75도 방향
-                right = self.lidar_msg.ranges[270+40]
+                right = self.lidar_msg.ranges[270+45]
                 # 비교한 후 왼쪽이 크면 음수(반시계), 오른쪽이 크면 오른쪽방향으로 돌아야 하기 때문에 양수(시계방향)
                 # 뺀 값은 거리, 속도가 아님, 따라서 경로 추종을 잘 할 수 있는 게인 값(1.3)dmf rhqgksek
-                mis_value = (right - left) * 1.3
+                mis_value = (right - left) * 0.65
                 # 적당한 선속도 값을 찾는다. 속도가 빠르면 게인값 커짐, 작으면 작아짐
-                self.cmd_msg.linear.x = 0.5
+                self.cmd_msg.linear.x = 0.25
                 self.cmd_msg.angular.z = mis_value
 
             else:
