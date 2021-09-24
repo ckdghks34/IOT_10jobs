@@ -21,10 +21,10 @@ def generate_launch_description():
             node_name='a_star_local_path',
             output='screen'
         ),
-        Node(
-            package='sub2',
-            node_executable='avoid_obstacle',
-            node_name='avoid_obstacle',
-            output='screen'
-        ),
+        # Node(
+        #     package='sub2',
+        #     node_executable='avoid_obstacle',
+        #     node_name='avoid_obstacle',
+        #     output='screen'
+        # ),
     ])
