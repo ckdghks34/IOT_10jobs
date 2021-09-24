@@ -23,15 +23,13 @@ setup(
             'aws_client = sub3.aws_client:main',
             'tf_detector_skeleton = sub3.tf_detector_skeleton:main',
             'tf_detector = sub3.tf_detector:main',
-            'run_mapping = sub3.run_mapping:main',
+            'run_mapping = sub3.run_map:main',
             'load_map = sub3.load_map:main',
             'run_localization = sub3.run_localization:main',
             'iot_udp = sub3.iot_udp:main',
             'iot_udp_skeleton = sub3.iot_udp_skeleton:main',
             'run_localization_skeleton = sub3.run_localization_skeleton:main',
             'run_mapping_skeleton = sub3.run_mapping_skeleton:main'
-
-
         ],
     },
 )
