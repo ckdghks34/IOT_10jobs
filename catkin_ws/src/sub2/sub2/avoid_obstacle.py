@@ -1,5 +1,5 @@
 import rclpy
-import time
+from datetime import datetime
 from rclpy.node import Node
 
 from geometry_msgs.msg import Twist,Point, Point32
@@ -63,17 +63,24 @@ class followTheCarrot(Node):
 
         if self.is_status and self.is_odom ==True and self.is_path==True and self.is_lidar == True:
             if self.collision :
-                print(time.time(), '장애물만남')
                 # 라이다의 75도 방향
                 left = self.lidar_msg.ranges[45]
                 # -75도 방향
                 right = self.lidar_msg.ranges[270+45]
                 # 비교한 후 왼쪽이 크면 음수(반시계), 오른쪽이 크면 오른쪽방향으로 돌아야 하기 때문에 양수(시계방향)
                 # 뺀 값은 거리, 속도가 아님, 따라서 경로 추종을 잘 할 수 있는 게인 값(1.3)dmf rhqgksek
-                mis_value = (right - left) * 0.65
+                mis_value = (right - left) * 1.3
                 # 적당한 선속도 값을 찾는다. 속도가 빠르면 게인값 커짐, 작으면 작아짐
-                self.cmd_msg.linear.x = 0.25
-                self.cmd_msg.angular.z = mis_value
+                # if mis_value == 0:
+                #     self.cmd_msg.linear.x = -0.25 
+                if 0 <= self.status_msg.twist.linear.x < 0.06 :
+                    self.cmd_msg.linear.x = -0.25
+                    self.cmd_msg.angular.z = self.cmd_msg.linear.z
+                    print('벽에박음')
+                else:
+                    self.cmd_msg.linear.x = 0.25
+                    self.cmd_msg.angular.z = mis_value
+                print(datetime.now(), f'mis_value : {mis_value}, linear.x : {self.status_msg.twist.linear.x}')
 
             else:
                 if len(self.path_msg.poses)> 1:
@@ -146,7 +153,10 @@ class followTheCarrot(Node):
                         로직 7. 선속도, 각속도 정하기
                         '''             
                         out_vel = 1.0
-                        out_rad_vel= theta * 2
+                        out_rad_vel= theta * 2 
+
+                        if 0 < self.status_msg.twist.linear.x < 0.06 :
+                            out_vel = -0.25
 
 
                         self.cmd_msg.linear.x=out_vel
@@ -214,16 +224,20 @@ class followTheCarrot(Node):
             self.collision = False
             # 모든경로와 라이다간의 거리를 비교
             for waypoint in self.path_msg.poses:
-                for lidar_point in pcd_msg.points[:45] :
+                # for lidar_point in pcd_msg.points[:45] :
+                #     distance = sqrt(pow(waypoint.pose.position.x - lidar_point.x, 2) + pow(waypoint.pose.position.y - lidar_point.y, 2))
+                #     if distance < 0.05:
+                #         self.collision = True
+                #         # print('collision')
+                # for lidar_point in pcd_msg.points[320:] :
+                #     distance = sqrt(pow(waypoint.pose.position.x - lidar_point.x, 2) + pow(waypoint.pose.position.y - lidar_point.y, 2))
+                #     if distance < 0.05:
+                #         self.collision = True
+                        # print('collision')
+                for lidar_point in pcd_msg.points :
                     distance = sqrt(pow(waypoint.pose.position.x - lidar_point.x, 2) + pow(waypoint.pose.position.y - lidar_point.y, 2))
                     if distance < 0.05:
                         self.collision = True
-                        # print('collision')
-                for lidar_point in pcd_msg.points[320:] :
-                    distance = sqrt(pow(waypoint.pose.position.x - lidar_point.x, 2) + pow(waypoint.pose.position.y - lidar_point.y, 2))
-                    if distance < 0.05:
-                        self.collision = True
-                        # print('collision')
             
             self.is_lidar = True
         
