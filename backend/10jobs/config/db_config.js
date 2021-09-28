@@ -5,8 +5,9 @@ var pool = mysql.createPool({
 	user: '10jobs',
 	password: 'jobs',
 	database: '10jobs',
-	connectionLimit : 5,
+	connectionLimit : 1000000,
 	queueLimit: 100,
+	multipleStatements : true,
 });
 
 module.exports = pool;
