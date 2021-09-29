@@ -141,6 +141,7 @@ cython_debug/
 install/
 log/
 build/
+node_modules/
 
 **/.idea/
 strings.xml
