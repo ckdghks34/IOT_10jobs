@@ -11,8 +11,9 @@ var appRouter = require('./routes/apps');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+app.engine("html",require("ejs").renderFile);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -51,17 +52,21 @@ var fs = require('fs');
 
 const port = process.env.port || 12001;
 
-const publicPath = path.join(__dirname,"/public");
+const publicPath = path.join(__dirname,"/public/images/client");
 const picPath = path.join(__dirname,"/public/images/client");
 
 
 server.listen(port,() =>{
 	console.log(`listening on * : ${port}`);
+	console.log(path.join(picPath,"/cam.jpg"));
 });
 
 const roomName ='team';
 
 io.on('connection', socket =>{
+	var ip = socket.request.headers["x-forwarded-for"] || socket.request.connection.remoteAddress;
+	console.log(`클라이언트 연결 성공 - 클라이언트 IP : ${ip}, Socket ID : ${socket.id}`);
+
 	socket.join(roomName);
 
 	// 사용자의 메시지 수신시 WebClient로 메시지 전달
@@ -73,6 +78,11 @@ io.on('connection', socket =>{
         	socket.to(roomName).emit('sendPatrolStatus', message);
     	});
 
+	// 터틀봇 상태 확인 소켓
+	socket.on('BotStatus', (message) => {
+		socket.to(roomName).emit('sendBotStatus', message);
+	});
+
     	socket.on('PatrolOnToServer', (data) => {
         	socket.to(roomName).emit('patrolOn', data);
         	console.log('Patrol On!');
@@ -81,6 +91,11 @@ io.on('connection', socket =>{
     	socket.on('PatrolOffToServer', (data) => {
         	socket.to(roomName).emit('patrolOff', data);
     	});
+
+	// 맵 만들기 소켓
+	socket.on('makeMapToServer', (data) => {
+		socket.to(roomName).emit('makeMake', data);
+	});
 
     	socket.on('turnleftToServer', (data) => {
         	socket.to(roomName).emit('turnleft', data);
@@ -94,6 +109,44 @@ io.on('connection', socket =>{
         	socket.to(roomName).emit('turnright', data);
     	});
 
+	socket.on('gobackToServer', (data) => {
+		socket.to(roomName).emit('goback', data);
+	});
+
+	// 물건을 찾아달라는 소켓
+	socket.on('findWalletToServer', (data) => {
+		socket.to(roomName).emit('findWallet', data);
+	});
+
+	socket.on('findRemoteToServer', (data) => {
+		socket.to(roomName).emit('findRemote', data);
+	});
+
+	socket.on('findKeyToServer', (data) => {
+		socket.to(roomName).emit('findKey', data);
+	});
+
+	socket.on('findBagToServer', (data) => {
+		socket.to(roomName).emit('findBag', data);
+	});
+
+	// 물건 찾은 상태 보내는 소켓 -> found/not found로 보내면 될듯(PatrolStatus의 On/Off처럼)
+	socket.on('WalletStatus', (message) => {
+		socket.to(roomName).emit('sendWalletStatus', message);
+	});
+
+	socket.on('RemoteStatus', (message) => {
+		socket.to(roomName).emit('sendRemoteStatus', message);
+	});
+
+	socket.on('KeyStatus', (mesasge) => {
+		socket.to(roomName).emit('sendKeyStatus', message);
+	});
+
+	socket.on('BagStatus', (message) => {
+		socket.to(roomName).emit('sendBagStatus', message);
+	});
+
     	socket.on('disconnect', () => {
         	console.log('disconnected from server');
     	});
@@ -103,7 +156,7 @@ io.on('connection', socket =>{
 		socket.to(roomName).emit('sendStreaming', message);
 
 		buffer = Buffer.from(message, "base64");
-		fs.writeFileSync(path.join(picPath, "../client/cam.jpg"),buffer);
+		fs.writeFileSync(path.join(picPath, "/cam.jpg"),buffer);
 	});
 })
 
