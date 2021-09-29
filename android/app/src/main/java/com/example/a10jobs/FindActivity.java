@@ -1,23 +1,37 @@
 package com.example.a10jobs;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 public class FindActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ArrayList<FindItem> data = null;
+    String url = getString(R.string.url);       // 서버 url 주기
+    Socket socket;
+    {
+        try{
+            socket = IO.socket(url);
+        } catch(URISyntaxException e){
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
+        socket.connect();
 
         ListView listView = (ListView) findViewById(R.id.find_listview);
 
@@ -28,7 +42,6 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
         FindItem rc = new FindItem(R.drawable.testimg, "리모컨 찾기", "날짜 / 시간 표시");
         FindItem key = new FindItem(R.drawable.testimg, "열쇠 찾기", "날짜 / 시간 표시");
         FindItem bp = new FindItem(R.drawable.testimg, "가방 찾기", "날짜 / 시간 표시");
-
 
         data.add(wal);
         data.add(rc);
@@ -46,7 +59,22 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra("img",data.get(i).getImg());
                 intent.putExtra("date",data.get(i).getDate());
                 startActivity(intent);
-
+                
+                // item별로 보내는 소켓이 다름
+                switch(i){
+                    case 0:
+                        socket.emit("findWalletToServer");
+                        break;
+                    case 1:
+                        socket.emit("findRemoteToServer");
+                        break;
+                    case 2:
+                        socket.emit("findKeyToServer");
+                        break;
+                    case 3:
+                        socket.emit("findBagToServer");
+                        break;
+                }
             }
         });
 
