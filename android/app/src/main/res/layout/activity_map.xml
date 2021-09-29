@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.023" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
+        android:id="@+id/btn_make_map"
         android:layout_width="358dp"
         android:layout_height="233dp"
         android:background="@drawable/button_corner"
