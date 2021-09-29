@@ -67,6 +67,8 @@ class iot_udp(Node):
         self.is_recv_data=False
 
         os.system('cls')
+        # thread2 = threading.Thread(target=self.menu)
+        # thread2.start()
         while True:
 
             '''
@@ -95,10 +97,39 @@ class iot_udp(Node):
                 self.disconnect()
             elif menu == '4' :
                 print("selected 4 : all_procedures")
-                self.all_procedures()
+                self.all_procedures()      
 
             
-            
+    # def menu(self) :
+        #  while True:
+
+        #     '''
+        #     로직 5. 사용자 메뉴 생성
+        #     print('Select Menu [0: scan, 1: connect, 2:control, 3:disconnect, 4:all_procedures ] ')
+        #     menu=??
+
+        #     if menu == ?? :
+        #         채워 넣기
+        #     '''
+        #     pass
+        #     print('Select Menu [0: scan, 1: connect, 2:control, 3:disconnect, 4:all_procedures ] ')
+        #     menu=input()
+
+        #     if menu == '0' :
+        #         print("selected 0 : scan start")
+        #         self.scan()
+        #     elif menu == '1' :
+        #         print("selected 1 : connect")
+        #         self.connect()
+        #     elif menu == '2' :
+        #         print("selected 2 : control")
+        #         self.control()
+        #     elif menu == '3' :
+        #         print("selected 3 : disconnect")
+        #         self.disconnect()
+        #     elif menu == '4' :
+        #         print("selected 4 : all_procedures")
+        #         self.all_procedures()      
 
 
     def data_parsing(self,raw_data) :
@@ -160,12 +191,20 @@ class iot_udp(Node):
         send_data=self.upper+uid_pack+cmd_pack+self.tail
         self.sock.sendto(send_data,(self.ip,self.send_port))
         '''
-        header="$Ctrl-command$".encode()
+        # header="$Ctrl-command$".encode()
+        
         # header="#Appliances$".encode()
-        data_length=bytes([18,0,0,0])
-        aux_data=bytes(12)
+        # data_length=bytes([18,0,0,0])
+        # aux_data=bytes(12)
+        # self.upper=header+data_length+aux_data
+        # self.tail='\r\n'.encode()
+
+        header="#Ctrl-command$".encode()
+        data_length=struct.pack('i',18)
+        aux_data=struct.pack('iii',0,0,0)
         self.upper=header+data_length+aux_data
         self.tail='\r\n'.encode()
+
 
         uid_pack=self.uid_to_packet(uid)
         cmd_pack=bytes([cmd[0],cmd[1]])
@@ -238,10 +277,18 @@ class iot_udp(Node):
         if self.is_recv_data==True:
             if self.recv_data[1] == "CONNECTION_LOST" :
                 print("CONNECTION_LOST")
-                self.send_data(self.recv_data[0],params_control_cmd["RESET"])
+                while True:
+                    self.send_data(self.recv_data[0],params_control_cmd["RESET"])
+                    if self.recv_data[1] == "IDLE" :
+                        break
+                
             else :
                 print(self.recv_data[1])
-                self.send_data(self.recv_data[0],params_control_cmd["TRY_TO_CONNECT"])
+                while True:
+                    self.send_data(self.recv_data[0],params_control_cmd["TRY_TO_CONNECT"])
+                    if self.recv_data[1] == "CONNECTION" :
+                        break
+                
 
 
     
@@ -256,13 +303,23 @@ class iot_udp(Node):
         '''
         if self.is_recv_data==True:
             if self.recv_data[2] == "ON" :
-                self.send_data(self.recv_data[0],params_control_cmd["SWITCH_OFF"])
+                 while True:
+                    self.send_data(self.recv_data[0],params_control_cmd["SWITCH_OFF"])
+                    if self.recv_data[2] == "OFF" :
+                        break
+                
             else :
-                self.send_data(self.recv_data[0],params_control_cmd["SWITCH_ON"])
+                while True:
+                    self.send_data(self.recv_data[0],params_control_cmd["SWITCH_ON"])
+                    if self.recv_data[2] == "ON" :
+                        break
 
     def disconnect(self):
-        if self.is_recv_data==True :
-            self.send_data(self.recv_data[0],params_control_cmd["DISCONNECT"])
+        if self.is_recv_data==True :         
+            while True:
+                self.send_data(self.recv_data[0],params_control_cmd["DISCONNECT"])
+                if self.recv_data[1] == "IDLE" :
+                    break
         
 
     def all_procedures(self):
