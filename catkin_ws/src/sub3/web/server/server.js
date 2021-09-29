@@ -33,6 +33,7 @@ io.on('connection', socket => {
     socket.join(roomName);
 
     // 로직 3. 사용자의 메시지 수신시 WebClient로 메시지 전달
+<<<<<<< HEAD
     socket.on('safety_status', (message) => {
         socket.to(roomName).emit('sendSafetyStatus', message);
     });
@@ -61,11 +62,49 @@ io.on('connection', socket => {
     socket.on('turnrightToServer', (data) => {
         socket.to(roomName).emit('turnright', data);
     });
+=======
+    socket.on('sendTime', (message) => {
+        socket.to(roomName).emit('sendTimeToWeb', message);
+    });
+
+    socket.on('sendWeather', (message) => {
+        socket.to(roomName).emit('sendWeatherToWeb', message);
+    });
+
+    socket.on('sendTemperature', (message) => {
+        socket.to(roomName).emit('sendTemperatureToWeb', message);
+    });
+
+    socket.on('sendAirConditioner', (message) => {
+        socket.to(roomName).emit('sendAirConditionerToWeb', message);
+    });
+
+    socket.on('sendAirConditionerOn', (data) => {
+        socket.to(roomName).emit('sendAirConOn', data);
+    });
+
+    socket.on('sendAirConditionerOff', (data) => {
+        socket.to(roomName).emit('sendAirConOff', data);
+    });
+
+    // socket.on('turnleftToServer', (data) => {
+    //     socket.to(roomName).emit('turnleft', data);
+    // });
+
+    // socket.on('gostraightToServer', (data) => {
+    //     socket.to(roomName).emit('gostraight', data);
+    // });
+
+    // socket.on('turnrightToServer', (data) => {
+    //     socket.to(roomName).emit('turnright', data);
+    // });
+>>>>>>> 74e7b3a93a2a7244c2c89fcdae147e7d2c75dae9
 
     socket.on('disconnect', () => {
         console.log('disconnected from server');
     });
 
+<<<<<<< HEAD
     // 전달받은 이미지를 jpg 파일로 저장
     socket.on('streaming', (message) => {
         socket.to(roomName).emit('sendStreaming', message);
@@ -73,5 +112,14 @@ io.on('connection', socket => {
         buffer = Buffer.from(message, "base64");
         fs.writeFileSync(path.join(picPath, "/../client/cam.jpg"), buffer);
     });
+=======
+    // // 전달받은 이미지를 jpg 파일로 저장
+    // socket.on('streaming', (message) => {
+    //     socket.to(roomName).emit('sendStreaming', message);
+    //     // console.log(message);
+    //     buffer = Buffer.from(message, "base64");
+    //     fs.writeFileSync(path.join(picPath, "/../client/cam.jpg"), buffer);
+    // });
+>>>>>>> 74e7b3a93a2a7244c2c89fcdae147e7d2c75dae9
 
 })

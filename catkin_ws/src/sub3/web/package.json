@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "web_test",
+=======
+  "name": "web",
+>>>>>>> 74e7b3a93a2a7244c2c89fcdae147e7d2c75dae9
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
