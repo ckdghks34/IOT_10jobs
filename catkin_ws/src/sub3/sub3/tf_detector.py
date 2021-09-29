@@ -43,6 +43,10 @@ from object_detection.utils import visualization_utils as vis_util
 ## 그리고 lidar scan data를 받아서 이미지에 정사영하기위해 ex_calib에 있는
 ## class 들도 가져와 import 합니다.
 
+
+# global img_bgr
+# img_bgr = None
+
 params_lidar = {
     "Range" : 90, #min & max range of lidar azimuths
     "CHANNEL" : int(1), #verticla channel of a lidar
@@ -145,6 +149,7 @@ def visualize_images(image_out, t_cost):
 def img_callback(msg):
 
     global img_bgr
+    # img_bgr = None
 
     np_arr = np.frombuffer(msg.data, np.uint8)
     img_bgr = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
@@ -181,7 +186,8 @@ def main(args=None):
     # back_folder='catkin_ws\\src\\ros2_smart_home\\sub3'
     # back_folder='Desktop\\test_ws\\src\\ssafy_smarthome\\sub3'
 
-    CWD_PATH = os.getcwd()
+    # CWD_PATH = os.getcwd()
+    CWD_PATH = 'C:\\Users\\multicampus\\Desktop\\catkin_ws\\src\\ros2_smart_home\\sub3\\sub3'
     
     MODEL_NAME = 'ssd_mobilenet_v1_coco_2018_01_28'
 
@@ -270,12 +276,18 @@ def main(args=None):
 
             rclpy.spin_once(g_node)
 
-        # 로직 10. object detection model inference
+        # if img_bgr is not None:
+            
+
+            # 로직 10. object detection model inference
         image_process, infer_time, boxes_detect, scores, classes_pick = ssd_net.inference(img_bgr)
 
         # 로직 11. 라이다-카메라 좌표 변환 및 정사영
         # sub2 에서 ex_calib 에 했던 대로 라이다 포인트들을
         # 이미지 프레임 안에 정사영시킵니다.
+
+        print(classes_pick)
+
 
         xyz_p = xyz[np.where(xyz[:, 0]>=0)]
 
@@ -283,13 +295,21 @@ def main(args=None):
 
         xy_i = l2c_trans.project_pts2img(xyz_c, False)
 
+        
+        # print(xyz_p.shape)
+
+        xy_i = xy_i.T
+
+        # print(xy_i.shape)
+        # print(xy_i)
         xyii = np.concatenate([xy_i, xyz_p], axis=1)
+        # print(xyii)
 
         """
 
         # 로직 12. bounding box 결과 좌표 뽑기
         ## boxes_detect 안에 들어가 있는 bounding box 결과들을
-        ## 좌상단 x,y와 너비 높이인 w,h 구하고, 
+        ## 좌상단 x,y와 너비 높이인 w,h 구하고, w
         ## 본래 이미지 비율에 맞춰서 integer로 만들어
         ## numpy array로 변환
 
@@ -314,6 +334,59 @@ def main(args=None):
 
         """
 
+        #로직 12
+        if len(boxes_detect) != 0:
+            # print(img_bgr)
+            ih = img_bgr.shape[0]
+            iw = img_bgr.shape[1]
+
+            boxes_np = np.transpose(boxes_detect)
+
+            x = boxes_np[1] * iw
+            y = boxes_np[0] * ih
+            w = (boxes_np[3]-boxes_np[1]) * iw
+            h = (boxes_np[2]-boxes_np[0]) * ih
+
+            bbox = np.vstack([
+                x.astype(np.int32).tolist(),
+                y.astype(np.int32).tolist(),
+                w.astype(np.int32).tolist(),
+                h.astype(np.int32).tolist()
+            ]).T
+
+            # print(xyii)
+
+            #로직 13
+            ostate_list = []
+
+            for i in range(bbox.shape[0]):
+                x = int(bbox[i, 0])
+                y = int(bbox[i, 1])
+                w = int(bbox[i, 2])
+                h = int(bbox[i, 3])
+
+                cx = (x+x+w)/2
+                cy = (y+y+h)/2
+                
+                xyv = xyii[np.where((xyii[:,0]>=x)&(xyii[:,0]<=x+w)),:]
+                # print(xyv)
+
+                # print(xyv.shape)
+                # print(xyv[0][:,2])
+
+                ## bbox 안에 들어가는 라이다 포인트들의 대표값(예:평균)을 뽑는다
+                # 0: 터틀봇 기준 거리, 1: 터틀봇 기준 오른쪽인지(-) 왼쪽인지(+)
+                ostate = [np.mean(xyv[0][:,2]),np.mean(xyv[0][:,3])]
+                # print(ostate)
+
+                ## 대표값이 존재하면 
+                if not np.isnan(ostate[0]):
+                    ostate_list.append(ostate)
+
+            image_process = draw_pts_img(image_process, xy_i[:, 0].astype(np.int32),
+                                            xy_i[:, 1].astype(np.int32))
+
+            # print(ostate_list)
             
         """
 
@@ -346,6 +419,7 @@ def main(args=None):
 
             print(ostate_list)
         """
+        
         visualize_images(image_process, infer_time)
 
     g_node.destroy_node()
