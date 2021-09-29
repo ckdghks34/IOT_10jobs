@@ -55,7 +55,7 @@ params_mcl = {
 
 
 def compute_relative_pose(pose_i, pose_j):
-
+    # print('compute_relative_pose')
     # 로봇의 상대 좌표에 대한 pose를 내놓는 역할을 합니다
     
     # 로직 순서
@@ -63,36 +63,35 @@ def compute_relative_pose(pose_i, pose_j):
     # 2. Rot 행렬, trans 백터 추출
     # 3. pose i 기준 pose j에 대한 Rot 행렬, trans 백터 계산
     # 4. 위의 Rot 행렬, trans 백터로 pose_ij를 계산    
-        
     """
     로직 1 : 두 pose를 기준으로 하는 좌표변환 행렬 정의
-    T_i = xyh2mat2D(pose_i)
-    T_j = xyh2mat2D(pose_j)
-
     """
+    T_i = utils.xyh2mat2D(pose_i)
+    T_j = utils.xyh2mat2D(pose_j)
+
     
     """
     로직 2 : Rot 행렬, trans 백터 추출
-    R_i = 
-    t_i = 
-
     """
+    R_i = np.transpose(T_i[:2, :2])
+    t_i = -R_i.dot(T_i[:2, 2])
+
 
     """
     로직 3 : pose i 기준 pose j에 대한 Rot 행렬, trans 백터 계산
-    R_ij = 
-    t_ij = 
-    
     """
+    R_ij = np.matmul(R_i, T_j[:2, :2])
+    t_ij = R_i.dot(T_j[:2, 2]) + t_i
+    
 
     """
     로직 4 : 위의 Rot 행렬, trans 백터로 pose_ij를 계산
+    """
     
     pose_ij = np.array([0.0, 0.0, 0.0])    
-    pose_ij[:2] = 
-    pose_ij[2] = 
+    pose_ij[:2] = t_ij[:]
+    pose_ij[2] = np.arctan2(R_ij[1,0], R_ij[0,0])*180.0/np.pi
 
-    """
 
     """
     테스트
@@ -141,6 +140,9 @@ class Localization:
 
         self.map_vis_resize_scale = params_map["MAPVIS_RESIZE_SCALE"]
 
+
+        # monte carlo localiztion(몬테 카를로 제이션) https://en.wikipedia.org/wiki/Monte_Carlo_localization
+        # 참고 http://jinyongjeong.github.io/2017/02/22/lec11_Particle_filter/
         self.num_particle = params_mcl["NUM_PARTICLE"]
         self.min_odom_dist = params_mcl["MIN_ODOM_DISTANCE"]
         self.min_odom_angle = params_mcl["MIN_ODOM_ANGLE"]
@@ -197,7 +199,8 @@ class Localization:
         # 로직 9. particles 초기화
         # 파티클을 x, y, theta, score로 이루어진 array로 랜덤하게 생성시켜 초기화 시키는 단계를 말합니다.
         # rviz2 에서 지정한 수신 받은 초기 위치 기준으로 초기 파티클을 랜덤 생성합니다.
-                
+        
+        print('파티클 초기화')
         rows, cols = self.map.shape
         self.max_prob_particle = np.zeros((4, 1))
         self.particles = np.zeros((4, self.num_particle)) # [x, y, theta, score]
@@ -308,31 +311,42 @@ class Localization:
         # delta_dist = 0.22361
         # delta_angle1 = 1.1071
         # delta_angle1 = -0.7581
-
-        delta_dist = 
-
-        delta_angle1 = 
-        delta_angle2 = 
+        """
+        print('_prediction')
+        # 피타고라스정의를 활용해서 빗변의 길이를 구하자
+        delta_dist = np.sqrt(np.square(diff_pose[:2]).sum())
         
-        odom_cov = 
+        # 값 똑같음 쉽게 이해를 위해서
+        # 루트 (x 제곱 + y 제곱)
+        # delta_dist = math.sqrt(diff_pose[0] ** 2 + diff_pose[1] ** 2)
+
+        # 명세서의 rot1, 2  각
+        delta_angle1 = np.arctan2(diff_pose[1] , diff_pose[0]) 
+        delta_angle2 = diff_pose * np.pi/180 - delta_angle1
+        
+        odom_cov = [self.odom_translation_cov, self.odom_translation_cov, self.odom_heading_cov]
 
         delta_angle1 = utils.limit_angular_range(delta_angle1)
 
-        dist_noise_coeff = 
-        angle1_noise_coeff = 
-        angle2_noise_coeff = 
+        # np.fabs => 절대값 반환
+        dist_noise_coeff = odom_cov[0]*np.fabs(delta_dist) + odom_cov[2]*np.fabs(delta_angle1+ delta_angle2)
+        angle1_noise_coeff = odom_cov[2]*np.fabs(delta_angle1) + odom_cov[0]*np.fabs(delta_dist)
+        angle2_noise_coeff = odom_cov[2]*np.fabs(delta_angle2) + odom_cov[0]*np.fabs(delta_dist)
 
         score_sum = 0
 
         for i in range(self.num_particle):
 
-            delta_dist = 
-            delta_angle1 = 
-            delta_angle2 = 
+            # np.random.normal(loc, scale, size) => loc : 평균, scale : 표준편차
+            # 명세서의 수식
+            # 가우시안 노이즈를 추가하는 이유는 파티클들이 특정 상태에만 몰려 지나치게 높은 confidence(신뢰성)를 갖는 걸 막아준다
+            delta_dist = delta_dist + np.random.normal(0,1)*dist_noise_coeff
+            delta_angle1 = delta_angle1 + np.random.normal(0,1)*angle1_noise_coeff
+            delta_angle2 = delta_angle2 + np.random.normal(0,1)*angle2_noise_coeff
 
-            x = 
-            y = 
-            h = 
+            x = delta_dist * np.cos(delta_angle1) + np.random.normal(0,1)*odom_cov[0]
+            y = delta_dist * np.sin(delta_angle1) + np.random.normal(0,1)*odom_cov[1]
+            h = delta_angle1 + delta_angle2 + np.random.normal(0,1)*odom_cov[2]
 
             diff_odom_noise = np.array([x, y, h*180.0/np.pi])
             diff_odom_T = utils.xyh2mat2D(diff_odom_noise)
@@ -344,8 +358,7 @@ class Localization:
             score_sum += self.particles[3, i]
             self.particles[:3, i] = utils.mat2D2xyh(T_j)
 
-        """
-
+        print(f'delta_dist : {delta_dist} \n delta_angle1 : {delta_angle1} \n delta_angle2: {delta_angle2}')
         self.particles[3, :] = self.particles[3, :] #/ score_sum위 코드를 완성한 후 주석을 해제해 주세요
 
     def _points_in_map(self, x_list, y_list):
@@ -366,7 +379,7 @@ class Localization:
         ##  로봇의 pose와 합쳐서 맵에 매칭시키고, 실제 벽의 좌표와 맞는 포인트 개수가 많을수록
         ##  가중치를 높게 주시면 됩니다.
         ##  그리고 마지막에 가중치의 총합을 1로 바꾸십시오.
-
+        print('_weighting')
         max_score = 0.0
         score_sum = 0.0
 
@@ -403,19 +416,23 @@ class Localization:
             로직 11. weighting
             # 맵안에 존재하는 유효한 파티클들의 픽셀좌표만 남기고 그 픽셀 좌표 상에서의
             # map의 값만 골라오십시오
-            valid_idx = 
-            valid_x = 
-            valid_y =  
+            """
+
+            print(points_global_x, points_global_y)
+            valid_idx = (points_global_x>0) * (points_global_y>0) * (points_global_x<cols) * (points_global_y<rows)
+            valid_x = points_global_x[valid_idx]
+            valid_y = points_global_y[valid_idx]
+
             vals = self.map[valid_y.astype(np.int), valid_x.astype(np.int)]
-            
+
             # 0.25라는 값을 기준으로 이상이면 wall, 이하면 empty로 정의하십시오
-            walls = 
-            empty = 
+            walls = vals < 0.25
+            empty = (vals > 0.25)
 
             # 라이다의 측정값인 laser scan의 위치가 실제 벽에 매칭이 많이 될수록
             # 그 파티클은 실제 위치에 가까운 것입니다.
             # walls==True인 개수를 weight로 정의하십시오.
-            weight = 
+            weight = np.sum(walls)
             penalty = np.sum(empty)*0.0
             weight = weight - penalty
             weights[i] = weight
@@ -423,7 +440,6 @@ class Localization:
             self.particles[3, i] += weight / transformed_points.shape[1]
             score_sum += self.particles[3, i]
 
-            """
 
             if max_score < self.particles[3, i]:
                 self.max_prob_particle = self.particles[:,i]
@@ -444,7 +460,7 @@ class Localization:
         # 골라내는 작업을 말합니다.
         # 구현이 제대로 되었으면 _weighting() 단계에서 가중치가 높게 나온 파티클들이
         # 주로 재생성 되는 걸 확인 할 수 있을 겁니다
-
+        print('_resampling')
         n_particles = self.num_particle
         score_basline = 0.0
         particle_scores = np.zeros([n_particles])
@@ -457,15 +473,17 @@ class Localization:
    
         """
         로직 12. resampling
-        np.random.uniform로 파티클 개수만큼 난수를 뽑은 다음, 그 난수에 
+        np.random.uniform로 파티클 개수만큼 난수를 뽑은 다음, 그 난수에
+        균등분포로 부터 무작위 표본 추출 : np.random.uniform(low, high, size)
+        최소값이 low, 최대값이 high인 구간에서 size만큼 난수 생성 
+        """
         
         for i in range(n_particles):
-            darted_score = 
-            darted_idx = 
+            darted_score = np.random.uniform(0, score_basline, 1)
+            darted_idx = np.abs(particle_scores-darted_score).argmin().astype(np.int)
             
             selected_particles[:, i] = self.particles[:, darted_idx]
 
-        """
 
         self.particles = selected_particles.copy()
 
@@ -475,6 +493,7 @@ class Localization:
         # 수정하면 monte carlo localization 이 완성이 됩니다. 
         # 해당 스켈레톤 코드에는 diff_pose와 diff_dist, diff_angle을 계속 0과 0.1로만 주고 있어서
         # 파티클 필터가 업데이트되고 있지 않습니다
+        print('update 시작')
 
         # 로직 9. particle 초기화하기
         if self.is_init != True:
@@ -483,18 +502,17 @@ class Localization:
             
             self.is_init = True
             return
+        
+        diff_pose = compute_relative_pose(self.odom_before, pose)
+        # diff_pose = np.array([[0],[0],[0]])
 
+        diff_dist = np.sqrt(np.square(diff_pose[:2]).sum())
+        diff_angle = diff_pose[2]
 
-        """diff_pose =""" 
-        diff_pose = np.array([[0],[0],[0]])
-
-        """
-        diff_dist = 
-        diff_angle = 
         """
         diff_dist = 0.1
         diff_angle = 0
-
+        """
 
         if diff_dist > 1 :
             print('reset')
@@ -616,23 +634,22 @@ class Localizer(Node):
                 # prev_time가 기록되면 이 다음에 status msg에서 odometry를 받기 시작한다.
 
                 self.is_status=True
+
+                
             else :
 
                 # 두번째 스텝부터 odom 정보 파싱
                 # 이전 스텝과 현재 스텝간의 시간 차이 계산
                 self.current_time=rclpy.clock.Clock().now()
                 self.period=(self.current_time-self.prev_time).nanoseconds/(1e+9)
-
-
                 """
                 turtlebot_status의 정보들로 선속도를 얻고
                 imu callback에서 처리한 odom_theta로 로봇의 헤딩을 얻어서
                 odom_theta, odom_x, odom_y 업데이트
-
-                linear_x =     
-                self.odom_x+=
-                self.odom_y+=
                 """
+                linear_x = msg.twist.linear.x    
+                self.odom_x += linear_x*cos(self.odom_theta) * self.period
+                self.odom_y += linear_x*sin(self.odom_theta) * self.period
                 self.prev_time=self.current_time
 
 
@@ -640,6 +657,8 @@ class Localizer(Node):
     def scan_callback(self,msg):
 
         if self.is_status==True :
+
+            # print('odom시작')
 
             # turtlebot status 로부터 업데이트한 odom 정보    
             pose_x=self.odom_x
@@ -672,27 +691,28 @@ class Localizer(Node):
             # 라이다를 global 좌표로 변환해서 sending
             """            
             # 로직 14. 위치 추정 결과를 publish
+            """
             self.laser_transform.header.stamp =rclpy.clock.Clock().now().to_msg()
             self.broadcaster.sendTransform(self.laser_transform)
 
-            amcl_q = Quaternion.from_euler(....)
-            self.localizer_transform.header.stamp =
-            self.localizer_transform.transform.translation.x = 
-            self.localizer_transform.transform.translation.y = 
-            self.localizer_transform.transform.rotation.x = 
-            self.localizer_transform.transform.rotation.y = 
-            self.localizer_transform.transform.rotation.z = 
-            self.localizer_transform.transform.rotation.w = 
-            
+            amcl_q = Quaternion.from_euler(0, 0, (amcl_pose[2]+90)/180*pi)
+            self.localizer_transform.header.stamp =rclpy.clock.Clock().now().to_msg()
+            self.localizer_transform.transform.translation.x = float(amcl_pose[0])
+            self.localizer_transform.transform.translation.y = float(amcl_pose[1])
+            self.localizer_transform.transform.rotation.x = amcl_q.x
+            self.localizer_transform.transform.rotation.y = amcl_q.y
+            self.localizer_transform.transform.rotation.z = amcl_q.z
+            self.localizer_transform.transform.rotation.w = amcl_q.w
+
             self.broadcaster.sendTransform(self.localizer_transform)
 
-            self.odom_msg.pose.pose.position.x = 
-            self.odom_msg.pose.pose.position.y =
-            self.odom_msg.pose.pose.orientation.x =
-            self.odom_msg.pose.pose.orientation.y =
-            self.odom_msg.pose.pose.orientation.z =
-            self.odom_msg.pose.pose.orientation.w =
-            """
+            self.odom_msg.pose.pose.position.x=float(amcl_pose[0])
+            self.odom_msg.pose.pose.position.y=float(amcl_pose[1])
+            self.odom_msg.pose.pose.orientation.x=amcl_q.x
+            self.odom_msg.pose.pose.orientation.y=amcl_q.y
+            self.odom_msg.pose.pose.orientation.z=amcl_q.z
+            self.odom_msg.pose.pose.orientation.w=amcl_q.w
+            self.odom_publisher.publish(self.odom_msg)
 
             self.odom_publisher.publish(self.odom_msg)        
             self.prev_amcl_pose=amcl_pose
