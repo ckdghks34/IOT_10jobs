@@ -296,7 +296,10 @@ class Localization:
             cv2.circle(map_bgr_with_particle, center, 2, (255,0,255), -1)
 
         map_bgr_with_particle = cv2.resize(map_bgr_with_particle, dsize=(0, 0), fx=self.map_vis_resize_scale, fy=self.map_vis_resize_scale)
+
+
         cv2.imshow('Sample Map', map_bgr_with_particle)
+        cv2.imwrite('../web/client/mapimg.png', map_bgr_with_particle)
         cv2.waitKey(1)
 
     def _prediction(self, diff_pose):
@@ -322,7 +325,7 @@ class Localization:
 
         # 명세서의 rot1, 2  각
         delta_angle1 = np.arctan2(diff_pose[1] , diff_pose[0]) 
-        delta_angle2 = diff_pose * np.pi/180 - delta_angle1
+        delta_angle2 = diff_pose[2] * np.pi/180.0 - delta_angle1
         
         odom_cov = [self.odom_translation_cov, self.odom_translation_cov, self.odom_heading_cov]
 
@@ -358,7 +361,6 @@ class Localization:
             score_sum += self.particles[3, i]
             self.particles[:3, i] = utils.mat2D2xyh(T_j)
 
-        print(f'delta_dist : {delta_dist} \n delta_angle1 : {delta_angle1} \n delta_angle2: {delta_angle2}')
         self.particles[3, :] = self.particles[3, :] #/ score_sum위 코드를 완성한 후 주석을 해제해 주세요
 
     def _points_in_map(self, x_list, y_list):
@@ -418,7 +420,6 @@ class Localization:
             # map의 값만 골라오십시오
             """
 
-            print(points_global_x, points_global_y)
             valid_idx = (points_global_x>0) * (points_global_y>0) * (points_global_x<cols) * (points_global_y<rows)
             valid_x = points_global_x[valid_idx]
             valid_y = points_global_y[valid_idx]
@@ -493,7 +494,6 @@ class Localization:
         # 수정하면 monte carlo localization 이 완성이 됩니다. 
         # 해당 스켈레톤 코드에는 diff_pose와 diff_dist, diff_angle을 계속 0과 0.1로만 주고 있어서
         # 파티클 필터가 업데이트되고 있지 않습니다
-        print('update 시작')
 
         # 로직 9. particle 초기화하기
         if self.is_init != True:
@@ -547,8 +547,8 @@ class Localizer(Node):
         super().__init__('Localizer')
         self.subscription = self.create_subscription(LaserScan,
         '/scan',self.scan_callback,1)
-        self.init_pose_sub = self.create_subscription(PoseWithCovarianceStamped,
-        '/initialpose',self.init_pose_callback,1)
+        # self.init_pose_sub = self.create_subscription(PoseWithCovarianceStamped,
+        # '/initialpose',self.init_pose_callback,1)
         self.imu_sub = self.create_subscription(Imu,
         '/imu',self.imu_callback,1)
         self.turtle_sub = self.create_subscription(TurtlebotStatus,
@@ -565,6 +565,12 @@ class Localizer(Node):
         self.heading=0.0
         self.prev_amcl_pose=np.array([[-9.4],[-7.7],[0.0]])
 
+        q=Quaternion(0, 0, 0.714018, 0.700127)
+        _,_,self.odom_theta=q.to_euler()
+        self.odom_x=-9.39136
+        self.odom_y=-7.72321   
+        self.is_init_pose=True
+        
         self.amcl_pose=None
 
  
@@ -601,7 +607,7 @@ class Localizer(Node):
             imu_q= Quaternion(msg.orientation.w,msg.orientation.x,msg.orientation.y,msg.orientation.z)
             self.odom_theta=imu_q.to_euler()[2]+self.imu_offset[2]
 
-
+    '''
     def init_pose_callback(self,msg):
 
         # 로직 5. 초기 위치 수신
@@ -611,14 +617,22 @@ class Localizer(Node):
 
         if msg.header.frame_id=='map' :
        
-            q=Quaternion(msg.pose.pose.orientation.w,
-                        msg.pose.pose.orientation.x,
-                        msg.pose.pose.orientation.y,
-                        msg.pose.pose.orientation.z)
+            # q=Quaternion(msg.pose.pose.orientation.w,
+            #             msg.pose.pose.orientation.x,
+            #             msg.pose.pose.orientation.y,
+            #             msg.pose.pose.orientation.z)
+            # _,_,self.odom_theta=q.to_euler()
+            # self.odom_x=msg.pose.pose.position.x
+            # self.odom_y=msg.pose.pose.position.y
+            q=Quaternion(0,
+                        0,
+                        0.714018,
+                        0.700127)
             _,_,self.odom_theta=q.to_euler()
-            self.odom_x=msg.pose.pose.position.x
-            self.odom_y=msg.pose.pose.position.y   
+            self.odom_x=-9.39136
+            self.odom_y=-7.72321   
             self.is_init_pose=True
+    '''
 
     def turtlebot_status_callback(self, msg):
 
