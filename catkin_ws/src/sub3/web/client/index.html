@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <form>
+    <!-- 맵 공유를 어떻게 할까 ?? 
+      1. security_service처럼 캡처를 활용해서 한다
+      2. rviz2에 있는 내용을 앱으로 가지고 올수 있지않을까 ??
+        - 맵 정보는 .txt 파일로 저장된다. -> 이걸 활용해서 그릴 수 있지 않을까 ??
+      3. run_localization을 실행하면 sample Map 이라는 (python파일??)이 실행되는데 
+      이 부분을 앱에서도 실행할 수 있지 않을까 ??
+    -->
+    <p>맵 공유하기 테스트</p>
+
+    <!-- 1번 방법 -->
+    <form class="make-map">
+      <img src="createmap.png?t=" width='480' onload='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 50)'
+      onerror='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 50)'/>
+      
+      <p>컨트롤러</p>
+      <button type ='button' id="A1-btn", onclick="btn_turn_left()">Turn Left</button>
+      <button type ='button' id="A2-btn", onclick="btn_go_straight()">Go Straight</button>
+      <button type ='button' id="A2-btn", onclick="btn_turn_right()">Turn Right</button>
+      
+    </form>
+    
+    <img src="mapimg.png?t=" width='480' onload='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 50)'
+    onerror='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 50)'/>
+    
+
+    
+  </form>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script type="text/javascript" src="/js/index.js"></script>
+</body>
+</html>
