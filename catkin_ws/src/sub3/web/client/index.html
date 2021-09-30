@@ -22,11 +22,13 @@
     <form class="make-map">
       <img src="createmap.png?t=" width='480' onload='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 50)'
       onerror='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 50)'/>
-      
+      <button type='button' id="start-btn" onclick="start_createmap()">맵만들기 시작</button>
+      <button type='button' id="stop-btn" onclick="stop_createmap()">맵만들기 완료</button>
       <p>컨트롤러</p>
       <button type ='button' id="A1-btn", onclick="btn_turn_left()">Turn Left</button>
       <button type ='button' id="A2-btn", onclick="btn_go_straight()">Go Straight</button>
-      <button type ='button' id="A2-btn", onclick="btn_turn_right()">Turn Right</button>
+      <button type ='button' id="A3-btn", onclick="btn_back()">back</button>
+      <button type ='button' id="A4-btn", onclick="btn_turn_right()">Turn Right</button>
       
     </form>
     
