@@ -170,6 +170,26 @@ io.on('connection', socket =>{
 		socket.to(roomName).emit('sendBagStatus', message);
 	});
 	
+	// -------------
+	// 가전제품 상태
+	// -------------
+	
+	socket.on('AirConditionerStatus',(message) => {
+		socket.to(roomName).emit('sendAirConditionerStatus', message);
+	});
+
+	socket.on('AirCleanerStatus',(message) => {
+		socket.to(roomName).emit('sendAirCleanerStatus', message);
+	});
+
+	socket.on('TvStatus',(message) =>{
+		socket.to(roomName).emit('sendTvStatus',message);
+	});
+
+	socket.on('LightStatus',(message) = >{
+		socket.to(roomName).emit('sendLightStatus',message);
+	});
+
 	// ---------------
     	// 가전제품 ON/OFF
 	// ---------------
