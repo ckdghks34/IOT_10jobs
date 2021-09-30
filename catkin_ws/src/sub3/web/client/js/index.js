@@ -26,6 +26,18 @@ socket.on('sendPatrolStatus', function(message) {
 });
 
 // 로직 2. 버튼 클릭시 호출되는 함수
+function stop_createmap() {
+    console.log('stop_createmap')
+    socket.emit('stop_createmap')
+}
+
+function start_createmap() {
+    console.log('start_createmap')
+    socket.emit('start_createmap')
+}
+
+
+
 function btn_turn_left() {
 
     console.log('btn_left');
@@ -44,11 +56,20 @@ function btn_go_straight() {
     socket.emit('gostraightToServer', data);
 };
 
+function btn_back() {
+
+    console.log('btn_back');
+
+    let data = 3;
+
+    socket.emit('backToServer', data);
+};
+
 function btn_turn_right() {
 
     console.log('btn_turn_right');
 
-    let data = 3;
+    let data = 4;
 
     socket.emit('turnrightToServer', data);
 };
