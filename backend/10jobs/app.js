@@ -68,17 +68,31 @@ io.on('connection', socket =>{
 	console.log(`클라이언트 연결 성공 - 클라이언트 IP : ${ip}, Socket ID : ${socket.id}`);
 
 	socket.join(roomName);
-
+	
+	// --------
+	// 연결 해제
+	// --------
+	socket.on('disconnect', () => {
+                console.log(`클라이언트 연결 해제 - 클라이언트 IP : ${ip}, Socket ID : ${socket.id}`);
+        });
+	
+	// ----------------------------------------------
 	// 사용자의 메시지 수신시 WebClient로 메시지 전달
+	// ----------------------------------------------
+
+	// 안전 상태 (안전한 상태 or 사람 인식 상태)
 	socket.on('safety_status',(message) =>{
 		socket.to(roomName).emit('sendSafetyStatus',message);
 	});
-
+	
+	// 방범모드 On/Off 상태
 	socket.on('PatrolStatus', (message) => {
         	socket.to(roomName).emit('sendPatrolStatus', message);
     	});
-
+	
+	// ---------------------
 	// 터틀봇 상태 확인 소켓
+	// ---------------------
 	socket.on('BotStatus', (message) => {
 		socket.to(roomName).emit('sendBotStatus', message);
 	});
@@ -92,7 +106,10 @@ io.on('connection', socket =>{
         	socket.to(roomName).emit('patrolOff', data);
     	});
 
+	// --------------
 	// 맵 만들기 소켓
+	// --------------
+	
 	socket.on('makeMapToServer', (data) => {
 		socket.to(roomName).emit('makeMake', data);
 	});
@@ -113,7 +130,10 @@ io.on('connection', socket =>{
 		socket.to(roomName).emit('goback', data);
 	});
 
+	// ----------------------
 	// 물건을 찾아달라는 소켓
+	// ----------------------
+
 	socket.on('findWalletToServer', (data) => {
 		socket.to(roomName).emit('findWallet', data);
 	});
@@ -129,8 +149,11 @@ io.on('connection', socket =>{
 	socket.on('findBagToServer', (data) => {
 		socket.to(roomName).emit('findBag', data);
 	});
-
+	
+	// --------------------------------------------------------------------------------------
 	// 물건 찾은 상태 보내는 소켓 -> found/not found로 보내면 될듯(PatrolStatus의 On/Off처럼)
+	// --------------------------------------------------------------------------------------
+	
 	socket.on('WalletStatus', (message) => {
 		socket.to(roomName).emit('sendWalletStatus', message);
 	});
@@ -146,11 +169,47 @@ io.on('connection', socket =>{
 	socket.on('BagStatus', (message) => {
 		socket.to(roomName).emit('sendBagStatus', message);
 	});
-
-    	socket.on('disconnect', () => {
-		console.log(`클라이언트 연결 해제 - 클라이언트 IP : ${ip}, Socket ID : ${socket.id}`);
-    	});
 	
+	// ---------------
+    	// 가전제품 ON/OFF
+	// ---------------
+	
+	// 에어컨
+	socket.on('AirConditionerOnToServer',(data)=>{
+		socket.to(roomName).emit('AirConditionerOn',data);
+	});
+
+	socket.on('AirConditionerOffToServer',(data)=>{
+		socket.to(roomName).emit('AirConditionerOff',data);
+	});
+
+	// 공기청정기
+	socket.on('AirCleanerOnToServer',(data)=>{
+		socket.to(roomName).emit('AirCleanerOn',data);
+	});
+
+	socket.on('AirCleanerOffToserver',(data)=>{
+		socket.to(roomName).emit('AirCleanerOff',data);
+	});
+
+	// TV
+	socket.on('TvOnToServer',(data)=>{
+                socket.to(roomName).emit('AirCleanerOn',data);
+        });
+
+        socket.on('TvOffToserver',(data)=>{
+                socket.to(roomName).emit('AirCleanerOff',data);
+        });
+
+	// 전등
+	socket.on('LightOnToServer',(data)=>{
+                socket.to(roomName).emit('AirCleanerOn',data);
+        });
+
+        socket.on('LightOffToserver',(data)=>{
+                socket.to(roomName).emit('AirCleanerOff',data);
+        });
+
 	// 전달받은 이미지를 jpg 파일로 저장
 	socket.on('streaming', (message) => {
 		socket.to(roomName).emit('sendStreaming', message);
