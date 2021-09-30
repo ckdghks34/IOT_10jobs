@@ -4,7 +4,7 @@ import ros2pkg
 from geometry_msgs.msg import Twist,PoseStamped,Pose,TransformStamped
 from ssafy_msgs.msg import TurtlebotStatus
 from sensor_msgs.msg import Imu,LaserScan
-from std_msgs.msg import Float32
+from std_msgs.msg import Float32, String, Int8MultiArray
 from squaternion import Quaternion
 from nav_msgs.msg import Odometry,Path,OccupancyGrid,MapMetaData
 from math import pi,cos,sin,sqrt
@@ -29,11 +29,16 @@ import time
 # 11. 업데이트 중인 map publish
 # 12. 맵 저장
 
+# 전역변수 선언 run_map
+global run_map
+run_map = 0
+
 params_map = {
     "MAP_RESOLUTION": 0.05,
     "OCCUPANCY_UP": 0.02,
     "OCCUPANCY_DOWN": 0.01,
     "MAP_CENTER": (-8.0, -4.0),
+    # "MAP_CENTER": (-8.0, 10.0), # map3용 좌표
     "MAP_SIZE": (17.5, 17.5),
     "MAP_FILENAME": 'test.png',
     "MAPVIS_RESIZE_SCALE": 2.0
@@ -174,7 +179,7 @@ class Mapping:
             # Occupied
             self.map[avail_y[-1], avail_x[-1]] = self.map[avail_y[-1], avail_x[-1]] - self.occu_up
 
-        # self.show_pose_and_points(pose, laser_global)        
+        self.show_pose_and_points(pose, laser_global)        
 
     def __del__(self):
         self.save_map(())
@@ -203,6 +208,8 @@ class Mapping:
         cv2.circle(map_bgr, center, 2, (0,0,255), -1)
 
         map_bgr = cv2.resize(map_bgr, dsize=(0, 0), fx=self.map_vis_resize_scale, fy=self.map_vis_resize_scale)
+        
+        cv2.imwrite('../web/client/createmap.png', map_bgr*255)
         # cv2.imshow('Sample Map', map_bgr)
         # cv2.waitKey(1)
 
@@ -218,13 +225,18 @@ class Mapper(Node):
         self.subscription = self.create_subscription(LaserScan,
         '/scan',self.scan_callback,10)
         self.map_pub = self.create_publisher(OccupancyGrid, '/map', 1)
-        
+        # 맵 관련 정보 받기
+        self.map_subcription = self.create_subscription(Int8MultiArray, '/map_status', self.map_callback, 10)
+
+        # True면 맵만들기 시작, False는 중지
+        self.is_map_create = False
+        # True면 맵 저장
+        self.is_save_map = False
         self.map_msg=OccupancyGrid()
         self.map_msg.header.frame_id="map"
         self.map_size=int(params_map["MAP_SIZE"][0]\
             /params_map["MAP_RESOLUTION"]*params_map["MAP_SIZE"][1]/params_map["MAP_RESOLUTION"])
         
-
         m = MapMetaData()
         m.resolution = params_map["MAP_RESOLUTION"]
         m.width = int(params_map["MAP_SIZE"][0]/params_map["MAP_RESOLUTION"])
@@ -252,23 +264,31 @@ class Mapper(Node):
         laser = np.vstack((x.reshape((1, -1)), y.reshape((1, -1))))
 
         pose = np.array([[pose_x],[pose_y],[heading]])
-        self.mapping.update(pose, laser)
+        if self.is_map_create:
+            self.mapping.update(pose, laser)
 
-        np_map_data=self.mapping.map.reshape(1,self.map_size) 
-        list_map_data=np_map_data.tolist()
-        for i in range(self.map_size):
-            list_map_data[0][i]=100-int(list_map_data[0][i]*100)
-            if list_map_data[0][i] >100 :
-                list_map_data[0][i]=100
- 
-            if list_map_data[0][i] <0 :
-                list_map_data[0][i]=0
-  
+            np_map_data=self.mapping.map.reshape(1,self.map_size) 
+            list_map_data=np_map_data.tolist()
+            for i in range(self.map_size):
+                list_map_data[0][i]=100-int(list_map_data[0][i]*100)
+                if list_map_data[0][i] >100 :
+                    list_map_data[0][i]=100
 
-        self.map_msg.header.stamp =rclpy.clock.Clock().now().to_msg()
-        self.map_msg.data=list_map_data[0]
-        self.map_pub.publish(self.map_msg)
+                if list_map_data[0][i] <0 :
+                    list_map_data[0][i]=0
 
+
+            self.map_msg.header.stamp =rclpy.clock.Clock().now().to_msg()
+            self.map_msg.data=list_map_data[0]
+            self.map_pub.publish(self.map_msg)
+
+    def map_callback(self, msg):
+        self.is_map_create = msg.data[0]
+        self.is_save_map = msg.data[1]
+        if self.is_save_map :
+            save_map(run_map, 'map.txt')
+
+    
 def save_map(node,file_path):
     pkg_path =os.getcwd()
     back_folder='..'
@@ -279,7 +299,6 @@ def save_map(node,file_path):
     f=open(full_path,'w')
     data=''
     for pixel in node.map_msg.data :
-
         data+='{0} '.format(pixel)
     f.write(data) 
     f.close()
@@ -287,16 +306,19 @@ def save_map(node,file_path):
         
 def main(args=None):    
     rclpy.init(args=args)
-    
-    try :    
-        run_map = Mapper()
-        rclpy.spin(run_map)
-        run_map.destroy_node()
-        rclpy.shutdown()
+    global run_map
+    # try :    
+    #     run_map = Mapper()
+    #     rclpy.spin(run_map)
+    #     run_map.destroy_node()
+    #     rclpy.shutdown()
 
-    except :
-        save_map(run_map,'map.txt')
-# 
+    # except :
+    #     save_map(run_map,'map.txt')
+    run_map = Mapper()
+    rclpy.spin(run_map)
+    run_map.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
