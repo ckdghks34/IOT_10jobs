@@ -6,10 +6,10 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.net.URISyntaxException;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
+import java.net.URISyntaxException;
 
 public class MapActivity extends AppCompatActivity {
     Button btn_map;

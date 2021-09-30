@@ -8,11 +8,11 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-
-import io.socket.client.IO;
-import io.socket.client.Socket;
 
 public class FindActivity extends AppCompatActivity implements View.OnClickListener {
 
