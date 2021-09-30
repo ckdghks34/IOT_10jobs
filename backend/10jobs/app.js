@@ -148,7 +148,7 @@ io.on('connection', socket =>{
 	});
 
     	socket.on('disconnect', () => {
-        	console.log('disconnected from server');
+		console.log(`클라이언트 연결 해제 - 클라이언트 IP : ${ip}, Socket ID : ${socket.id}`);
     	});
 	
 	// 전달받은 이미지를 jpg 파일로 저장
