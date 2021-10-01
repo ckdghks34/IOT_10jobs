@@ -25,7 +25,9 @@ setup(
             'odom = security_service.odom:main',
             'path_pub = security_service.path_pub:main',
             'make_path = security_service.make_path:main',
-            'path_tracking = security_service.path_tracking:main'
+            'path_tracking = security_service.path_tracking:main',
+            'object_detector_client = security_service.object_detector_client:main',
+            'tf_detector = security_service.tf_detector:main'
         ],
     },
 )
