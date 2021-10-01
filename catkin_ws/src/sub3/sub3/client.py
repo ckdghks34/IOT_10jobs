@@ -91,7 +91,7 @@ class ControllFromServer(Node):
         self.is_app_status=False
         self.is_envir_status=False
 
-        sio.connect("http://127.0.0.1:12001")
+        sio.connect("http://j5d201.p.ssafy.io:12001")
 
 
 

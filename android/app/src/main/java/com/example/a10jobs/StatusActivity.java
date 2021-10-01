@@ -4,7 +4,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,8 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
 public class StatusActivity extends AppCompatActivity {
-    LinearLayout power, battery, now;
+    Button power;
+    ImageButton battery, now;
 
     String url = "http://j5d201.p.ssafy.io:12001";
     Socket socket;
@@ -33,9 +35,9 @@ public class StatusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
 
-        power = (LinearLayout)findViewById(R.id.power);
-        battery = (LinearLayout)findViewById(R.id.battery);
-        now = (LinearLayout)findViewById(R.id.now);
+//        power = (ToggleButton)findViewById(R.id.power);
+        battery = (ImageButton) findViewById(R.id.battery);
+        now = (ImageButton) findViewById(R.id.now);
 
         socket.on("sendBotStatus", onStatus);
 //        socket.on("sendBotStatus", new Emitter.Listener(){
@@ -57,7 +59,7 @@ public class StatusActivity extends AppCompatActivity {
 //        });
         socket.connect();
 
-        power.setOnClickListener(new View.OnClickListener() {
+        battery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 소켓 통신(서버 쪽에서 보낸 이벤트 듣기)
