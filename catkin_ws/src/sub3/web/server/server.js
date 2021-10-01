@@ -67,11 +67,11 @@ io.on('connection', socket => {
     });
 
     // 전달받은 이미지를 jpg 파일로 저장
-    // socket.on('streaming', (message) => {
-    //     socket.to(roomName).emit('sendStreaming', message);
-    //     // console.log(message);
-    //     buffer = Buffer.from(message, "base64");
-    //     fs.writeFileSync(path.join(picPath, "/../client/cam.jpg"), buffer);
-    // });
+    socket.on('mapStreaming', (message) => {
+        socket.to(roomName).emit('sendMapStreaming', message);
+        console.log(message);
+        buffer = Buffer.from(message, "base64");
+        fs.writeFileSync(path.join(picPath, "/../client/map.jpg"), buffer);
+    });
 
 })
