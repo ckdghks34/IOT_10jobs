@@ -86,7 +86,7 @@ class odom(Node):
 
 
     def listener_callback(self, msg):
-        print('linear_vel : {}  angular_vel : {}'.format(msg.twist.linear.x,-msg.twist.angular.z))        
+        # print('linear_vel : {}  angular_vel : {}'.format(msg.twist.linear.x,-msg.twist.angular.z))        
         if self.is_imu == True:
             if self.is_status == False :
                 self.x = msg.twist.angular.x
@@ -161,5 +161,3 @@ if __name__ == '__main__':
 
 
 
-       
-   
