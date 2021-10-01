@@ -2,20 +2,36 @@ package com.example.a10jobs;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
 public class RealtimeActivity extends AppCompatActivity {
+    ImageView imageView;
+    String url = getString(R.string.url);
+    Socket socket;
+    {
+        try {
+            socket = IO.socket(url);
+            Log.v("socket", String.valueOf(socket));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_realtime);
 
+        ImageView imageView = (ImageView)findViewById(R.id.imageView);
         ImageButton btnUp = (ImageButton) findViewById(R.id.arrowkeys_up);
         ImageButton btnDown = (ImageButton) findViewById(R.id.arrowkeys_down);
         ImageButton btnLeft = (ImageButton) findViewById(R.id.arrowkeys_left);
