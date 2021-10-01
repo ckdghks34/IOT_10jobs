@@ -3,6 +3,8 @@
 import numpy as np
 import rclpy
 import socketio
+import cv2
+import base64
 
 from rclpy.node import Node
 from geometry_msgs.msg import Twist,Point
@@ -98,7 +100,7 @@ class MapFromServer(Node):
         self.m_control_interval = 10
         self.m_control_iter = 0
 
-        sio.connect('http://127.0.0.1:12001')
+        sio.connect('http://j5d201.p.ssafy.io:12001/')
 
 
     def odom_callback(self, msg):
@@ -183,6 +185,7 @@ class MapFromServer(Node):
             self.m_control_iter = 0
 
             reset_global_var()
+        
 
 def main(args=None):
     
