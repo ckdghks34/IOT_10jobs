@@ -23,6 +23,7 @@ class ssafy_bridge(Node):
 
         self.ctrl_cmd=erp_udp_sender(dst_ip,7601)
         self.app_control=app_control_sender(dst_ip,7901)
+        #self.app_control=app_control_sender(dst_ip,7401)
 
         self.hand_control=handControlSender(dst_ip,8101)
       
