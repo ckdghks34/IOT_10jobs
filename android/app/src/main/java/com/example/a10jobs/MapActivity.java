@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 
 public class MapActivity extends AppCompatActivity {
     Button btn_map;
-    String url = getString(R.string.url);
+    String url = "http://j5d201.p.ssafy.io:12001";
     Socket socket;
     {
         try{
@@ -33,6 +33,7 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 소켓 통신(서버쪽으로 이벤트 발생시키기)
+                // data를 같이 보내야 하는지? (patrol_client처럼 cmd같은 숫자)
                 socket.emit("makeMapToServer");
             }
         });

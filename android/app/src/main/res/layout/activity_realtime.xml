@@ -16,8 +16,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <VideoView
-            android:id="@+id/videoView"
+        <ImageView
+            android:id="@+id/realView"
             android:layout_width="346dp"
             android:layout_height="261dp"
             android:layout_gravity="center"
