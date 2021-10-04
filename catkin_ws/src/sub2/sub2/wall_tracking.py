@@ -7,6 +7,7 @@ from ssafy_msgs.msg import TurtlebotStatus
 from squaternion import Quaternion
 from nav_msgs.msg import Odometry,Path
 from sensor_msgs.msg import LaserScan, PointCloud
+from std_msgs.msg import Float32, String, Int8MultiArray
 from math import pi,cos,sin,sqrt,atan2
 import numpy as np
 
@@ -51,21 +52,21 @@ class wallTracking(Node):
         self.collision = False
 
         # 맵그리기 AutoMode 여부
-        autoMode_state = False
+        self.autoMode_state = False
 
     def timer_callback(self):
         
-        if autoMode_state :
+        if self.autoMode_state :
             print('state : ', state_)
             
             if state_ == 0:
-            self.find_wall()
+                self.find_wall()
             
             elif state_ == 1:
-            self.turn_right()
+                self.turn_right()
             
             elif state_ == 2:
-            self.follow_the_wall()
+                self.follow_the_wall()
             
             else:
                 print('Unknown state!')
