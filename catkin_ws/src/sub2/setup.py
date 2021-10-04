@@ -28,7 +28,8 @@ setup(
             'odom = sub2.odom:main',
             'path_tracking = sub2.path_tracking:main',
             'seg_binarizer = sub2.seg_binarizer:main',
-            'avoid_obstacle = sub2.avoid_obstacle:main'
+            'avoid_obstacle = sub2.avoid_obstacle:main',
+            'wall_tracking = sub2.wall_tracking:main'
         ],
     },
 )
