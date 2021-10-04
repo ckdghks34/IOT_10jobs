@@ -17,7 +17,9 @@
 
 ### 시뮬레이터 설정
 
-[참고자료]()
+[참고자료](https://lab.ssafy.com/s05-iot-ctrl/S05P21D201/-/blob/sh/README/SSAFY%20%EC%8B%9C%EB%AE%AC%EB%A0%88%EC%9D%B4%ED%84%B0%20%EB%A9%94%EB%89%B4%EC%96%BCv5.pdf)
+
+
 
 
 
