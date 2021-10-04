@@ -9,15 +9,35 @@
 
 - TEST 방법
   1. gitlab의 파일들을 clone한다.
-  2. 시뮬레이터 설정
-  3. ROS2 설정 및 실행
+  2. ROS2 설정 및 실행
+  3. 시뮬레이터 설정
   4. 앱 동작
 
 
 
 ### ROS2 설정 및 실행
 
-[참고자료]()
+[참고자료](https://lab.ssafy.com/s05-iot-ctrl/S05P21D201/-/blob/sh/README/%EA%B0%9C%EB%B0%9C%ED%99%98%EA%B2%BD%20%EA%B5%AC%EC%B6%95%20%EB%A9%94%EB%89%B4%EC%96%BCv5.pdf)
+
+1. ROS2 설치
+
+2. 터미널창 실행 후 명령어 입력 (p21 참고)
+
+3. 코드 빌드하기 (p25 참고, 깃랩에서 클론한 파일중 catkin_ws폴더에서 실행)
+
+4. 빌드 후 `call 저장한주소\catkin_ws\install\local_setup.bat` 실행 p26 명령어 입력창 참고
+
+5. sub3의 `final_launch.py`실행 p27 참고 (ssafy_bridge는 실행할 필요없습니다 , final_launch에 존재)
+
+   `src\sub3\launch\`안에 파일존재 -> cd명령어로 폴더 이동하여 사용
+
+
+
+- 서버에 ros2를 올려서 사용방법 연구중
+
+
+
+
 
 ### 시뮬레이터 설정
 
@@ -59,7 +79,9 @@
 
 
 
+### 앱동작
 
+ 
 
 
 
