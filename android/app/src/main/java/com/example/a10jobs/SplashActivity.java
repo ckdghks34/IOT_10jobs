@@ -21,15 +21,17 @@ public class SplashActivity  extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (getBitmapFromCacheDir()) {
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(getApplicationContext(),MapCreateActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
+//                if (getBitmapFromCacheDir()) {
+//                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+//                    startActivity(intent);
+//                }else{
+//                    Intent intent = new Intent(getApplicationContext(),MapCreateActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(intent);
+//                }
                 finish();
             }
         },3000);
