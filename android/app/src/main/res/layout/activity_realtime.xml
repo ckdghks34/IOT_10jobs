@@ -56,7 +56,7 @@
                 android:contentDescription="moveUp"
                 android:padding="0sp"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/arrow_key_up" />
+                android:src="@drawable/btn_up" />
         </LinearLayout>
 
         <LinearLayout
@@ -76,7 +76,7 @@
                 android:contentDescription="moveLeft"
                 android:padding="0sp"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/arrow_key_left" />
+                android:src="@drawable/btn_left" />
 
             <ImageButton
                 android:id="@+id/arrowkeys_down"
@@ -88,7 +88,7 @@
                 android:contentDescription="moveDown"
                 android:padding="0sp"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/arrow_key_down" />
+                android:src="@drawable/btn_down" />
 
             <ImageButton
                 android:id="@+id/arrowkeys_right"
@@ -101,7 +101,7 @@
                 android:contentDescription="moveRight"
                 android:padding="0sp"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/arrow_key_right" />
+                android:src="@drawable/btn_right" />
         </LinearLayout>
 
     </LinearLayout>
