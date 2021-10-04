@@ -126,60 +126,60 @@ class wallTracking(Node):
         print('regions[right] : ', regions['right'])
 
         
-        # if regions['front'] > d and regions['fright'] > d and regions['fleft'] > d:
-        #     self.state_description = 'case 1 - nothing'
-        #     self.change_state(0)
-        # elif regions['front'] < d and regions['fright'] > d and regions['fleft'] > d:
-        #     self.state_description = 'case 2 - front'
-        #     self.change_state(1)
-        # elif regions['front'] > d and regions['fright'] > d and regions['fleft'] < d:
-        #     self.state_description = 'case 3 - fright'
-        #     self.change_state(2)
-        # elif regions['front'] > d and regions['fright'] < d and regions['fleft'] > d:
-        #     self.state_description = 'case 4 - fleft'
-        #     self.change_state(0)
-        # elif regions['front'] < d and regions['fright'] > d and regions['fleft'] < d:
-        #     self.state_description = 'case 5 - front and fright'
-        #     self.change_state(1)
-        # elif regions['front'] < d and regions['fright'] < d and regions['fleft'] > d:
-        #     self.state_description = 'case 6 - front and fleft'
-        #     self.change_state(1)
-        # elif regions['front'] < d and regions['fright'] < d and regions['fleft'] < d:
-        #     self.state_description = 'case 7 - front and fleft and fright'
-        #     self.change_state(1)
-        # elif regions['front'] > d and regions['fright'] < d and regions['fleft'] < d:
-        #     self.state_description = 'case 8 - fleft and fright'
-        #     self.change_state(0)
-        # else:
-        #     self.state_description = 'unknown case'
-        #     print(regions)
-        if regions['front'] > d and regions['fleft'] > d:
+        if regions['front'] > d and regions['fright'] > d and regions['fleft'] > d:
             self.state_description = 'case 1 - nothing'
             self.change_state(0)
-        elif regions['front'] < d and regions['fleft'] > d:
+        elif regions['front'] < d and regions['fright'] > d and regions['fleft'] > d:
             self.state_description = 'case 2 - front'
             self.change_state(1)
-        elif regions['front'] > d and regions['fleft'] < d:
+        elif regions['front'] > d and regions['fright'] > d and regions['fleft'] < d:
             self.state_description = 'case 3 - fright'
             self.change_state(2)
-        elif regions['front'] > d and regions['fleft'] > d:
+        elif regions['front'] > d and regions['fright'] < d and regions['fleft'] > d:
             self.state_description = 'case 4 - fleft'
             self.change_state(0)
-        elif regions['front'] < d and regions['fleft'] < d:
+        elif regions['front'] < d and regions['fright'] > d and regions['fleft'] < d:
             self.state_description = 'case 5 - front and fright'
             self.change_state(1)
-        elif regions['front'] < d and regions['fleft'] > d:
+        elif regions['front'] < d and regions['fright'] < d and regions['fleft'] > d:
             self.state_description = 'case 6 - front and fleft'
             self.change_state(1)
-        elif regions['front'] < d and regions['fleft'] < d:
+        elif regions['front'] < d and regions['fright'] < d and regions['fleft'] < d:
             self.state_description = 'case 7 - front and fleft and fright'
             self.change_state(1)
-        elif regions['front'] > d and regions['fleft'] < d:
+        elif regions['front'] > d and regions['fright'] < d and regions['fleft'] < d:
             self.state_description = 'case 8 - fleft and fright'
             self.change_state(0)
         else:
             self.state_description = 'unknown case'
             print(regions)
+        # if regions['front'] > d and regions['fleft'] > d:
+        #     self.state_description = 'case 1 - nothing'
+        #     self.change_state(0)
+        # elif regions['front'] < d and regions['fleft'] > d:
+        #     self.state_description = 'case 2 - front'
+        #     self.change_state(1)
+        # elif regions['front'] > d and regions['fleft'] < d:
+        #     self.state_description = 'case 3 - fright'
+        #     self.change_state(2)
+        # elif regions['front'] > d and regions['fleft'] > d:
+        #     self.state_description = 'case 4 - fleft'
+        #     self.change_state(0)
+        # elif regions['front'] < d and regions['fleft'] < d:
+        #     self.state_description = 'case 5 - front and fright'
+        #     self.change_state(1)
+        # elif regions['front'] < d and regions['fleft'] > d:
+        #     self.state_description = 'case 6 - front and fleft'
+        #     self.change_state(1)
+        # elif regions['front'] < d and regions['fleft'] < d:
+        #     self.state_description = 'case 7 - front and fleft and fright'
+        #     self.change_state(1)
+        # elif regions['front'] > d and regions['fleft'] < d:
+        #     self.state_description = 'case 8 - fleft and fright'
+        #     self.change_state(0)
+        # else:
+        #     self.state_description = 'unknown case'
+        #     print(regions)
 
 
     def find_wall(self):
