@@ -27,6 +27,7 @@ state_dict_ = {
     2: 'follow the wall',
 }
 
+
 class wallTracking(Node):
 
     def __init__(self) :
@@ -35,6 +36,7 @@ class wallTracking(Node):
         self.lidar_sub = self.create_subscription(LaserScan,'/scan',self.lidar_callback,10)
         self.subscription = self.create_subscription(Odometry,'/odom',self.odom_callback,10)
         self.status_sub = self.create_subscription(TurtlebotStatus,'/turtlebot_status',self.status_callback,10)
+        self.automap_sub = self.create_subscription(Int8MultiArray,'/map_auto',self.mapauto_callback,10)
 
         self.cmd_msg = Twist()
         time_period = 0.05
@@ -47,21 +49,28 @@ class wallTracking(Node):
 
         # 장애물 충돌여부
         self.collision = False
-            
+
+        # 맵그리기 AutoMode 여부
+        autoMode_state = False
 
     def timer_callback(self):
-        print('state : ', state_)
-        if state_ == 0:
-            self.find_wall()
-        elif state_ == 1:
-            self.turn_right()
-        elif state_ == 2:
-            self.follow_the_wall()
-        else:
-            print('Unknown state!')
+        
+        if autoMode_state :
+            print('state : ', state_)
             
-        self.cmd_pub.publish(self.cmd_msg)
-        pass
+            if state_ == 0:
+            self.find_wall()
+            
+            elif state_ == 1:
+            self.turn_right()
+            
+            elif state_ == 2:
+            self.follow_the_wall()
+            
+            else:
+                print('Unknown state!')
+            
+            self.cmd_pub.publish(self.cmd_msg)
         #print('timer Callback')
 
     def clbk_laser(self,msg):
@@ -261,6 +270,14 @@ class wallTracking(Node):
     def status_callback(self,msg):
         self.is_status=True
         self.status_msg=msg
+
+    def mapauto_callback(self,msg):
+        if autoMode_state == True and msg.data[0] == False :
+            self.cmd_msg.linear.x = 0
+            self.cmd_msg.angular.z = 0
+            self.cmd_pub.publish(cmd_msg)
+
+        self.autoMode_state = msg.data[0]
     
 def main(args=None):
 
