@@ -4,3 +4,22 @@
   - https://drive.google.com/drive/folders/1rp54qL31ZIoHet7A9BlvpoDCCdGVsvLK?usp=sharing
 
 (위 경로에 위치한 프로그램 및 문서는 SSAFY 과정 내에서만 사용할 수 있으며 무단 복제 및 반출, 배포를 금합니다.)
+
+
+
+- TEST 방법
+  1. gitlab의 파일들을 clone한다.
+  2. 시뮬레이터 설정
+  3. ROS2 launch파일 실행
+  4. 앱 동작
+
+
+
+### 시뮬레이터 설정
+
+[참고자료]()
+
+
+
+
+
