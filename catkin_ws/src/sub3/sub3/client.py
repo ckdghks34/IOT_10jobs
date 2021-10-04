@@ -69,15 +69,17 @@ class ControllFromServer(Node):
         ## 메시지 송신을 위한 PUBLISHER 생성
         self.cmd_publisher = self.create_publisher(Twist, 'cmd_vel', 10)
         self.app_control_pub = self.create_publisher(Int8MultiArray, 'app_control', 10)
+        self.pose_pub = self.create_publisher(Twist, 'iot_pose', 10)
 
         ## 메시지 수신을 위한 SUBSCRIBER 생성
         self.turtlebot_status_sub = self.create_subscription(TurtlebotStatus,'/turtlebot_status',self.listener_callback,10)
         self.envir_status_sub = self.create_subscription(EnviromentStatus,'/envir_status',self.envir_callback,10)
         self.app_status_sub = self.create_subscription(Int8MultiArray,'/app_status',self.app_callback,10)
-        self.timer = self.create_timer(0.1, self.timer_callback)
+        self.timer = self.create_timer(1, self.timer_callback)
 
         ## 제어 메시지 변수 생성 
         self.cmd_msg=Twist()
+        self.pose_msg=Twist()
         
         self.app_control_msg=Int8MultiArray()
         for i in range(17):
@@ -91,18 +93,26 @@ class ControllFromServer(Node):
         self.is_app_status=False
         self.is_envir_status=False
 
-        sio.connect("http://j5d201.p.ssafy.io:12001")
+        sio.connect("http://127.0.0.1:12001")
 
 
 
         self.m_control_interval = 10
         self.m_control_iter = 0
         self.m_control_mode = 0
+        self.ctr_status = 0
+        self.ctr_num = 0
+        self.iot_data_x = [-4.3863, -13.0347, -4.4073, -2.0108, -11.6842, -9.4368, -6.8314, -12.4872, -5.11772, -2.6384, -7.28014, -9.3725, -7.47112, -12.3701, -5.10873, -2.49999, -8.26499]
+        self.iot_data_y = [-7.6372, -5.0711, -5.5053, -5.4144, -8.40308, -7.4848, -5.7857, -3.3074, -3.85194, -4.1554, -0.883887, -5.0080, -2.48537, -2.53426, -3.1643, -3.71085, -1.30507]
 
         self.lfd=0.1
         self.idx_wp = 0
         self.len_wp = None
         self.check_1_wp = False
+
+        sio.emit('sendTime','TEST')
+        sio.emit('sendWeather',self.envir_status_msg.weather)
+        sio.emit('sendTemperature', self.envir_status_msg.temperature)
 
 
     def listener_callback(self, msg):
@@ -167,35 +177,56 @@ class ControllFromServer(Node):
     
     def timer_callback(self):
 
-        sio.emit('sendTime','TEST')
-        sio.emit('sendWeather',self.envir_status_msg.weather)
-        sio.emit('sendTemperature', self.envir_status_msg.temperature)
+        
         
         ctrl_cmd = get_global_var()
         
 
         if ctrl_cmd == 1:
             # aircon on
-            # self.turtlebot_cww_rot()
-            self.app_all_on()
+            
+            self.ctr_status = 1
+            self.ctr_num = 12
+            self.app_on_select(self.ctr_num)
+            self.pose_msg.angular.x= self.iot_data_x[self.ctr_num]
+            self.pose_msg.angular.y= self.iot_data_y[self.ctr_num]
+            if self.cmd_msg.linear.x == 0:
+                self.pose_pub.publish(self.pose_msg)
+            
 
-        elif ctrl_cmd == 2:        
+        elif ctrl_cmd == 2:
             # aircon off
-            # self.turtlebot_go()
-            self.app_all_off()
+            
+            self.ctr_status = 2
+            self.ctr_num = 12
+            self.app_off_select(self.ctr_num)
+            self.pose_msg.angular.x= self.iot_data_x[self.ctr_num]
+            self.pose_msg.angular.y= self.iot_data_y[self.ctr_num]
+            if self.cmd_msg.linear.x == 0:
+                self.pose_pub.publish(self.pose_msg)
+            
+            
 
 
         self.cmd_publisher.publish(self.cmd_msg)
-            
+
         if ctrl_cmd!=0: 
+            if self.app_status_msg.data[self.ctr_num] == self.ctr_status:
+                print(self.app_status_msg.data)
+                self.ctr_num = 0
+                self.ctr_status = 0
+                reset_global_var()
+        
+            
+        # if ctrl_cmd!=0: 
 
-            self.m_control_iter += 1
+        #     self.m_control_iter += 1
 
-        if self.m_control_iter % self.m_control_interval == 0:
+        # if self.m_control_iter % self.m_control_interval == 0:
 
-            self.m_control_iter = 0
+        #     self.m_control_iter = 0
 
-            reset_global_var()
+        #     reset_global_var()
 
         self.check_1_wp = False
 
