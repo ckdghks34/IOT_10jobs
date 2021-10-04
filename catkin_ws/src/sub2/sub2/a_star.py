@@ -2,7 +2,7 @@ import rclpy
 import numpy as np
 from rclpy.node import Node
 import os
-from geometry_msgs.msg import Pose,PoseStamped
+from geometry_msgs.msg import Twist,Pose,PoseStamped
 from squaternion import Quaternion
 from nav_msgs.msg import Odometry,OccupancyGrid,MapMetaData,Path
 from math import pi,cos,sin
@@ -30,7 +30,8 @@ class a_star(Node):
         # 로직 1. publisher, subscriber 만들기
         self.map_sub = self.create_subscription(OccupancyGrid,'map',self.map_callback,1)
         self.odom_sub = self.create_subscription(Odometry,'odom',self.odom_callback,1)
-        self.goal_sub = self.create_subscription(PoseStamped,'goal_pose',self.goal_callback,1)
+        # self.goal_sub = self.create_subscription(PoseStamped,'goal_pose',self.goal_callback,1)
+        self.goal_sub = self.create_subscription(Twist, 'iot_pose', self.goal_callback,1)
         self.a_star_pub= self.create_publisher(Path, 'global_path', 1)
         
         self.map_msg=OccupancyGrid()
@@ -107,12 +108,19 @@ class a_star(Node):
 
     def goal_callback(self,msg):
         
-        if msg.header.frame_id=='map':
+        # if msg.header.frame_id=='map':
             '''
             로직 6. goal_pose 메시지 수신하여 목표 위치 설정
             '''             
-            goal_x = msg.pose.position.x
-            goal_y = msg.pose.position.y
+            # goal_x = msg.pose.position.x
+            # goal_y = msg.pose.position.y
+
+            # goal_x = -7.20421
+            # goal_y = -0.935446
+
+            goal_x = msg.angular.x
+            goal_y = msg.angular.y
+
             # goal_x,y가 좌표를 받아서
             goal_cell = self.pose_to_grid_cell(goal_x, goal_y)
             self.goal = goal_cell
