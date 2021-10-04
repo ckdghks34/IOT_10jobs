@@ -241,13 +241,17 @@ class Mapper(Node):
         self.is_map_create = False
         # True면 맵 저장
         self.is_save_map = False
+
+        self.setting_map()
+
+        sio.connect('http://j5d201.p.ssafy.io:12001/')
+
+
+    def setting_map(self):
         self.map_msg=OccupancyGrid()
         self.map_msg.header.frame_id="map"
         self.map_size=int(params_map["MAP_SIZE"][0]\
             /params_map["MAP_RESOLUTION"]*params_map["MAP_SIZE"][1]/params_map["MAP_RESOLUTION"])
-        
-        sio.connect('http://j5d201.p.ssafy.io:12001/')
-
         m = MapMetaData()
         m.resolution = params_map["MAP_RESOLUTION"]
         m.width = int(params_map["MAP_SIZE"][0]/params_map["MAP_RESOLUTION"])
@@ -260,9 +264,7 @@ class Mapper(Node):
 
         self.map_msg.info=self.map_meta_data
 
-        # 로직 2 : mapping 클래스 생성
         self.mapping = Mapping(params_map)
-
 
     def scan_callback(self,msg):
         
@@ -298,6 +300,7 @@ class Mapper(Node):
         self.is_save_map = msg.data[1]
         if self.is_save_map :
             save_map(run_map, 'map.txt')
+            self.setting_map()
 
     
 def save_map(node,file_path):
@@ -330,6 +333,8 @@ def main(args=None):
     rclpy.spin(run_map)
     run_map.destroy_node()
     rclpy.shutdown()
+
+    sio.disconnect()
 
 
 if __name__ == '__main__':

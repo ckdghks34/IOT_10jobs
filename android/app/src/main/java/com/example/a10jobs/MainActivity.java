@@ -2,6 +2,8 @@ package com.example.a10jobs;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +23,10 @@ import com.github.nkzawa.socketio.client.Socket;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import org.aviran.cookiebar2.CookieBar;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Random;
 
 import me.relex.circleindicator.CircleIndicator3;
 
@@ -113,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         btn_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), TmpActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
                 startActivity(intent);
             }
         });
@@ -166,5 +172,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     };
+
 }
 
