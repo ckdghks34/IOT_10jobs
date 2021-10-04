@@ -24,6 +24,9 @@ map_create = False
 global map_save
 map_save = False
 
+global map_Auto
+map_Auto = False
+
 @sio.event
 def connect():
     print('connection established')
@@ -51,8 +54,26 @@ def start_createmap():
 
     map_create = True
 
+
+@sio.on('mapAutoOn')
+def autoMap():
+    print('mapAutoOn')
+    global map_Auto
+
+    map_Auto = True
+
+@sio.on('mapAutoOff')
+def autoMap():
+    print('mapAutOff')
+    global map_Auto
+
+    map_Auto = False
+
 def get_map_create():
     return map_create, map_save
+
+def get_map_auto():
+    return map_Auto
 
 @sio.on('turnleft')
 def turn_left(data):
@@ -90,6 +111,7 @@ class MapFromServer(Node):
     def __init__(self):
         super().__init__('map_client')
         self.map_publisher = self.create_publisher(Int8MultiArray, 'map_status', 10)
+        self.automap_publisher = self.create_publisher(Int8MultiArray,'map_auto',10)
         self.subscription = self.create_subscription(Odometry,'/odom',self.odom_callback,10)
         self.cmd_publisher = self.create_publisher(Twist, 'cmd_vel', 10)
         self.cmd_msg=Twist()
@@ -141,6 +163,12 @@ class MapFromServer(Node):
         msg.data = [map_create_state, map_save_state]
         map_save = False
         self.map_publisher.publish(msg)
+
+        global map_Auto
+        msg_auto = Int8MultiArray()
+        map_auto_state = get_map_auto()
+        msg_auto.data = [map_auto_state]
+        self.automap_publisher.publish(msg_auto)
 
         # 터틀봇 조작관련 
         ctrl_cmd = get_global_var()
