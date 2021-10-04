@@ -51,9 +51,9 @@ def generate_launch_description():
             node_executable='run_map',
             node_name='run_map'
         ),
-        Node(
-            package='sub3',
-            node_executable='client',
-            node_name='client'
-        ),
+        # Node(
+        #     package='sub3',
+        #     node_executable='client',
+        #     node_name='client'
+        # ),
     ])
