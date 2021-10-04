@@ -79,7 +79,7 @@
 
 ### 앱동작
 
-1. apk파일을 다운로드 후 설치해주세요 [apk파일](https://lab.ssafy.com/s05-iot-ctrl/S05P21D201/-/blob/sh/android/app/release/app-release.apk)
+1. apk파일을 다운로드 후 설치해주세요 [apk파일](https://lab.ssafy.com/s05-iot-ctrl/S05P21D201/-/blob/sh/android/app/release/app-release.apk) , 접근 불가시 android - app - release - app-release.apk
 
 - 현재상태 
   - 맵만들기 가능 (autoMode : wallFollowing과 연결중 , 금주내 해결 가능)
