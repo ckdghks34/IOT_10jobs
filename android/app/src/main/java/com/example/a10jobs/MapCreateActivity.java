@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -35,6 +37,7 @@ public class MapCreateActivity extends AppCompatActivity {
     ImageButton btnUp, btnDown, btnLeft, btnRight;
     Bitmap bitmap;
     ImageView mapImg;
+    Switch switchAuto;
 
     String url = "http://j5d201.p.ssafy.io:12001";
     Socket msocket;
@@ -61,6 +64,8 @@ public class MapCreateActivity extends AppCompatActivity {
         btnLeft = (ImageButton) findViewById(R.id.arrowkeys_left);
         btnRight = (ImageButton) findViewById(R.id.arrowkeys_right);
 
+        switchAuto = (Switch) findViewById(R.id.switch_auto);
+
         btnUp.setOnTouchListener(onTouchListener);
         btnDown.setOnTouchListener(onTouchListener);
         btnLeft.setOnTouchListener(onTouchListener);
@@ -72,6 +77,7 @@ public class MapCreateActivity extends AppCompatActivity {
                 msocket.emit("start_createmap");
                 btn_start.setVisibility(btn_start.GONE);
                 btn_stop.setVisibility(btn_stop.VISIBLE);
+                switchAuto.setVisibility(switchAuto.VISIBLE);
             }
         });
 
@@ -113,6 +119,21 @@ public class MapCreateActivity extends AppCompatActivity {
 //                btn_start.setVisibility(btn_stop.VISIBLE);
             }
         });
+        switchAuto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                // 스위치 버튼이 체크되었는지 검사하여 텍스트뷰에 각 경우에 맞게 출력합니다.
+                if (isChecked){
+                    Log.d("check","옵션 활성화");
+
+                }else{
+                    Log.d("check","옵션 비활성화");  
+                }
+            }
+        });
+        
         msocket.on("sendMapStreaming", getImg);
     }
 
