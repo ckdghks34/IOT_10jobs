@@ -71,7 +71,7 @@
                     android:id="@+id/tv"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
-                    app:srcCompat="@drawable/tv" />
+                    app:srcCompat="@drawable/television_off" />
 
 
                 <TextView
@@ -122,7 +122,7 @@
                     android:id="@+id/curtain"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
-                    app:srcCompat="@drawable/curtain" />
+                    app:srcCompat="@drawable/curtain_off" />
 
 
                 <TextView
@@ -164,7 +164,7 @@
                     android:id="@+id/airpurifier"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
-                    app:srcCompat="@drawable/airpurifier" />
+                    app:srcCompat="@drawable/airpurifier_off" />
 
 
                 <TextView
@@ -215,7 +215,7 @@
                     android:id="@+id/light"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
-                    app:srcCompat="@drawable/light" />
+                    app:srcCompat="@drawable/lamps_off" />
 
 
                 <TextView
