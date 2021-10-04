@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,8 +15,8 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
 public class StatusActivity extends AppCompatActivity {
-    Button power;
     ImageButton battery, now;
+    TextView battery_txt;
 
     String url = "http://j5d201.p.ssafy.io:12001";
     Socket socket;
@@ -29,7 +29,6 @@ public class StatusActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +37,7 @@ public class StatusActivity extends AppCompatActivity {
 //        power = (ToggleButton)findViewById(R.id.power);
         battery = (ImageButton) findViewById(R.id.battery);
         now = (ImageButton) findViewById(R.id.now);
+        battery_txt = (TextView) findViewById(R.id.battery_txt);
 
         socket.on("sendBotStatus", onStatus);
 //        socket.on("sendBotStatus", new Emitter.Listener(){
@@ -82,6 +82,8 @@ public class StatusActivity extends AppCompatActivity {
                 public void run() {
                     int data = (int)args[0];
                     Log.v("data", String.valueOf(data));
+                    // 항상 0이라서 그냥 100에서 뺌
+                    battery_txt.setText(100 - data);
                 }
             });
         }

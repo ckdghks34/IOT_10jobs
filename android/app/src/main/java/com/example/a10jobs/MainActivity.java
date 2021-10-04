@@ -1,7 +1,9 @@
 package com.example.a10jobs;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ToggleButton;
@@ -13,12 +15,18 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.a10jobs.Fragment.MyAdapter;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.nex3z.notificationbadge.NotificationBadge;
+
+import org.aviran.cookiebar2.CookieBar;
 
 import me.relex.circleindicator.CircleIndicator3;
 
 
 public class MainActivity extends AppCompatActivity {
+    Activity activity = this;
     Button btn_map, btn_control, btn_watch, btn_find, btn_status;
     ToggleButton btn_crime;
     NotificationBadge badge;
@@ -26,11 +34,26 @@ public class MainActivity extends AppCompatActivity {
     FragmentStateAdapter pagerAdapter;
     int num_page = 4;
     CircleIndicator3 mIndicator;
+    int data;
+
+    String url = "http://j5d201.p.ssafy.io:12001";
+    Socket socket;
+    {
+        try {
+            socket = IO.socket(url);
+            Log.v("socket", String.valueOf(socket));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        socket.on("sendBotStatus", onStatus);
+        socket.connect();
 
         mPager = findViewById(R.id.viewpager);
         pagerAdapter = new MyAdapter(this, num_page);
@@ -104,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         btn_watch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), TmpActivity.class);
+                Intent intent = new Intent(getApplicationContext(), RealtimeActivity.class);
                 startActivity(intent);
             }
         });
@@ -118,10 +141,30 @@ public class MainActivity extends AppCompatActivity {
         btn_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), StatusActivity.class);
-                startActivity(intent);
+                CookieBar.build(activity)
+                        .setTitle("터틀봇 배터리")
+                        .setMessage(data + "%입니다")
+                        .setIcon(R.drawable.ic_settings_white_48dp)
+                        .setIconAnimation(R.animator.iconspin)
+                        .setBackgroundColor(R.color.navy)
+                        .setCookiePosition(CookieBar.BOTTOM)  // Cookie will be displayed at the bottom
+                        .show();                              // of the screen
             }
         });
     }
+
+    // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨
+    private Emitter.Listener onStatus = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    data = 100 - (int)args[0];
+                    Log.v("data", String.valueOf(100 - data));
+                }
+            });
+        }
+    };
 }
 

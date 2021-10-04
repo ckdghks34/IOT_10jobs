@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <LinearLayout
@@ -32,6 +33,7 @@
 
                 <TextView
                     android:id="@+id/airconState"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="꺼짐" />
@@ -45,7 +47,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:background="@drawable/power"
+                android:background="@drawable/power_button"
                 android:textOn=""
                 android:textOff="" />
 
@@ -74,6 +76,7 @@
 
                 <TextView
                     android:id="@+id/tvState"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="꺼짐" />
@@ -86,7 +89,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:background="@drawable/power"
+                android:background="@drawable/power_button"
                 android:text="ToggleButton"
                 android:textOn=""
                 android:textOff="" />
@@ -124,6 +127,7 @@
 
                 <TextView
                     android:id="@+id/curtainState"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="닫힘" />
@@ -136,7 +140,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:background="@drawable/power"
+                android:background="@drawable/power_button"
                 android:textOff=""
                 android:textOn="" />
 
@@ -165,6 +169,7 @@
 
                 <TextView
                     android:id="@+id/airpurifierState"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="꺼짐" />
@@ -177,7 +182,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:background="@drawable/power"
+                android:background="@drawable/power_button"
                 android:text="ToggleButton"
                 android:textOff=""
                 android:textOn="" />
@@ -215,6 +220,7 @@
 
                 <TextView
                     android:id="@+id/lightState"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="꺼짐" />
@@ -227,7 +233,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:background="@drawable/power"
+                android:background="@drawable/power_button"
                 android:textOff=""
                 android:textOn="" />
 
