@@ -1,6 +1,9 @@
 package com.example.a10jobs.controlFragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.fragment.app.Fragment;
@@ -26,11 +30,16 @@ public class FragmentLivingRoom extends Fragment {
     ToggleButton curtainButton;
     ToggleButton airpurifierButton;
     ToggleButton lightButton;
+
     String airconStatus = "";
     String tvStatus = "";
     String curtainStatus = "";
     String aircleanerStatus = "";
     String lightStatus = "";
+
+    TextView aircon, tv, curtain, aircleaner, light;
+    ImageView airconImg, tvImg, curtainImg, aircleanerImg, lightImg;
+
     String url = "http://j5d201.p.ssafy.io:12001";
     Socket socket;
     {
@@ -48,6 +57,15 @@ public class FragmentLivingRoom extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_living_room, container, false);
+        aircon = (TextView) v.findViewById(R.id.airconState);
+        airconImg = (ImageView) v.findViewById(R.id.aircon);
+
+        if(savedInstanceState != null){
+            String txt1 = savedInstanceState.getString("data1");
+            String txt2 = savedInstanceState.getString("data2");
+            aircon.setText(txt1);
+            airconImg.setImageBitmap(StringToBitmap(txt2));
+        }
         socket.on("AirConditionerStatus", onAircon);
         socket.on("AirCleanerStatus", onAirCleaner);
         socket.on("TvStatus", onTv);
@@ -55,13 +73,52 @@ public class FragmentLivingRoom extends Fragment {
         socket.on("CurtainStatus", onCurtain);
         socket.connect();
 
+        if(airconStatus == "On") {
+            aircon.setText("켜짐");
+            airconImg.setImageResource(R.drawable.airconon);
+        } else if(airconStatus == "Off") {
+            aircon.setText("꺼짐");
+            airconImg.setImageResource(R.drawable.airconoff);
+        }
+
+        if(tvStatus == "On") {
+            tv.setText("켜짐");
+            tvImg.setImageResource(R.drawable.television_on);
+        } else if(tvStatus == "Off") {
+            tv.setText("꺼짐");
+            tvImg.setImageResource(R.drawable.television_off);
+        }
+
+        if(aircleanerStatus == "On") {
+            aircleaner.setText("켜짐");
+            aircleanerImg.setImageResource(R.drawable.airpurifier_on);
+        } else if(airconStatus == "Off") {
+            aircleaner.setText("꺼짐");
+            aircleanerImg.setImageResource(R.drawable.airpurifier_off);
+        }
+
+        if(lightStatus == "On") {
+            light.setText("켜짐");
+            lightImg.setImageResource(R.drawable.lamps_on);
+        } else if(lightStatus == "Off") {
+            light.setText("꺼짐");
+            lightImg.setImageResource(R.drawable.lamps_on);
+        }
+
+        if(curtainStatus == "On") {
+            curtain.setText("닫힘");
+            curtainImg.setImageResource(R.drawable.curtain_on);
+        } else if(curtainStatus == "Off") {
+            curtain.setText("열림");
+            curtainImg.setImageResource(R.drawable.curtain_off);
+        }
+
         // 에어컨 전원
         airconButton = (ToggleButton) v.findViewById(R.id.airconButton);
         airconButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                TextView aircon = (TextView) v.findViewById(R.id.airconState);
-                ImageView airconImg = (ImageView) v.findViewById(R.id.aircon);
                 if (isChecked) {
+                    Toast.makeText(getActivity(), "에어컨을 작동시킵니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 1);
                         data.put("ctr_num", 10);
@@ -69,8 +126,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("켜짐");
-                    airconImg.setImageResource(R.drawable.airconon);
+//                    aircon.setText("켜짐");
+//                    airconImg.setImageResource(R.drawable.airconon);
                 } else {
                     try {
                         data.put("ctr_cmd", 2);
@@ -79,8 +136,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("꺼짐");
-                    airconImg.setImageResource(R.drawable.airconoff);
+//                    aircon.setText("꺼짐");
+//                    airconImg.setImageResource(R.drawable.airconoff);
                 }
             }
         });
@@ -88,8 +145,6 @@ public class FragmentLivingRoom extends Fragment {
         tvButton = (ToggleButton) v.findViewById(R.id.tvButton);
         tvButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                TextView aircon = (TextView) v.findViewById(R.id.tvState);
-                ImageView airconImg = (ImageView) v.findViewById(R.id.tv);
                 if (isChecked) {
                     try {
                         data.put("ctr_cmd", 1);
@@ -98,8 +153,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("켜짐");
-                    airconImg.setImageResource(R.drawable.television_on);
+//                    aircon.setText("켜짐");
+//                    airconImg.setImageResource(R.drawable.television_on);
                 } else {
                     try {
                         data.put("ctr_cmd", 2);
@@ -108,8 +163,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("꺼짐");
-                    airconImg.setImageResource(R.drawable.television_off);
+//                    aircon.setText("꺼짐");
+//                    airconImg.setImageResource(R.drawable.television_off);
                 }
             }
         });
@@ -118,8 +173,6 @@ public class FragmentLivingRoom extends Fragment {
         curtainButton = (ToggleButton) v.findViewById(R.id.curtainButton);
         curtainButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                TextView aircon = (TextView) v.findViewById(R.id.curtainState);
-                ImageView airconImg = (ImageView) v.findViewById(R.id.curtain);
                 if (isChecked) {
                     try {
                         data.put("ctr_cmd", 1);
@@ -128,8 +181,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("열림");
-                    airconImg.setImageResource(R.drawable.curtain_on);
+//                    aircon.setText("열림");
+//                    airconImg.setImageResource(R.drawable.curtain_on);
                 } else {
                     try {
                         data.put("ctr_cmd", 2);
@@ -138,8 +191,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("닫힘");
-                    airconImg.setImageResource(R.drawable.curtain_off);
+//                    aircon.setText("닫힘");
+//                    airconImg.setImageResource(R.drawable.curtain_off);
                 }
             }
         });
@@ -148,8 +201,6 @@ public class FragmentLivingRoom extends Fragment {
         airpurifierButton = (ToggleButton) v.findViewById(R.id.airpurifierButton);
         airpurifierButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                TextView aircon = (TextView) v.findViewById(R.id.airpurifierState);
-                ImageView airconImg = (ImageView) v.findViewById(R.id.airpurifier);
                 if (isChecked) {
                     try {
                         data.put("ctr_cmd", 1);
@@ -158,8 +209,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("켜짐");
-                    airconImg.setImageResource(R.drawable.airpurifier_on);
+//                    aircon.setText("켜짐");
+//                    airconImg.setImageResource(R.drawable.airpurifier_on);
                 } else {
                     try {
                         data.put("ctr_cmd", 2);
@@ -168,8 +219,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("꺼짐");
-                    airconImg.setImageResource(R.drawable.airpurifier_off);
+//                    aircon.setText("꺼짐");
+//                    airconImg.setImageResource(R.drawable.airpurifier_off);
                 }
             }
         });
@@ -178,8 +229,6 @@ public class FragmentLivingRoom extends Fragment {
         lightButton = (ToggleButton) v.findViewById(R.id.lightButton);
         lightButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                TextView aircon = (TextView) v.findViewById(R.id.lightState);
-                ImageView airconImg = (ImageView) v.findViewById(R.id.light);
                 if (isChecked) {
                     try {
                         data.put("ctr_cmd", 1);
@@ -188,8 +237,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("켜짐");
-                    airconImg.setImageResource(R.drawable.lamps_on);
+//                    aircon.setText("켜짐");
+//                    airconImg.setImageResource(R.drawable.lamps_on);
                 } else {
                     try {
                         data.put("ctr_cmd", 2);
@@ -198,14 +247,29 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("꺼짐");
-                    airconImg.setImageResource(R.drawable.lamps_off);
+//                    aircon.setText("꺼짐");
+//                    airconImg.setImageResource(R.drawable.lamps_off);
                 }
             }
         });
 
         return v;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        TextView textCounter = getView().findViewById(R.id.airconState);
+        ImageView image = getView().findViewById(R.id.aircon);
+        String data1 = textCounter.getText().toString();
+        String data2 = image.toString();
+//        String data2 = image.get
+//        int counter = Integer.parseInt(textCounter.getText().toString());
+        outState.putString("data1", data1);
+        outState.putString("data2", data2);
+    }
+
     // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨
     private Emitter.Listener onAircon = new Emitter.Listener() {
         @Override
@@ -268,4 +332,15 @@ public class FragmentLivingRoom extends Fragment {
             });
         }
     };
+
+    public static Bitmap StringToBitmap(String encodedString){
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
 }
