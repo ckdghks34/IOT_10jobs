@@ -26,6 +26,8 @@ const port = process.env.port || 12001
 
 server.listen(port, () => {
     console.log(`listening on *:${port}`);
+	console.log(`publicPath : ${publicPath}`);
+	console.log(`picPath : ${picPath}`);
 });
 
 const roomName = 'team';
@@ -72,7 +74,7 @@ io.on('connection', socket => {
         socket.to(roomName).emit('sendStreaming', message);
         // console.log(message);
         buffer = Buffer.from(message, "base64");
-        fs.writeFileSync(path.join(picPath, "/../client/cam.jpg"), buffer);
+        fs.writeFileSync(path.join(picPath, "/../client/images/cam.jpg"), buffer);
     });
 
 })
