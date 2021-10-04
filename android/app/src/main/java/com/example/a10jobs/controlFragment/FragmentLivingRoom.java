@@ -66,49 +66,49 @@ public class FragmentLivingRoom extends Fragment {
             aircon.setText(txt1);
             airconImg.setImageBitmap(StringToBitmap(txt2));
         }
-        socket.on("AirConditionerStatus", onAircon);
-        socket.on("AirCleanerStatus", onAirCleaner);
-        socket.on("TvStatus", onTv);
-        socket.on("LightStatus", onLight);
-        socket.on("CurtainStatus", onCurtain);
+        socket.on("sendAirConditionerStatus", onAircon);
+        socket.on("sendAirCleanerStatus", onAirCleaner);
+        socket.on("sendTvStatus", onTv);
+        socket.on("sendLightStatus", onLight);
+        socket.on("sendCurtainStatus", onCurtain);
         socket.connect();
 
-        if(airconStatus == "On") {
+        if(airconStatus.equals("On")) {
             aircon.setText("켜짐");
             airconImg.setImageResource(R.drawable.airconon);
-        } else if(airconStatus == "Off") {
+        } else if(airconStatus.equals("Off")) {
             aircon.setText("꺼짐");
             airconImg.setImageResource(R.drawable.airconoff);
         }
 
-        if(tvStatus == "On") {
+        if(tvStatus.equals("On")) {
             tv.setText("켜짐");
             tvImg.setImageResource(R.drawable.television_on);
-        } else if(tvStatus == "Off") {
+        } else if(tvStatus.equals("Off")) {
             tv.setText("꺼짐");
             tvImg.setImageResource(R.drawable.television_off);
         }
 
-        if(aircleanerStatus == "On") {
+        if(aircleanerStatus.equals("On")) {
             aircleaner.setText("켜짐");
             aircleanerImg.setImageResource(R.drawable.airpurifier_on);
-        } else if(airconStatus == "Off") {
+        } else if(airconStatus.equals("Off")) {
             aircleaner.setText("꺼짐");
             aircleanerImg.setImageResource(R.drawable.airpurifier_off);
         }
 
-        if(lightStatus == "On") {
+        if(lightStatus.equals("On")) {
             light.setText("켜짐");
             lightImg.setImageResource(R.drawable.lamps_on);
-        } else if(lightStatus == "Off") {
+        } else if(lightStatus.equals("Off")) {
             light.setText("꺼짐");
             lightImg.setImageResource(R.drawable.lamps_on);
         }
 
-        if(curtainStatus == "On") {
+        if(curtainStatus.equals("On")) {
             curtain.setText("닫힘");
             curtainImg.setImageResource(R.drawable.curtain_on);
-        } else if(curtainStatus == "Off") {
+        } else if(curtainStatus.equals("Off")) {
             curtain.setText("열림");
             curtainImg.setImageResource(R.drawable.curtain_off);
         }
@@ -126,9 +126,10 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("켜짐");
-//                    airconImg.setImageResource(R.drawable.airconon);
+                    aircon.setText("켜짐");
+                    airconImg.setImageResource(R.drawable.airconon);
                 } else {
+                    Toast.makeText(getActivity(), "에어컨 작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 2);
                         data.put("ctr_num", 10);
@@ -136,8 +137,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("꺼짐");
-//                    airconImg.setImageResource(R.drawable.airconoff);
+                    aircon.setText("꺼짐");
+                    airconImg.setImageResource(R.drawable.airconoff);
                 }
             }
         });
@@ -146,6 +147,7 @@ public class FragmentLivingRoom extends Fragment {
         tvButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    Toast.makeText(getActivity(), "TV를 작동시킵니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 1);
                         data.put("ctr_num", 12);
@@ -153,9 +155,10 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("켜짐");
-//                    airconImg.setImageResource(R.drawable.television_on);
+                    tv.setText("켜짐");
+                    tvImg.setImageResource(R.drawable.television_on);
                 } else {
+                    Toast.makeText(getActivity(), "TV 작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 2);
                         data.put("ctr_num", 12);
@@ -163,8 +166,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("꺼짐");
-//                    airconImg.setImageResource(R.drawable.television_off);
+                    tv.setText("꺼짐");
+                    tvImg.setImageResource(R.drawable.television_off);
                 }
             }
         });
@@ -174,6 +177,7 @@ public class FragmentLivingRoom extends Fragment {
         curtainButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    Toast.makeText(getActivity(), "커튼을 닫습니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 1);
                         data.put("ctr_num", 16);
@@ -181,9 +185,10 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("열림");
-//                    airconImg.setImageResource(R.drawable.curtain_on);
+                    curtain.setText("닫힘");
+                    curtainImg.setImageResource(R.drawable.curtain_on);
                 } else {
+                    Toast.makeText(getActivity(), "커튼을 엽니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 2);
                         data.put("ctr_num", 16);
@@ -191,8 +196,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("닫힘");
-//                    airconImg.setImageResource(R.drawable.curtain_off);
+                    curtain.setText("열힘");
+                    curtainImg.setImageResource(R.drawable.curtain_off);
                 }
             }
         });
@@ -202,6 +207,7 @@ public class FragmentLivingRoom extends Fragment {
         airpurifierButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    Toast.makeText(getActivity(), "공기청정기를 작동시킵니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 1);
                         data.put("ctr_num", 11);
@@ -209,18 +215,19 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("켜짐");
-//                    airconImg.setImageResource(R.drawable.airpurifier_on);
+                    aircleaner.setText("켜짐");
+                    aircleanerImg.setImageResource(R.drawable.airpurifier_on);
                 } else {
+                    Toast.makeText(getActivity(), "공기청정기작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 2);
-                        data.put("ctr_num", 16);
+                        data.put("ctr_num", 11);
                         socket.emit("AirCleanerOffToServer", data);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("꺼짐");
-//                    airconImg.setImageResource(R.drawable.airpurifier_off);
+                    aircleaner.setText("꺼짐");
+                    aircleanerImg.setImageResource(R.drawable.airpurifier_off);
                 }
             }
         });
@@ -230,6 +237,7 @@ public class FragmentLivingRoom extends Fragment {
         lightButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    Toast.makeText(getActivity(), "전등을 켭니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 1);
                         data.put("ctr_num", 6);
@@ -237,9 +245,10 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("켜짐");
-//                    airconImg.setImageResource(R.drawable.lamps_on);
+                    light.setText("켜짐");
+                    lightImg.setImageResource(R.drawable.lamps_on);
                 } else {
+                    Toast.makeText(getActivity(), "전등을 끕니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 2);
                         data.put("ctr_num", 6);
@@ -247,8 +256,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("꺼짐");
-//                    airconImg.setImageResource(R.drawable.lamps_off);
+                    light.setText("켜짐");
+                    lightImg.setImageResource(R.drawable.lamps_off);
                 }
             }
         });

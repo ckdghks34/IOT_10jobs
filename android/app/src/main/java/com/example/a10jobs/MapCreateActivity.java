@@ -127,9 +127,10 @@ public class MapCreateActivity extends AppCompatActivity {
                 // 스위치 버튼이 체크되었는지 검사하여 텍스트뷰에 각 경우에 맞게 출력합니다.
                 if (isChecked){
                     Log.d("check","옵션 활성화");
-
+                    msocket.emit("mapAutoOffToServer");
                 }else{
-                    Log.d("check","옵션 비활성화");  
+                    Log.d("check","옵션 비활성화");
+                    msocket.emit("mapAutoOnToServer");
                 }
             }
         });
