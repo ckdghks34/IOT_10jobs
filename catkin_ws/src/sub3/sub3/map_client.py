@@ -10,7 +10,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist,Point
 from squaternion import Quaternion
 from nav_msgs.msg import Odometry,Path
-from std_msgs.msg import Int8MultiArray
+from std_msgs.msg import Int8MultiArray, Bool
 from math import pi,cos,sin,sqrt,atan2
 
 
@@ -108,8 +108,7 @@ class MapFromServer(Node):
         self.odom_msg=msg
         q=Quaternion(msg.pose.pose.orientation.w,msg.pose.pose.orientation.x,msg.pose.pose.orientation.y,msg.pose.pose.orientation.z)
         _,_,self.robot_yaw=q.to_euler()
-
-
+    
     def turtlebot_go(self) :
         self.cmd_msg.linear.x=0.2
         self.cmd_msg.angular.z=0.0
