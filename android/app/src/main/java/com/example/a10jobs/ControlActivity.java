@@ -4,14 +4,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -49,15 +44,53 @@ public class ControlActivity extends AppCompatActivity {
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 transaction = fragmentManager.beginTransaction();
 
+                if (i==0) {
+                    transaction.remove(fragmentRoom1);
+                    transaction.remove(fragmentRoom2);
+                    transaction.remove(fragmentRoom3);
+                    transaction.add(R.id.controlLayout, fragmentLivingRoom);
 
-                if (i==0) transaction.replace(R.id.controlLayout, fragmentLivingRoom);
-                else if (i==1) transaction.replace(R.id.controlLayout, fragmentRoom1);
-                else if (i==2) transaction.replace(R.id.controlLayout, fragmentRoom2);
-                else transaction.replace(R.id.controlLayout, fragmentRoom3);
+                    transaction.show(fragmentLivingRoom);
+                    transaction.hide(fragmentRoom1);
+                    transaction.hide(fragmentRoom2);
+                    transaction.hide(fragmentRoom3);
+                }
+                else if (i==1) {
+                    transaction.remove(fragmentLivingRoom);
+                    transaction.remove(fragmentRoom2);
+                    transaction.remove(fragmentRoom3);
+                    transaction.add(R.id.controlLayout, fragmentRoom1);
+
+                    transaction.hide(fragmentLivingRoom);
+                    transaction.show(fragmentRoom1);
+                    transaction.hide(fragmentRoom2);
+                    transaction.hide(fragmentRoom3);
+                }
+                else if (i==2) {
+                    transaction.remove(fragmentRoom1);
+                    transaction.remove(fragmentLivingRoom);
+                    transaction.remove(fragmentRoom3);
+                    transaction.add(R.id.controlLayout, fragmentRoom2);
+
+                    transaction.hide(fragmentLivingRoom);
+                    transaction.hide(fragmentRoom1);
+                    transaction.show(fragmentRoom2);
+                    transaction.hide(fragmentRoom3);
+                }
+                else {
+                    transaction.remove(fragmentRoom1);
+                    transaction.remove(fragmentRoom2);
+                    transaction.remove(fragmentLivingRoom);
+                    transaction.add(R.id.controlLayout, fragmentRoom3);
+
+                    transaction.hide(fragmentLivingRoom);
+                    transaction.hide(fragmentRoom1);
+                    transaction.show(fragmentRoom2);
+                    transaction.hide(fragmentRoom3);
+                }
 
 //                transaction.addToBackStack(null);
                 transaction.commit();
@@ -65,7 +98,18 @@ public class ControlActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                transaction.replace(R.id.controlLayout, fragmentLivingRoom).commitAllowingStateLoss();
+                transaction.remove(fragmentRoom1);
+                transaction.remove(fragmentRoom2);
+                transaction.remove(fragmentRoom3);
+                transaction.add(R.id.controlLayout, fragmentLivingRoom);
+
+                transaction.show(fragmentLivingRoom);
+                transaction.hide(fragmentRoom1);
+                transaction.hide(fragmentRoom2);
+                transaction.hide(fragmentRoom3);
+//                transaction.replace(R.id.controlLayout, fragmentLivingRoom).commitAllowingStateLoss();
+
+                transaction.commit();
             }
 
         });
