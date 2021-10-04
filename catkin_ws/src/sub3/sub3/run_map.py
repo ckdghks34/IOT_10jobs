@@ -14,6 +14,10 @@ import sub3.utils as utils
 import numpy as np
 import cv2
 import time
+import socketio
+import base64
+
+sio = socketio.Client()
 
 # mapping node의 전체 로직 순서
 # 1. publisher, subscriber, msg 생성
@@ -192,6 +196,7 @@ class Mapping:
         tmp_map = self.map.astype(np.float32)
         map_bgr = cv2.cvtColor(tmp_map, cv2.COLOR_GRAY2BGR)
 
+
         pose_x = (pose[0] - self.map_center[0] + (self.map_size[0]*self.map_resolution)/2) / self.map_resolution
         pose_y = (pose[1] - self.map_center[1] + (self.map_size[1]*self.map_resolution)/2) / self.map_resolution
 
@@ -208,10 +213,14 @@ class Mapping:
         cv2.circle(map_bgr, center, 2, (0,0,255), -1)
 
         map_bgr = cv2.resize(map_bgr, dsize=(0, 0), fx=self.map_vis_resize_scale, fy=self.map_vis_resize_scale)
+        # cv2.imwrite('../web/client/createmap.png', map_bgr*255)
         
-        cv2.imwrite('../web/client/createmap.png', map_bgr*255)
+        # 이미지정보 보내기
+        self.byte_data = cv2.imencode('.jpg', map_bgr*255)[1].tobytes()
+        b64data = base64.b64encode(self.byte_data)
+        sio.emit('mapStreaming', b64data.decode( 'utf-8' ) )
         # cv2.imshow('Sample Map', map_bgr)
-        # cv2.waitKey(1)
+        # cv2.waitKey(1)c
 
 
 
@@ -237,6 +246,8 @@ class Mapper(Node):
         self.map_size=int(params_map["MAP_SIZE"][0]\
             /params_map["MAP_RESOLUTION"]*params_map["MAP_SIZE"][1]/params_map["MAP_RESOLUTION"])
         
+        sio.connect('http://j5d201.p.ssafy.io:12001/')
+
         m = MapMetaData()
         m.resolution = params_map["MAP_RESOLUTION"]
         m.width = int(params_map["MAP_SIZE"][0]/params_map["MAP_RESOLUTION"])
