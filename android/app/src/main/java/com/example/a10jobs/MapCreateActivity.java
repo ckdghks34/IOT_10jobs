@@ -119,6 +119,8 @@ public class MapCreateActivity extends AppCompatActivity {
 //                btn_start.setVisibility(btn_stop.VISIBLE);
             }
         });
+
+
         switchAuto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -139,6 +141,19 @@ public class MapCreateActivity extends AppCompatActivity {
         msocket.on("sendMapStreaming", getImg);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.msocket.disconnect();
+        Log.d("socket connection ", "disconnect");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.msocket.connect();
+        Log.d("socket connection ", "Reconnect");
+    }
 
     ImageButton.OnTouchListener onTouchListener = new View.OnTouchListener(){
         @Override

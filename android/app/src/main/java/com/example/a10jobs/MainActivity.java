@@ -160,6 +160,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.socket.disconnect();
+        Log.d("socket connection ", "disconnect");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.socket.connect();
+        Log.d("socket connection ", "Reconnect");
+    }
+
     // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨
     private Emitter.Listener onStatus = new Emitter.Listener() {
         @Override
