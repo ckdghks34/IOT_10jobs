@@ -19,7 +19,6 @@ import com.example.a10jobs.Fragment.MyAdapter;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
-import com.nex3z.notificationbadge.NotificationBadge;
 
 import org.aviran.cookiebar2.CookieBar;
 
@@ -31,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     Button btn_map, btn_control, btn_watch, btn_find, btn_patrol_log;
     ImageButton battery_status;
     ToggleButton btn_crime;
-    NotificationBadge badge;
     ViewPager2 mPager;
     FragmentStateAdapter pagerAdapter;
     int num_page = 4;
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        socket.on("sendBotStatus", onStatus);
+//        socket.on("sendBotStatus", onStatus);
         socket.connect();
 
         mPager = findViewById(R.id.viewpager);
@@ -142,13 +140,14 @@ public class MainActivity extends AppCompatActivity {
         btn_patrol_log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), FindActivity.class);        // 어디 Activity로 갈지만 바꿔주세요!!
+                Intent intent = new Intent(getApplicationContext(), StatusActivity.class);        // 어디 Activity로 갈지만 바꿔주세요!!
                 startActivity(intent);
             }
         });
         battery_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                socket.on("sendBotStatus", onStatus);
                 CookieBar.build(activity)
                         .setTitle("터틀봇 배터리")
                         .setMessage(data + "%입니다")
