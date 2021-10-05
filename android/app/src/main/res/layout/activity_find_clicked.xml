@@ -52,4 +52,11 @@
 
         android:textSize="20sp" />
 
+    <Button
+        android:id="@+id/finishbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="종료" />
+
 </LinearLayout>
