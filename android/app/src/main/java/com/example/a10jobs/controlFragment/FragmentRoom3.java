@@ -45,18 +45,18 @@ public class FragmentRoom3 extends Fragment {
         socket.on("sendApplianceStatus", onAppliance);
         socket.connect();
 
-        airconButton = (ImageView) v.findViewById(R.id.airconButton_room2);
-        curtainButton = (ImageView) v.findViewById(R.id.curtainButton_room2);
-        lightButton = (ImageView) v.findViewById(R.id.lightButton_room2);
+        airconButton = (ImageView) v.findViewById(R.id.airconButton_room3);
+        curtainButton = (ImageView) v.findViewById(R.id.curtainButton_room3);
+        lightButton = (ImageView) v.findViewById(R.id.lightButton_room3);
 
-        aircon = (TextView) v.findViewById(R.id.airconState_room2);
-        airconImg = (ImageView) v.findViewById(R.id.aircon_room2);
+        aircon = (TextView) v.findViewById(R.id.airconState_room3);
+        airconImg = (ImageView) v.findViewById(R.id.aircon_room3);
 
-        curtain = (TextView) v.findViewById(R.id.curtainState_room2);
-        curtainImg = (ImageView) v.findViewById(R.id.curtain_room2);
+        curtain = (TextView) v.findViewById(R.id.curtainState_room3);
+        curtainImg = (ImageView) v.findViewById(R.id.curtain_room3);
 
-        light = (TextView) v.findViewById(R.id.lightState_room2);
-        lightImg = (ImageView) v.findViewById(R.id.light_room2);
+        light = (TextView) v.findViewById(R.id.lightState_room3);
+        lightImg = (ImageView) v.findViewById(R.id.light_room3);
 
         airconButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -139,6 +139,14 @@ public class FragmentRoom3 extends Fragment {
         return v;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        socket.off("sendApplianceStatus");
+        socket.disconnect();
+        Log.v("msg", "기기제어 소켓 통신 해제");
+    }
+
     // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨
     private Emitter.Listener onAppliance = new Emitter.Listener() {
         @Override
@@ -157,7 +165,7 @@ public class FragmentRoom3 extends Fragment {
                             num = num.replace("}", "");
                             num = num.replace("{", "");
                             applianceStatus[i] = Integer.parseInt(num);
-                            Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
+//                            Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
                         }
                         if (applianceStatus[9] == 1) {
                             airconButton.setImageResource(R.drawable.power_on);
@@ -170,17 +178,21 @@ public class FragmentRoom3 extends Fragment {
                         }
 
                         if (applianceStatus[3] == 1) {
+                            lightButton.setImageResource(R.drawable.power_on);
                             light.setText("켜짐");
                             lightImg.setImageResource(R.drawable.lamps_on);
                         } else if (applianceStatus[3] == 2) {
+                            lightButton.setImageResource(R.drawable.power_off);
                             light.setText("꺼짐");
                             lightImg.setImageResource(R.drawable.lamps_off);
                         }
 
                         if (applianceStatus[15] == 1) {
+                            curtainButton.setImageResource(R.drawable.power_on);
                             curtain.setText("닫힘");
                             curtainImg.setImageResource(R.drawable.curtain_on);
                         } else if (applianceStatus[15] == 2) {
+                            curtainButton.setImageResource(R.drawable.power_off);
                             curtain.setText("열림");
                             curtainImg.setImageResource(R.drawable.curtain_off);
                         }
