@@ -2,12 +2,11 @@ package com.example.a10jobs;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -24,16 +23,13 @@ import com.nex3z.notificationbadge.NotificationBadge;
 
 import org.aviran.cookiebar2.CookieBar;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Random;
-
 import me.relex.circleindicator.CircleIndicator3;
 
 
 public class MainActivity extends AppCompatActivity {
     Activity activity = this;
-    Button btn_map, btn_control, btn_watch, btn_find, btn_status;
+    Button btn_map, btn_control, btn_watch, btn_find, btn_patrol_log;
+    ImageButton battery_status;
     ToggleButton btn_crime;
     NotificationBadge badge;
     ViewPager2 mPager;
@@ -112,9 +108,8 @@ public class MainActivity extends AppCompatActivity {
         btn_watch = (Button) findViewById(R.id.btn_watch);
         btn_crime = (ToggleButton) findViewById(R.id.btn_crime);
         btn_find = (Button) findViewById(R.id.btn_find);
-        btn_status = (Button) findViewById(R.id.btn_status);
-        badge = findViewById(R.id.badge);
-        badge.setNumber(2);
+        btn_patrol_log = (Button) findViewById(R.id.btn_patrol_log);
+        battery_status = (ImageButton) findViewById(R.id.battery_status);
 
         btn_map.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +139,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        btn_status.setOnClickListener(new View.OnClickListener() {
+        btn_patrol_log.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), FindActivity.class);        // 어디 Activity로 갈지만 바꿔주세요!!
+                startActivity(intent);
+            }
+        });
+        battery_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CookieBar.build(activity)
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                         .setIcon(R.drawable.ic_settings_white_48dp)
                         .setIconAnimation(R.animator.iconspin)
                         .setBackgroundColor(R.color.navy)
-                        .setCookiePosition(CookieBar.BOTTOM)  // Cookie will be displayed at the bottom
+                        .setCookiePosition(CookieBar.TOP)  // Cookie will be displayed at the bottom
                         .show();                              // of the screen
             }
         });
