@@ -2,6 +2,7 @@ package com.example.a10jobs;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -82,8 +83,20 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.socket.disconnect();
+        Log.d("socket connection ", "disconnect");
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.socket.connect();
+        Log.d("socket connection ", "Reconnect");
     }
 
     @Override
