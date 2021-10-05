@@ -40,16 +40,33 @@
 
             </LinearLayout>
 
-            <ToggleButton
+<!--            <ToggleButton-->
+<!--                android:id="@+id/airconButton"-->
+<!--                android:layout_width="53dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_marginTop="3dp"-->
+<!--                android:layout_marginRight="3dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@drawable/power_button"-->
+<!--                android:textOn=""-->
+<!--                android:textOff="" />-->
+
+<!--            <Switch-->
+<!--                android:id="@+id/airconButton"-->
+<!--                android:layout_width="53dp"-->
+<!--                android:layout_height="30dp">-->
+<!--            </Switch>-->
+            <ImageView
                 android:id="@+id/airconButton"
-                android:layout_width="53dp"
-                android:layout_height="30dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
-                android:layout_weight="1"
-                android:background="@drawable/power_button"
-                android:textOn=""
-                android:textOff="" />
+                android:layout_height="30dp"
+                android:layout_width="53dp"
+                android:src="@drawable/power_off">
+
+            </ImageView>
+
+
 
         </LinearLayout>
 
@@ -82,17 +99,30 @@
                     android:text="꺼짐" />
             </LinearLayout>
 
-            <ToggleButton
+<!--            <ToggleButton-->
+<!--                android:id="@+id/tvButton"-->
+<!--                android:layout_width="53dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_marginTop="3dp"-->
+<!--                android:layout_marginRight="3dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@drawable/power_button"-->
+<!--                android:text="ToggleButton"-->
+<!--                android:textOn=""-->
+<!--                android:textOff="" />-->
+<!--            <Switch-->
+<!--                android:id="@+id/tvButton"-->
+<!--                android:layout_width="53dp"-->
+<!--                android:layout_height="30dp">-->
+<!--            </Switch>-->
+
+            <ImageView
                 android:id="@+id/tvButton"
-                android:layout_width="53dp"
-                android:layout_height="30dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
-                android:layout_weight="1"
-                android:background="@drawable/power_button"
-                android:text="ToggleButton"
-                android:textOn=""
-                android:textOff="" />
+                android:layout_height="30dp"
+                android:layout_width="53dp"
+                android:src="@drawable/power_off"/>
 
         </LinearLayout>
 
