@@ -1,5 +1,6 @@
 package com.example.a10jobs;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
 public class StatusActivity extends AppCompatActivity {
+    Activity activity = this;
     ImageButton battery, now;
     TextView battery_txt;
 
