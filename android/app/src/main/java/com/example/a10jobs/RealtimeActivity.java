@@ -51,6 +51,20 @@ public class RealtimeActivity extends AppCompatActivity {
         btnRight.setOnTouchListener(onTouchListener);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.socket.disconnect();
+        Log.d("socket connection ", "disconnect");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.socket.connect();
+        Log.d("socket connection ", "Reconnect");
+    }
+
     // Touch 이벤트
     ImageButton.OnTouchListener onTouchListener = new View.OnTouchListener(){
         @Override
