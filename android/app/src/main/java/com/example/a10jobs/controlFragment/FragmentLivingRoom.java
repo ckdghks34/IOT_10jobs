@@ -373,24 +373,24 @@ public class FragmentLivingRoom extends Fragment {
                             num = num.replace("}", "");
                             num = num.replace("{", "");
                             applianceStatus[i] = Integer.parseInt(num);
-                            Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
+//                            Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
                         }
+
                         if (applianceStatus[10] == 1) {
-                            airconButton.setChecked(true);
+                            airconButton.setImageResource(R.drawable.power_on);
                             aircon.setText("켜짐");
                             airconImg.setImageResource(R.drawable.airconon);
                         } else if (applianceStatus[10] == 2) {
-                            airconButton.setChecked(false);
+                            airconButton.setImageResource(R.drawable.power_off);
                             aircon.setText("꺼짐");
                             airconImg.setImageResource(R.drawable.airconoff);
                         }
 
                         if (applianceStatus[12] == 1) {
-                            tvButton.setChecked(true);
                             tv.setText("켜짐");
                             tvImg.setImageResource(R.drawable.television_on);
                         } else if (applianceStatus[12] == 2) {
-                            tvButton.setChecked(false);
+//                        tvButton.setChecked(false);
                             tv.setText("꺼짐");
                             tvImg.setImageResource(R.drawable.television_off);
                         }
@@ -419,117 +419,80 @@ public class FragmentLivingRoom extends Fragment {
                             curtainImg.setImageResource(R.drawable.curtain_off);
                         }
                     }
-<<<<<<< HEAD
-                    if(applianceStatus[10] == 1) {
-                        airconButton.setImageResource(R.drawable.power_on);
-                        aircon.setText("켜짐");
-                        airconImg.setImageResource(R.drawable.airconon);
-                    } else if(applianceStatus[10] == 2) {
-                        airconButton.setImageResource(R.drawable.power_off);
-                        aircon.setText("꺼짐");
-                        airconImg.setImageResource(R.drawable.airconoff);
-                    }
-
-                    if(applianceStatus[12] == 1) {
-                        tv.setText("켜짐");
-                        tvImg.setImageResource(R.drawable.television_on);
-                    } else if(applianceStatus[12] == 2) {
-//                        tvButton.setChecked(false);
-                        tv.setText("꺼짐");
-                        tvImg.setImageResource(R.drawable.television_off);
-                    }
-
-                    if(applianceStatus[11] == 1) {
-                        aircleaner.setText("켜짐");
-                        aircleanerImg.setImageResource(R.drawable.airpurifier_on);
-                    } else if(applianceStatus[11] == 2) {
-                        aircleaner.setText("꺼짐");
-                        aircleanerImg.setImageResource(R.drawable.airpurifier_off);
-                    }
-
-                    if(applianceStatus[6] == 1) {
-                        light.setText("켜짐");
-                        lightImg.setImageResource(R.drawable.lamps_on);
-                    } else if(applianceStatus[6] == 2) {
-                        light.setText("꺼짐");
-                        lightImg.setImageResource(R.drawable.lamps_off);
-                    }
-
-                    if(applianceStatus[16] == 1) {
-                        curtain.setText("닫힘");
-                        curtainImg.setImageResource(R.drawable.curtain_on);
-                    } else if(applianceStatus[16] == 2) {
-                        curtain.setText("열림");
-                        curtainImg.setImageResource(R.drawable.curtain_off);
-                    }
-                }
-            });
-=======
                 });
             }
->>>>>>> 1046910fbd3998c86b795f27aadc82aecdcbcbe6
         }
     };
 
     private Emitter.Listener onAircon = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    airconStatus = (String)args[0];
-                    Log.v("aircon", airconStatus);
-                }
-            });
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        airconStatus = (String) args[0];
+                        Log.v("aircon", airconStatus);
+                    }
+                });
+            }
         }
     };
 
     private Emitter.Listener onAirCleaner = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    aircleanerStatus = (String)args[0];
-                    Log.v("aircleaner", aircleanerStatus);
-                }
-            });
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        aircleanerStatus = (String) args[0];
+                        Log.v("aircleaner", aircleanerStatus);
+                    }
+                });
+            }
         }
     };
     private Emitter.Listener onTv = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    tvStatus = (String)args[0];
-                    Log.v("tv", tvStatus);
-                }
-            });
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvStatus = (String) args[0];
+                        Log.v("tv", tvStatus);
+                    }
+                });
+            }
         }
     };
     private Emitter.Listener onLight = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    lightStatus = (String)args[0];
-                    Log.v("light", lightStatus);
-                }
-            });
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lightStatus = (String) args[0];
+                        Log.v("light", lightStatus);
+                    }
+                });
+            }
         }
     };
     private Emitter.Listener onCurtain = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    curtainStatus = (String)args[0];
-                    Log.v("curtain", curtainStatus);
-                }
-            });
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        curtainStatus = (String) args[0];
+                        Log.v("curtain", curtainStatus);
+                    }
+                });
+            }
         }
     };
 
