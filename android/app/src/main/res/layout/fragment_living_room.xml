@@ -51,11 +51,20 @@
 <!--                android:textOn=""-->
 <!--                android:textOff="" />-->
 
-            <Switch
+<!--            <Switch-->
+<!--                android:id="@+id/airconButton"-->
+<!--                android:layout_width="53dp"-->
+<!--                android:layout_height="30dp">-->
+<!--            </Switch>-->
+            <ImageView
                 android:id="@+id/airconButton"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_height="30dp"
                 android:layout_width="53dp"
-                android:layout_height="30dp">
-            </Switch>
+                android:src="@drawable/power_off">
+
+            </ImageView>
 
 
 
@@ -101,11 +110,19 @@
 <!--                android:text="ToggleButton"-->
 <!--                android:textOn=""-->
 <!--                android:textOff="" />-->
-            <Switch
+<!--            <Switch-->
+<!--                android:id="@+id/tvButton"-->
+<!--                android:layout_width="53dp"-->
+<!--                android:layout_height="30dp">-->
+<!--            </Switch>-->
+
+            <ImageView
                 android:id="@+id/tvButton"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_height="30dp"
                 android:layout_width="53dp"
-                android:layout_height="30dp">
-            </Switch>
+                android:src="@drawable/power_off"/>
 
         </LinearLayout>
 
