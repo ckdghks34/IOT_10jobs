@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -27,7 +26,7 @@ import org.json.JSONObject;
 
 public class FragmentLivingRoom extends Fragment {
 //    ToggleButton airconButton;
-    Switch airconButton, tvButton;
+    ImageView airconButton, tvButton;
 //    ToggleButton tvButton;
     ToggleButton curtainButton;
     ToggleButton airpurifierButton;
@@ -42,6 +41,8 @@ public class FragmentLivingRoom extends Fragment {
 
     TextView aircon, tv, curtain, aircleaner, light;
     ImageView airconImg, tvImg, curtainImg, aircleanerImg, lightImg;
+
+    boolean check = false;
 
     String url = "http://j5d201.p.ssafy.io:12001";
     Socket socket;
@@ -132,11 +133,12 @@ public class FragmentLivingRoom extends Fragment {
 //        }
 
         // 에어컨 전원
-        airconButton = (Switch) v.findViewById(R.id.airconButton);
+        airconButton = (ImageView) v.findViewById(R.id.airconButton);
 
-        airconButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
+        airconButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                if(applianceStatus[10] == 2){
                     Toast.makeText(getActivity(), "에어컨을 작동시킵니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 1);
@@ -145,9 +147,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("켜짐");
-//                    airconImg.setImageResource(R.drawable.airconon);
-                } else {
+                }
+                else if(applianceStatus[10] == 1){
                     Toast.makeText(getActivity(), "에어컨 작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 2);
@@ -156,40 +157,96 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    aircon.setText("꺼짐");
-//                    airconImg.setImageResource(R.drawable.airconoff);
                 }
             }
         });
+
+//        airconButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                boolean isCheck = airconButton.isChecked();     // 켜져있다는 거
+//                if(isCheck){
+//                    airconButton.setChecked(false);
+//                    Toast.makeText(getActivity(), "에어컨 작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
+//                    try {
+//                        data.put("ctr_cmd", 2);
+//                        data.put("ctr_num", 10);
+//                        socket.emit("AirConditionerOffToServer", data);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                else{
+//                    airconButton.setChecked(true);
+//                    Toast.makeText(getActivity(), "에어컨 작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
+//                    try {
+//                        data.put("ctr_cmd", 1);
+//                        data.put("ctr_num", 10);
+//                        socket.emit("AirConditionerOnToServer", data);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+
+//        airconButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (!isChecked) {
+//                    Toast.makeText(getActivity(), "에어컨을 작동시킵니다!", Toast.LENGTH_SHORT).show();
+//                    try {
+//                        data.put("ctr_cmd", 1);
+//                        data.put("ctr_num", 10);
+//                        socket.emit("AirConditionerOnToServer", data);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+////                    aircon.setText("켜짐");
+////                    airconImg.setImageResource(R.drawable.airconon);
+//                } else {
+//                    Toast.makeText(getActivity(), "에어컨 작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
+//                    try {
+//                        data.put("ctr_cmd", 2);
+//                        data.put("ctr_num", 10);
+//                        socket.emit("AirConditionerOffToServer", data);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+////                    aircon.setText("꺼짐");
+////                    airconImg.setImageResource(R.drawable.airconoff);
+//                }
+//            }
+//        });
+
         // TV 전원
-        tvButton = (Switch) v.findViewById(R.id.tvButton);
-        tvButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    Toast.makeText(getActivity(), "TV를 작동시킵니다!", Toast.LENGTH_SHORT).show();
-                    try {
-                        data.put("ctr_cmd", 1);
-                        data.put("ctr_num", 12);
-                        socket.emit("TvOnToServer", data);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-//                    tv.setText("켜짐");
-//                    tvImg.setImageResource(R.drawable.television_on);
-                } else {
-                    Toast.makeText(getActivity(), "TV 작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
-                    try {
-                        data.put("ctr_cmd", 2);
-                        data.put("ctr_num", 12);
-                        socket.emit("TvOffToServer", data);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-//                    tv.setText("꺼짐");
-//                    tvImg.setImageResource(R.drawable.television_off);
-                }
-            }
-        });
+        tvButton = (ImageView) v.findViewById(R.id.tvButton);
+//        tvButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (!isChecked) {
+//                    Toast.makeText(getActivity(), "TV를 작동시킵니다!", Toast.LENGTH_SHORT).show();
+//                    try {
+//                        data.put("ctr_cmd", 1);
+//                        data.put("ctr_num", 12);
+//                        socket.emit("TvOnToServer", data);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+////                    tv.setText("켜짐");
+////                    tvImg.setImageResource(R.drawable.television_on);
+//                } else {
+//                    Toast.makeText(getActivity(), "TV 작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
+//                    try {
+//                        data.put("ctr_cmd", 2);
+//                        data.put("ctr_num", 12);
+//                        socket.emit("TvOffToServer", data);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+////                    tv.setText("꺼짐");
+////                    tvImg.setImageResource(R.drawable.television_off);
+//                }
+//            }
+//        });
 
         // 커튼 열림 / 닫힘
         curtainButton = (ToggleButton) v.findViewById(R.id.curtainButton);
@@ -318,21 +375,20 @@ public class FragmentLivingRoom extends Fragment {
                         Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
                     }
                     if(applianceStatus[10] == 1) {
-                        airconButton.setChecked(true);
+                        airconButton.setImageResource(R.drawable.power_on);
                         aircon.setText("켜짐");
                         airconImg.setImageResource(R.drawable.airconon);
                     } else if(applianceStatus[10] == 2) {
-                        airconButton.setChecked(false);
+                        airconButton.setImageResource(R.drawable.power_off);
                         aircon.setText("꺼짐");
                         airconImg.setImageResource(R.drawable.airconoff);
                     }
 
                     if(applianceStatus[12] == 1) {
-                        tvButton.setChecked(true);
                         tv.setText("켜짐");
                         tvImg.setImageResource(R.drawable.television_on);
                     } else if(applianceStatus[12] == 2) {
-                        tvButton.setChecked(false);
+//                        tvButton.setChecked(false);
                         tv.setText("꺼짐");
                         tvImg.setImageResource(R.drawable.television_off);
                     }
