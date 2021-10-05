@@ -127,7 +127,7 @@ class wallTracking(Node):
         
         self.state_description = ''
         
-        d = 0.6
+        d = 0.62
         
         # print('regions[left] : ', regions['left'])
         # print('regions[fleft] : ', regions['fleft'])
