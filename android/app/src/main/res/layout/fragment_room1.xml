@@ -23,40 +23,35 @@
                 android:layout_width="137dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-
                 <ImageView
-                    android:id="@+id/aircon"
+                    android:id="@+id/aircon_room1"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
                     app:srcCompat="@drawable/airconoff" />
 
                 <TextView
-                    android:id="@+id/airconState"
+                    android:id="@+id/airconState_room1"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="꺼짐" />
 
             </LinearLayout>
-
-            <ToggleButton
-                android:id="@+id/airconButton"
-                android:layout_width="53dp"
-                android:layout_height="30dp"
+            <ImageView
+                android:id="@+id/airconButton_room1"
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
-                android:layout_weight="1"
-                android:background="@drawable/power_on"
-                android:textOn=""
-                android:textOff="" />
-
+                android:layout_height="30dp"
+                android:layout_width="53dp"
+                android:src="@drawable/power_off">
+            </ImageView>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="169dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="1"
             android:background="@drawable/button_corner"
             android:orientation="horizontal">
 
@@ -65,32 +60,28 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
                 <ImageView
-                    android:id="@+id/curtain"
+                    android:id="@+id/curtain_room1"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
-                    app:srcCompat="@drawable/curtain" />
-
+                    app:srcCompat="@drawable/curtain_off" />
 
                 <TextView
-                    android:id="@+id/curtainState"
+                    android:id="@+id/curtainState_room1"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="닫힘" />
-            </LinearLayout>
+                    android:text="꺼짐" />
 
-            <ToggleButton
-                android:id="@+id/curtainButton"
-                android:layout_width="53dp"
-                android:layout_height="30dp"
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/curtainButton_room1"
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
-                android:layout_weight="1"
-                android:background="@drawable/power_on"
-                android:textOff=""
-                android:textOn="" />
-
+                android:layout_height="30dp"
+                android:layout_width="53dp"
+                android:src="@drawable/power_off">
+            </ImageView>
         </LinearLayout>
 
     </LinearLayout>
@@ -103,9 +94,9 @@
 
         <LinearLayout
             android:layout_width="169dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="1"
             android:background="@drawable/button_corner"
             android:orientation="horizontal">
 
@@ -113,33 +104,27 @@
                 android:layout_width="137dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-
                 <ImageView
-                    android:id="@+id/light"
+                    android:id="@+id/light_room1"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
-                    app:srcCompat="@drawable/light" />
-
-
+                    app:srcCompat="@drawable/lamps_off" />
                 <TextView
-                    android:id="@+id/lightState"
+                    android:id="@+id/lightState_room1"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="꺼짐" />
             </LinearLayout>
 
-            <ToggleButton
-                android:id="@+id/lightButton"
-                android:layout_width="53dp"
-                android:layout_height="30dp"
+            <ImageView
+                android:id="@+id/lightButton_room1"
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
-                android:layout_weight="1"
-                android:background="@drawable/power_on"
-                android:textOff=""
-                android:textOn="" />
-
+                android:layout_height="30dp"
+                android:layout_width="53dp"
+                android:src="@drawable/power_off">
+            </ImageView>
         </LinearLayout>
 
         <LinearLayout
