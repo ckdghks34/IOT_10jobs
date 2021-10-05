@@ -17,7 +17,7 @@
 
 ### ROS2 설정 및 실행
 
-[참고자료](https://lab.ssafy.com/s05-iot-ctrl/S05P21D201/-/blob/sh/README/%EA%B0%9C%EB%B0%9C%ED%99%98%EA%B2%BD%20%EA%B5%AC%EC%B6%95%20%EB%A9%94%EB%89%B4%EC%96%BCv5.pdf)
+[참고자료](https://lab.ssafy.com/s05-iot-ctrl/S05P21D201/-/blob/master/README/SSAFY%20%EC%8B%9C%EB%AE%AC%EB%A0%88%EC%9D%B4%ED%84%B0%20%EB%A9%94%EB%89%B4%EC%96%BCv5.pdf)
 
 1. ROS2 설치
 
@@ -39,7 +39,7 @@
 
 ### 시뮬레이터 설정
 
-[참고자료](https://lab.ssafy.com/s05-iot-ctrl/S05P21D201/-/blob/sh/README/SSAFY%20%EC%8B%9C%EB%AE%AC%EB%A0%88%EC%9D%B4%ED%84%B0%20%EB%A9%94%EB%89%B4%EC%96%BCv5.pdf)
+[참고자료](https://lab.ssafy.com/s05-iot-ctrl/S05P21D201/-/blob/master/README/%EA%B0%9C%EB%B0%9C%ED%99%98%EA%B2%BD%20%EA%B5%AC%EC%B6%95%20%EB%A9%94%EB%89%B4%EC%96%BCv5.pdf)
 
 1. 시뮬레이터 설치하기
 
@@ -79,7 +79,7 @@
 
 ### 앱동작
 
-1. apk파일을 다운로드 후 설치해주세요 [apk파일](https://lab.ssafy.com/s05-iot-ctrl/S05P21D201/-/blob/sh/android/app/release/app-release.apk)
+1. apk파일을 다운로드 후 설치해주세요 [apk파일](https://lab.ssafy.com/s05-iot-ctrl/S05P21D201/-/blob/master/android/app/release/app-release.apk) , 접근 불가시 android - app - release - app-release.apk
 
 - 현재상태 
   - 맵만들기 가능 (autoMode : wallFollowing과 연결중 , 금주내 해결 가능)

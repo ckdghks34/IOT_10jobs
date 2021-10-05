@@ -11,8 +11,9 @@ var appRouter = require('./routes/apps');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+app.engine("html",require("ejs").renderFile);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -51,27 +52,50 @@ var fs = require('fs');
 
 const port = process.env.port || 12001;
 
-const publicPath = path.join(__dirname,"/public");
+const publicPath = path.join(__dirname,"/public/images/client");
 const picPath = path.join(__dirname,"/public/images/client");
 
 
 server.listen(port,() =>{
 	console.log(`listening on * : ${port}`);
+	console.log(path.join(picPath,"/cam.jpg"));
 });
 
 const roomName ='team';
 
 io.on('connection', socket =>{
-	socket.join(roomName);
+	var ip = socket.request.headers["x-forwarded-for"] || socket.request.connection.remoteAddress;
+	console.log(`클라이언트 연결 성공 - 클라이언트 IP : ${ip}, Socket ID : ${socket.id}`);
 
+	socket.join(roomName);
+	
+	// --------
+	// 연결 해제
+	// --------
+	socket.on('disconnect', () => {
+                console.log(`클라이언트 연결 해제 - 클라이언트 IP : ${ip}, Socket ID : ${socket.id}`);
+        });
+	
+	// ----------------------------------------------
 	// 사용자의 메시지 수신시 WebClient로 메시지 전달
+	// ----------------------------------------------
+
+	// 안전 상태 (안전한 상태 or 사람 인식 상태)
 	socket.on('safety_status',(message) =>{
 		socket.to(roomName).emit('sendSafetyStatus',message);
 	});
-
+	
+	// 방범모드 On/Off 상태
 	socket.on('PatrolStatus', (message) => {
         	socket.to(roomName).emit('sendPatrolStatus', message);
     	});
+	
+	// ---------------------
+	// 터틀봇 상태 확인 소켓
+	// ---------------------
+	socket.on('BotStatus', (message) => {
+		socket.to(roomName).emit('sendBotStatus', message);
+	});
 
     	socket.on('PatrolOnToServer', (data) => {
         	socket.to(roomName).emit('patrolOn', data);
@@ -81,6 +105,14 @@ io.on('connection', socket =>{
     	socket.on('PatrolOffToServer', (data) => {
         	socket.to(roomName).emit('patrolOff', data);
     	});
+
+	// --------------
+	// 맵 만들기 소켓
+	// --------------
+	
+	socket.on('makeMapToServer', (data) => {
+		socket.to(roomName).emit('makeMake', data);
+	});
 
     	socket.on('turnleftToServer', (data) => {
         	socket.to(roomName).emit('turnleft', data);
@@ -94,16 +126,116 @@ io.on('connection', socket =>{
         	socket.to(roomName).emit('turnright', data);
     	});
 
-    	socket.on('disconnect', () => {
-        	console.log('disconnected from server');
-    	});
+	socket.on('gobackToServer', (data) => {
+		socket.to(roomName).emit('goback', data);
+	});
+
+	// ----------------------
+	// 물건을 찾아달라는 소켓
+	// ----------------------
+
+	socket.on('findWalletToServer', (data) => {
+		socket.to(roomName).emit('findWallet', data);
+	});
+
+	socket.on('findRemoteToServer', (data) => {
+		socket.to(roomName).emit('findRemote', data);
+	});
+
+	socket.on('findKeyToServer', (data) => {
+		socket.to(roomName).emit('findKey', data);
+	});
+
+	socket.on('findBagToServer', (data) => {
+		socket.to(roomName).emit('findBag', data);
+	});
 	
+	// --------------------------------------------------------------------------------------
+	// 물건 찾은 상태 보내는 소켓 -> found/not found로 보내면 될듯(PatrolStatus의 On/Off처럼)
+	// --------------------------------------------------------------------------------------
+	
+	socket.on('WalletStatus', (message) => {
+		socket.to(roomName).emit('sendWalletStatus', message);
+	});
+
+	socket.on('RemoteStatus', (message) => {
+		socket.to(roomName).emit('sendRemoteStatus', message);
+	});
+
+	socket.on('KeyStatus', (mesasge) => {
+		socket.to(roomName).emit('sendKeyStatus', message);
+	});
+
+	socket.on('BagStatus', (message) => {
+		socket.to(roomName).emit('sendBagStatus', message);
+	});
+	
+	// -------------
+	// 가전제품 상태
+	// -------------
+	
+	socket.on('AirConditionerStatus',(message) => {
+		socket.to(roomName).emit('sendAirConditionerStatus', message);
+	});
+
+	socket.on('AirCleanerStatus',(message) => {
+		socket.to(roomName).emit('sendAirCleanerStatus', message);
+	});
+
+	socket.on('TvStatus',(message) =>{
+		socket.to(roomName).emit('sendTvStatus',message);
+	});
+
+	socket.on('LightStatus',(message) = >{
+		socket.to(roomName).emit('sendLightStatus',message);
+	});
+
+	// ---------------
+    	// 가전제품 ON/OFF
+	// ---------------
+	
+	// 에어컨
+	socket.on('AirConditionerOnToServer',(data)=>{
+		socket.to(roomName).emit('AirConditionerOn',data);
+	});
+
+	socket.on('AirConditionerOffToServer',(data)=>{
+		socket.to(roomName).emit('AirConditionerOff',data);
+	});
+
+	// 공기청정기
+	socket.on('AirCleanerOnToServer',(data)=>{
+		socket.to(roomName).emit('AirCleanerOn',data);
+	});
+
+	socket.on('AirCleanerOffToserver',(data)=>{
+		socket.to(roomName).emit('AirCleanerOff',data);
+	});
+
+	// TV
+	socket.on('TvOnToServer',(data)=>{
+                socket.to(roomName).emit('AirCleanerOn',data);
+        });
+
+        socket.on('TvOffToserver',(data)=>{
+                socket.to(roomName).emit('AirCleanerOff',data);
+        });
+
+	// 전등
+	socket.on('LightOnToServer',(data)=>{
+                socket.to(roomName).emit('AirCleanerOn',data);
+        });
+
+        socket.on('LightOffToserver',(data)=>{
+                socket.to(roomName).emit('AirCleanerOff',data);
+        });
+
 	// 전달받은 이미지를 jpg 파일로 저장
 	socket.on('streaming', (message) => {
 		socket.to(roomName).emit('sendStreaming', message);
 
 		buffer = Buffer.from(message, "base64");
-		fs.writeFileSync(path.join(picPath, "../client/cam.jpg"),buffer);
+		fs.writeFileSync(path.join(picPath, "/cam.jpg"),buffer);
 	});
 })
 
