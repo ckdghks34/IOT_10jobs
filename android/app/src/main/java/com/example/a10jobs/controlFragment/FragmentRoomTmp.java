@@ -109,6 +109,14 @@ public class FragmentRoomTmp extends Fragment {
         return v;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        socket.off("sendApplianceStatus");
+        socket.disconnect();
+        Log.v("msg", "기기제어 소켓 통신 해제");
+    }
+
     // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨
     private Emitter.Listener onAppliance = new Emitter.Listener() {
         @Override
@@ -127,22 +135,26 @@ public class FragmentRoomTmp extends Fragment {
                             num = num.replace("}", "");
                             num = num.replace("{", "");
                             applianceStatus[i] = Integer.parseInt(num);
-                            Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
+//                            Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
                         }
                         if (applianceStatus[0] == 1) {
+                            hallway_lightButton.setImageResource(R.drawable.power_on);
                             hallway_light.setText("켜짐");
-                            hallway_lightImg.setImageResource(R.drawable.lamps_on);
+                            hallway_lightImg.setImageResource(R.drawable.hallway_on);
                         } else if (applianceStatus[0] == 2) {
+                            hallway_lightButton.setImageResource(R.drawable.power_off);
                             hallway_light.setText("꺼짐");
-                            hallway_lightImg.setImageResource(R.drawable.lamps_off);
+                            hallway_lightImg.setImageResource(R.drawable.hallway_off);
                         }
 
                         if (applianceStatus[5] == 1) {
+                            kitchen_lightButton.setImageResource(R.drawable.power_on);
                             kitchen_light.setText("닫힘");
-                            kitchen_lightImg.setImageResource(R.drawable.curtain_on);
+                            kitchen_lightImg.setImageResource(R.drawable.kitchen_on);
                         } else if (applianceStatus[5] == 2) {
+                            kitchen_lightButton.setImageResource(R.drawable.power_off);
                             kitchen_light.setText("열림");
-                            kitchen_lightImg.setImageResource(R.drawable.curtain_off);
+                            kitchen_lightImg.setImageResource(R.drawable.kitchen_off);
                         }
                     }
                 });
