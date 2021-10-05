@@ -30,6 +30,16 @@
         android:gravity="center"
         tools:srcCompat="@drawable/testimg" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/findcliked_img_lottie"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="49993-search.json"
+        app:lottie_loop="true" />
+
     <TextView
         android:id="@+id/findcliked_info"
         android:layout_width="match_parent"
@@ -37,7 +47,7 @@
         android:layout_marginTop="50dp"
         android:fontFamily="@font/paybooc"
         android:gravity="center"
-        android:text="날짜 / 시간"
+        android:text="물건을 찾고 있어요"
         android:textColor="@color/mainColor"
 
         android:textSize="20sp" />
