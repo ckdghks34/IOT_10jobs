@@ -75,6 +75,21 @@ public class StatusActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.socket.disconnect();
+        Log.d("socket connection ", "disconnect");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.socket.connect();
+        Log.d("socket connection ", "Reconnect");
+    }
+
     // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨
     private Emitter.Listener onStatus = new Emitter.Listener() {
         @Override
@@ -85,7 +100,7 @@ public class StatusActivity extends AppCompatActivity {
                     int data = (int)args[0];
                     Log.v("data", String.valueOf(data));
                     // 항상 0이라서 그냥 100에서 뺌
-                    battery_txt.setText(100 - data);
+                    battery_txt.setText(String.valueOf(100 - data));
                 }
             });
         }
