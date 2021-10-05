@@ -85,7 +85,7 @@ public class StatusActivity extends AppCompatActivity {
                     int data = (int)args[0];
                     Log.v("data", String.valueOf(data));
                     // 항상 0이라서 그냥 100에서 뺌
-                    battery_txt.setText(100 - data);
+                    battery_txt.setText(String.valueOf(100 - data));
                 }
             });
         }

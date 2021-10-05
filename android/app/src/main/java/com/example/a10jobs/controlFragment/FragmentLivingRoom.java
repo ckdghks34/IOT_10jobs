@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -25,8 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class FragmentLivingRoom extends Fragment {
-    ToggleButton airconButton;
-    ToggleButton tvButton;
+//    ToggleButton airconButton;
+    Switch airconButton, tvButton;
+//    ToggleButton tvButton;
     ToggleButton curtainButton;
     ToggleButton airpurifierButton;
     ToggleButton lightButton;
@@ -89,51 +91,52 @@ public class FragmentLivingRoom extends Fragment {
         socket.on("sendCurtainStatus", onCurtain);
         socket.connect();
 
-        if(applianceStatus[10] == 1) {
-            aircon.setText("켜짐");
-            airconImg.setImageResource(R.drawable.airconon);
-        } else if(applianceStatus[10] == 2) {
-            aircon.setText("꺼짐");
-            airconImg.setImageResource(R.drawable.airconoff);
-        }
-
-        if(applianceStatus[12] == 1) {
-            tv.setText("켜짐");
-            tvImg.setImageResource(R.drawable.television_on);
-        } else if(applianceStatus[12] == 2) {
-            tv.setText("꺼짐");
-            tvImg.setImageResource(R.drawable.television_off);
-        }
-
-        if(applianceStatus[11] == 1) {
-            aircleaner.setText("켜짐");
-            aircleanerImg.setImageResource(R.drawable.airpurifier_on);
-        } else if(applianceStatus[11] == 2) {
-            aircleaner.setText("꺼짐");
-            aircleanerImg.setImageResource(R.drawable.airpurifier_off);
-        }
-
-        if(applianceStatus[6] == 1) {
-            light.setText("켜짐");
-            lightImg.setImageResource(R.drawable.lamps_on);
-        } else if(applianceStatus[6] == 2) {
-            light.setText("꺼짐");
-            lightImg.setImageResource(R.drawable.lamps_on);
-        }
-
-        if(applianceStatus[16] == 1) {
-            curtain.setText("닫힘");
-            curtainImg.setImageResource(R.drawable.curtain_on);
-        } else if(applianceStatus[16] == 2) {
-            curtain.setText("열림");
-            curtainImg.setImageResource(R.drawable.curtain_off);
-        }
+//        if(applianceStatus[10] == 1) {
+//            aircon.setText("켜짐");
+//            airconImg.setImageResource(R.drawable.airconon);
+//        } else if(applianceStatus[10] == 2) {
+//            aircon.setText("꺼짐");
+//            airconImg.setImageResource(R.drawable.airconoff);
+//        }
+//
+//        if(applianceStatus[12] == 1) {
+//            tv.setText("켜짐");
+//            tvImg.setImageResource(R.drawable.television_on);
+//        } else if(applianceStatus[12] == 2) {
+//            tv.setText("꺼짐");
+//            tvImg.setImageResource(R.drawable.television_off);
+//        }
+//
+//        if(applianceStatus[11] == 1) {
+//            aircleaner.setText("켜짐");
+//            aircleanerImg.setImageResource(R.drawable.airpurifier_on);
+//        } else if(applianceStatus[11] == 2) {
+//            aircleaner.setText("꺼짐");
+//            aircleanerImg.setImageResource(R.drawable.airpurifier_off);
+//        }
+//
+//        if(applianceStatus[6] == 1) {
+//            light.setText("켜짐");
+//            lightImg.setImageResource(R.drawable.lamps_on);
+//        } else if(applianceStatus[6] == 2) {
+//            light.setText("꺼짐");
+//            lightImg.setImageResource(R.drawable.lamps_on);
+//        }
+//
+//        if(applianceStatus[16] == 1) {
+//            curtain.setText("닫힘");
+//            curtainImg.setImageResource(R.drawable.curtain_on);
+//        } else if(applianceStatus[16] == 2) {
+//            curtain.setText("열림");
+//            curtainImg.setImageResource(R.drawable.curtain_off);
+//        }
 
         // 에어컨 전원
-        airconButton = (ToggleButton) v.findViewById(R.id.airconButton);
+        airconButton = (Switch) v.findViewById(R.id.airconButton);
+
         airconButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (!isChecked) {
                     Toast.makeText(getActivity(), "에어컨을 작동시킵니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 1);
@@ -142,8 +145,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("켜짐");
-                    airconImg.setImageResource(R.drawable.airconon);
+//                    aircon.setText("켜짐");
+//                    airconImg.setImageResource(R.drawable.airconon);
                 } else {
                     Toast.makeText(getActivity(), "에어컨 작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
                     try {
@@ -153,16 +156,16 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircon.setText("꺼짐");
-                    airconImg.setImageResource(R.drawable.airconoff);
+//                    aircon.setText("꺼짐");
+//                    airconImg.setImageResource(R.drawable.airconoff);
                 }
             }
         });
         // TV 전원
-        tvButton = (ToggleButton) v.findViewById(R.id.tvButton);
+        tvButton = (Switch) v.findViewById(R.id.tvButton);
         tvButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (!isChecked) {
                     Toast.makeText(getActivity(), "TV를 작동시킵니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 1);
@@ -171,8 +174,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    tv.setText("켜짐");
-                    tvImg.setImageResource(R.drawable.television_on);
+//                    tv.setText("켜짐");
+//                    tvImg.setImageResource(R.drawable.television_on);
                 } else {
                     Toast.makeText(getActivity(), "TV 작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
                     try {
@@ -182,8 +185,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    tv.setText("꺼짐");
-                    tvImg.setImageResource(R.drawable.television_off);
+//                    tv.setText("꺼짐");
+//                    tvImg.setImageResource(R.drawable.television_off);
                 }
             }
         });
@@ -201,8 +204,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    curtain.setText("닫힘");
-                    curtainImg.setImageResource(R.drawable.curtain_on);
+//                    curtain.setText("닫힘");
+//                    curtainImg.setImageResource(R.drawable.curtain_on);
                 } else {
                     Toast.makeText(getActivity(), "커튼을 엽니다!", Toast.LENGTH_SHORT).show();
                     try {
@@ -212,8 +215,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    curtain.setText("열힘");
-                    curtainImg.setImageResource(R.drawable.curtain_off);
+//                    curtain.setText("열힘");
+//                    curtainImg.setImageResource(R.drawable.curtain_off);
                 }
             }
         });
@@ -231,8 +234,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircleaner.setText("켜짐");
-                    aircleanerImg.setImageResource(R.drawable.airpurifier_on);
+//                    aircleaner.setText("켜짐");
+//                    aircleanerImg.setImageResource(R.drawable.airpurifier_on);
                 } else {
                     Toast.makeText(getActivity(), "공기청정기작동을 멈춥니다!", Toast.LENGTH_SHORT).show();
                     try {
@@ -242,8 +245,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    aircleaner.setText("꺼짐");
-                    aircleanerImg.setImageResource(R.drawable.airpurifier_off);
+//                    aircleaner.setText("꺼짐");
+//                    aircleanerImg.setImageResource(R.drawable.airpurifier_off);
                 }
             }
         });
@@ -261,8 +264,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    light.setText("켜짐");
-                    lightImg.setImageResource(R.drawable.lamps_on);
+//                    light.setText("켜짐");
+//                    lightImg.setImageResource(R.drawable.lamps_on);
                 } else {
                     Toast.makeText(getActivity(), "전등을 끕니다!", Toast.LENGTH_SHORT).show();
                     try {
@@ -272,8 +275,8 @@ public class FragmentLivingRoom extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    light.setText("켜짐");
-                    lightImg.setImageResource(R.drawable.lamps_off);
+//                    light.setText("켜짐");
+//                    lightImg.setImageResource(R.drawable.lamps_off);
                 }
             }
         });
@@ -314,7 +317,49 @@ public class FragmentLivingRoom extends Fragment {
                         applianceStatus[i] = Integer.parseInt(num);
                         Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
                     }
+                    if(applianceStatus[10] == 1) {
+                        airconButton.setChecked(true);
+                        aircon.setText("켜짐");
+                        airconImg.setImageResource(R.drawable.airconon);
+                    } else if(applianceStatus[10] == 2) {
+                        airconButton.setChecked(false);
+                        aircon.setText("꺼짐");
+                        airconImg.setImageResource(R.drawable.airconoff);
+                    }
 
+                    if(applianceStatus[12] == 1) {
+                        tvButton.setChecked(true);
+                        tv.setText("켜짐");
+                        tvImg.setImageResource(R.drawable.television_on);
+                    } else if(applianceStatus[12] == 2) {
+                        tvButton.setChecked(false);
+                        tv.setText("꺼짐");
+                        tvImg.setImageResource(R.drawable.television_off);
+                    }
+
+                    if(applianceStatus[11] == 1) {
+                        aircleaner.setText("켜짐");
+                        aircleanerImg.setImageResource(R.drawable.airpurifier_on);
+                    } else if(applianceStatus[11] == 2) {
+                        aircleaner.setText("꺼짐");
+                        aircleanerImg.setImageResource(R.drawable.airpurifier_off);
+                    }
+
+                    if(applianceStatus[6] == 1) {
+                        light.setText("켜짐");
+                        lightImg.setImageResource(R.drawable.lamps_on);
+                    } else if(applianceStatus[6] == 2) {
+                        light.setText("꺼짐");
+                        lightImg.setImageResource(R.drawable.lamps_off);
+                    }
+
+                    if(applianceStatus[16] == 1) {
+                        curtain.setText("닫힘");
+                        curtainImg.setImageResource(R.drawable.curtain_on);
+                    } else if(applianceStatus[16] == 2) {
+                        curtain.setText("열림");
+                        curtainImg.setImageResource(R.drawable.curtain_off);
+                    }
                 }
             });
         }
