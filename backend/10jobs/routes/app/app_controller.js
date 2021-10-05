@@ -27,9 +27,16 @@ function test(req,res){
 		'msg' : 'test'
 	});
 }
+function getPatrolStatus(req, res){
+	res.json({
+		'patrolStatus' : req.body.patrolStatus
+		}
+	);
+}
 
 module.exports = {
 	test,
+	getPatrolStatus,
 }
 
 

@@ -5,4 +5,10 @@ const controller = require('./app_controller');
 
 router.post('/test',controller.test);
 
+//router.post('/status',controller.getStatus);
+
+//router.post('/control',controller.control);
+
+//router.post('/patrolStatus', controller.getPatrolStatus);
+
 module.exports = router;
