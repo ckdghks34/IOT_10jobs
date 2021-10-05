@@ -119,9 +119,11 @@ class HumanDetectorToServer(Node):
             for (x,y,w,h) in rects:
 
                 cv2.rectangle(self.img_bgr, (x,y),(x+w,y+h),(0,255,255), 2)
+        
+        else:
+            self.human_detected = False
 
         cv2.imshow("detection result", self.img_bgr)
-
         cv2.waitKey(1)
 
         
@@ -139,17 +141,19 @@ class HumanDetectorToServer(Node):
 
                 self.byte_data = cv2.imencode('.jpg', self.img_bgr)[1].tobytes()
 
-            sio.emit('streaming', b64data.decode( 'utf-8' ) )
+                sio.emit('humanDetectToServer', b64data.decode( 'utf-8' ) )
 
-            if self.human_detected:
+                print('찾음')
 
-                str_to_web = "house intruder detected"
+            # if self.human_detected:
 
-            else:
+            #     str_to_web = "house intruder detected"
 
-                str_to_web = "safe"
+            # else:
 
-            sio.emit('safety_status', str_to_web)
+            #     str_to_web = "safe"
+
+            # sio.emit('safety_status', str_to_web)
 
         else:
 
