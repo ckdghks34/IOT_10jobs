@@ -31,6 +31,7 @@ public class FragmentLivingRoom extends Fragment {
     ToggleButton airpurifierButton;
     ToggleButton lightButton;
 
+    int[] applianceStatus = new int[17];
     String airconStatus = "";
     String tvStatus = "";
     String curtainStatus = "";
@@ -66,6 +67,7 @@ public class FragmentLivingRoom extends Fragment {
             aircon.setText(txt1);
             airconImg.setImageBitmap(StringToBitmap(txt2));
         }
+        socket.on("sendApplianceStatus", onAppliance);
         socket.on("sendAirConditionerStatus", onAircon);
         socket.on("sendAirCleanerStatus", onAirCleaner);
         socket.on("sendTvStatus", onTv);
@@ -73,42 +75,42 @@ public class FragmentLivingRoom extends Fragment {
         socket.on("sendCurtainStatus", onCurtain);
         socket.connect();
 
-        if(airconStatus.equals("On")) {
+        if(applianceStatus[10] == 1) {
             aircon.setText("켜짐");
             airconImg.setImageResource(R.drawable.airconon);
-        } else if(airconStatus.equals("Off")) {
+        } else if(applianceStatus[10] == 2) {
             aircon.setText("꺼짐");
             airconImg.setImageResource(R.drawable.airconoff);
         }
 
-        if(tvStatus.equals("On")) {
+        if(applianceStatus[12] == 1) {
             tv.setText("켜짐");
             tvImg.setImageResource(R.drawable.television_on);
-        } else if(tvStatus.equals("Off")) {
+        } else if(applianceStatus[12] == 2) {
             tv.setText("꺼짐");
             tvImg.setImageResource(R.drawable.television_off);
         }
 
-        if(aircleanerStatus.equals("On")) {
+        if(applianceStatus[11] == 1) {
             aircleaner.setText("켜짐");
             aircleanerImg.setImageResource(R.drawable.airpurifier_on);
-        } else if(airconStatus.equals("Off")) {
+        } else if(applianceStatus[11] == 2) {
             aircleaner.setText("꺼짐");
             aircleanerImg.setImageResource(R.drawable.airpurifier_off);
         }
 
-        if(lightStatus.equals("On")) {
+        if(applianceStatus[6] == 1) {
             light.setText("켜짐");
             lightImg.setImageResource(R.drawable.lamps_on);
-        } else if(lightStatus.equals("Off")) {
+        } else if(applianceStatus[6] == 2) {
             light.setText("꺼짐");
             lightImg.setImageResource(R.drawable.lamps_on);
         }
 
-        if(curtainStatus.equals("On")) {
+        if(applianceStatus[16] == 1) {
             curtain.setText("닫힘");
             curtainImg.setImageResource(R.drawable.curtain_on);
-        } else if(curtainStatus.equals("Off")) {
+        } else if(applianceStatus[16] == 2) {
             curtain.setText("열림");
             curtainImg.setImageResource(R.drawable.curtain_off);
         }
@@ -280,6 +282,30 @@ public class FragmentLivingRoom extends Fragment {
     }
 
     // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨
+    private Emitter.Listener onAppliance = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                   String data = (String)args[0];
+//                   Log.v("data", data);
+                    String[] tmp = data.split(",");
+                    for(int i = 0; i < tmp.length; i++){
+//                        Log.v("data", tmp[i]);
+                        String[] tmp2 = tmp[i].split(":");
+                        String num = tmp2[1].trim();
+                        num = num.replace("}", "");
+                        num = num.replace("{", "");
+                        applianceStatus[i] = Integer.parseInt(num);
+                        Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
+                    }
+
+                }
+            });
+        }
+    };
+
     private Emitter.Listener onAircon = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
