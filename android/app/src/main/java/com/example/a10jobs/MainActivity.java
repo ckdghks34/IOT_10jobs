@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        socket.on("sendBotStatus", onStatus);
+        socket.on("sendBotStatus", onStatus);
         socket.connect();
 
         mPager = findViewById(R.id.viewpager);
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         battery_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                socket.on("sendBotStatus", onStatus);
+//                socket.on("sendBotStatus", onStatus);
                 CookieBar.build(activity)
                         .setTitle("터틀봇 배터리")
                         .setMessage(data + "%입니다")
@@ -160,6 +160,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        socket.disconnect();
+        Log.v("msg", "소켓 통신 해제");
+    }
+
     // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨
     private Emitter.Listener onStatus = new Emitter.Listener() {
         @Override
@@ -168,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     data = 100 - (int)args[0];
-                    Log.v("data", String.valueOf(100 - data));
+                    Log.v("battery", String.valueOf(100 - data));
                 }
             });
         }
