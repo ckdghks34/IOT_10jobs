@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ public class FindClickedActivity extends AppCompatActivity {
     LottieAnimationView animationView;
     ImageView img;
     TextView date;
+    Button button;
     String url = "http://j5d201.p.ssafy.io:12001";         // 서버 url 주기
     Socket socket;
     {
@@ -48,6 +50,7 @@ public class FindClickedActivity extends AppCompatActivity {
         TextView title = (TextView)findViewById(R.id.findclicked_title);
         date = (TextView)findViewById(R.id.findcliked_info);
         animationView = (LottieAnimationView) findViewById(R.id.findcliked_img_lottie);
+        button = (Button)findViewById(R.id.finishbutton);
 
         img.setImageResource(intent.getIntExtra("img", 0));
         title.setText(intent.getStringExtra("title"));
@@ -68,7 +71,13 @@ public class FindClickedActivity extends AppCompatActivity {
                 break;
         }
 
-
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                socket.emit("PatrolOffToServer");
+                onBackPressed();
+            }
+        });
     }
 
     // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨

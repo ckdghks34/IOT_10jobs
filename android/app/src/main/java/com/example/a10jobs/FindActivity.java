@@ -63,15 +63,19 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
                 // item별로 보내는 소켓이 다름
                 switch(i){
                     case 0:
+                        socket.emit("PatrolOnToServer");
                         socket.emit("findWalletToServer");
                         break;
                     case 1:
+                        socket.emit("PatrolOnToServer");
                         socket.emit("findRemoteToServer");
                         break;
                     case 2:
+                        socket.emit("PatrolOnToServer");
                         socket.emit("findKeyToServer");
                         break;
                     case 3:
+                        socket.emit("PatrolOnToServer");
                         socket.emit("findBagToServer");
                         break;
                 }
