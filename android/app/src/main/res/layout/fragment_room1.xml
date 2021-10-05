@@ -46,7 +46,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:background="@drawable/power"
+                android:background="@drawable/power_on"
                 android:textOn=""
                 android:textOff="" />
 
@@ -87,7 +87,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:background="@drawable/power"
+                android:background="@drawable/power_on"
                 android:textOff=""
                 android:textOn="" />
 
@@ -136,7 +136,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:background="@drawable/power"
+                android:background="@drawable/power_on"
                 android:textOff=""
                 android:textOn="" />
 
