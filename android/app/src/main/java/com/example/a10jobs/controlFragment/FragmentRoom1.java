@@ -139,6 +139,14 @@ public class FragmentRoom1 extends Fragment {
         return v;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        socket.off("sendApplianceStatus");
+        socket.disconnect();
+        Log.v("msg", "기기제어 소켓 통신 해제");
+    }
+
     // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨
     private Emitter.Listener onAppliance = new Emitter.Listener() {
         @Override
@@ -157,7 +165,7 @@ public class FragmentRoom1 extends Fragment {
                             num = num.replace("}", "");
                             num = num.replace("{", "");
                             applianceStatus[i] = Integer.parseInt(num);
-                            Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
+//                            Log.v("data", i + " : " + String.valueOf(applianceStatus[i]));
                         }
                         if (applianceStatus[7] == 1) {
                             airconButton.setImageResource(R.drawable.power_on);
@@ -170,17 +178,21 @@ public class FragmentRoom1 extends Fragment {
                         }
 
                         if (applianceStatus[1] == 1) {
+                            lightButton.setImageResource(R.drawable.power_on);
                             light.setText("켜짐");
                             lightImg.setImageResource(R.drawable.lamps_on);
                         } else if (applianceStatus[1] == 2) {
+                            lightButton.setImageResource(R.drawable.power_off);
                             light.setText("꺼짐");
                             lightImg.setImageResource(R.drawable.lamps_off);
                         }
 
                         if (applianceStatus[13] == 1) {
+                            curtainButton.setImageResource(R.drawable.power_on);
                             curtain.setText("닫힘");
                             curtainImg.setImageResource(R.drawable.curtain_on);
                         } else if (applianceStatus[13] == 2) {
+                            curtainButton.setImageResource(R.drawable.power_off);
                             curtain.setText("열림");
                             curtainImg.setImageResource(R.drawable.curtain_off);
                         }

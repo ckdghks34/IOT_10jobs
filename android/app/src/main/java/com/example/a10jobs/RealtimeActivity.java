@@ -54,15 +54,25 @@ public class RealtimeActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        this.socket.disconnect();
-        Log.d("socket connection ", "disconnect");
+        socket.off("sendStreaming");
+        socket.disconnect();
+//        Log.v("msg", "pause 소켓 통신 해제");
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        this.socket.connect();
-        Log.d("socket connection ", "Reconnect");
+    protected void onRestart(){
+        super.onRestart();
+        socket.on("sendStreaming", onStream);
+        socket.connect();
+//        Log.v("msg", "restart 배터리 소켓 재연결");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        socket.off("sendStreaming");
+        socket.disconnect();
+//        Log.v("msg", "destroy 소켓 통신 해제");
     }
 
     // Touch 이벤트
