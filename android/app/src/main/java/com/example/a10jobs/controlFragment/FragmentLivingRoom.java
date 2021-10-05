@@ -58,8 +58,21 @@ public class FragmentLivingRoom extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_living_room, container, false);
+
         aircon = (TextView) v.findViewById(R.id.airconState);
         airconImg = (ImageView) v.findViewById(R.id.aircon);
+
+        tv = (TextView) v.findViewById(R.id.tvState);
+        tvImg = (ImageView) v.findViewById(R.id.tv);
+
+        curtain = (TextView) v.findViewById(R.id.curtainState);
+        curtainImg = (ImageView) v.findViewById(R.id.curtain);
+
+        aircleaner = (TextView) v.findViewById(R.id.airpurifierState);
+        aircleanerImg = (ImageView) v.findViewById(R.id.airpurifier);
+
+        light = (TextView) v.findViewById(R.id.lightState);
+        lightImg = (ImageView) v.findViewById(R.id.light);
 
         if(savedInstanceState != null){
             String txt1 = savedInstanceState.getString("data1");
@@ -67,6 +80,7 @@ public class FragmentLivingRoom extends Fragment {
             aircon.setText(txt1);
             airconImg.setImageBitmap(StringToBitmap(txt2));
         }
+
         socket.on("sendApplianceStatus", onAppliance);
         socket.on("sendAirConditionerStatus", onAircon);
         socket.on("sendAirCleanerStatus", onAirCleaner);
