@@ -55,13 +55,6 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(), FindClickedActivity.class);
-                intent.putExtra("title",data.get(i).getTitle());
-                intent.putExtra("img",data.get(i).getImg());
-                intent.putExtra("date",data.get(i).getDate());
-                startActivity(intent);
-                
-                // item별로 보내는 소켓이 다름
                 switch(i){
                     case 0:
                         socket.emit("PatrolOnToServer");
@@ -80,6 +73,17 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
                         socket.emit("findBagToServer");
                         break;
                 }
+
+
+                Intent intent = new Intent(getApplicationContext(), FindClickedActivity.class);
+                intent.putExtra("title",data.get(i).getTitle());
+                intent.putExtra("img",data.get(i).getImg());
+                intent.putExtra("date",data.get(i).getDate());
+
+
+                // item별로 보내는 소켓이 다름
+
+                startActivity(intent);
             }
         });
 
@@ -89,14 +93,14 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPause() {
         super.onPause();
         this.socket.disconnect();
-        Log.d("socket connection ", "disconnect");
+//        Log.d("socket connection ", "disconnect");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         this.socket.connect();
-        Log.d("socket connection ", "Reconnect");
+//        Log.d("socket connection ", "Reconnect");
     }
 
     @Override
