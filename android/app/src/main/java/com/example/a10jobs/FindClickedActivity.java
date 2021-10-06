@@ -58,16 +58,16 @@ public class FindClickedActivity extends AppCompatActivity {
 
         switch(intent.getStringExtra("title")){
             case "지갑 찾기":
-                socket.on("sendWalletStatus", onWallet);
+                socket.on("findWallet", onWallet);
                 break;
             case "리모컨 찾기":
-                socket.on("sendRemoteStatus", onRemote);
+                socket.on("findRemote", onRemote);
                 break;
             case "열쇠 찾기":
-                socket.on("sendKeyStatus", onKey);
+                socket.on("findKey", onKey);
                 break;
             case "가방 찾기":
-                socket.on("sendBagStatus", onBag);
+                socket.on("findBag", onBag);
                 break;
         }
 
