@@ -51,6 +51,30 @@ public class RealtimeActivity extends AppCompatActivity {
         btnRight.setOnTouchListener(onTouchListener);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        socket.off("sendStreaming");
+        socket.disconnect();
+//        Log.v("msg", "pause 소켓 통신 해제");
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        socket.on("sendStreaming", onStream);
+        socket.connect();
+//        Log.v("msg", "restart 배터리 소켓 재연결");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        socket.off("sendStreaming");
+        socket.disconnect();
+//        Log.v("msg", "destroy 소켓 통신 해제");
+    }
+
     // Touch 이벤트
     ImageButton.OnTouchListener onTouchListener = new View.OnTouchListener(){
         @Override
