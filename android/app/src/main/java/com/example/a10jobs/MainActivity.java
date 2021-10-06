@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                         .setIconAnimation(R.animator.iconspin)
                         .setBackgroundColor(R.color.navy)
                         .setCookiePosition(CookieBar.TOP)  // Cookie will be displayed at the bottom
+                        .setDuration(5000)
                         .show();                              // of the screen
             }
         });
