@@ -94,6 +94,7 @@ io.on('connection', socket =>{
 	// 터틀봇 상태 확인 소켓
 	// ---------------------
 	socket.on('BotStatus', (message) => {
+		//console.log('Battery : ', message);
 		socket.to(roomName).emit('sendBotStatus', message);
 	});
 
@@ -106,12 +107,20 @@ io.on('connection', socket =>{
         	socket.to(roomName).emit('patrolOff', data);
     	});
 
+	// -----------------
+	// 가전제품 확인 소켓
+	// -----------------
+	socket.on('ApplianceStatus', (message) => {
+		//console.log('Appliance : ', message);
+		socket.to(roomName).emit('sendApplianceStatus', message);
+	});
+
 	// --------------
 	// 맵 만들기 소켓
 	// --------------
 	
 	socket.on('makeMapToServer', (data) => {
-		socket.to(roomName).emit('makeMake', data);
+		socket.to(roomName).emit('makeMap', data);
 	});
 
     	socket.on('turnleftToServer', (data) => {
@@ -175,6 +184,7 @@ io.on('connection', socket =>{
 	// -------------
 	
 	socket.on('AirConditionerStatus',(message) => {
+		console.log(message);
 		socket.to(roomName).emit('sendAirConditionerStatus', message);
 	});
 
@@ -186,8 +196,12 @@ io.on('connection', socket =>{
 		socket.to(roomName).emit('sendTvStatus',message);
 	});
 
-	socket.on('LightStatus',(message) = >{
+	socket.on('LightStatus',(message) =>{
 		socket.to(roomName).emit('sendLightStatus',message);
+	});
+
+	socket.on('CurtainStatus', (message) => {
+		socket.to(roomName).emit('sendCurtainStatus', message);
 	});
 
 	// ---------------
@@ -196,6 +210,7 @@ io.on('connection', socket =>{
 	
 	// 에어컨
 	socket.on('AirConditionerOnToServer',(data)=>{
+		console.log(data);
 		socket.to(roomName).emit('AirConditionerOn',data);
 	});
 
@@ -208,27 +223,36 @@ io.on('connection', socket =>{
 		socket.to(roomName).emit('AirCleanerOn',data);
 	});
 
-	socket.on('AirCleanerOffToserver',(data)=>{
+	socket.on('AirCleanerOffToServer',(data)=>{
 		socket.to(roomName).emit('AirCleanerOff',data);
 	});
 
 	// TV
 	socket.on('TvOnToServer',(data)=>{
-                socket.to(roomName).emit('AirCleanerOn',data);
+                socket.to(roomName).emit('TvOn',data);
         });
 
-        socket.on('TvOffToserver',(data)=>{
-                socket.to(roomName).emit('AirCleanerOff',data);
+        socket.on('TvOffToServer',(data)=>{
+                socket.to(roomName).emit('TvOff',data);
         });
 
 	// 전등
 	socket.on('LightOnToServer',(data)=>{
-                socket.to(roomName).emit('AirCleanerOn',data);
+                socket.to(roomName).emit('LightOn',data);
         });
 
-        socket.on('LightOffToserver',(data)=>{
-                socket.to(roomName).emit('AirCleanerOff',data);
+        socket.on('LightOffToServer',(data)=>{
+                socket.to(roomName).emit('LightOff',data);
         });
+	
+	// 커튼
+	socket.on('CurtainOnToServer', (data) => {
+		socket.to(roomName).emit('CurtainOn', data);
+	});
+
+	socket.on('CurtainOffToServer', (data) => {
+		socket.to(roomName).emit('CurtainOff', data);
+	});
 
 	// 전달받은 이미지를 jpg 파일로 저장
 	socket.on('streaming', (message) => {
@@ -236,6 +260,60 @@ io.on('connection', socket =>{
 
 		buffer = Buffer.from(message, "base64");
 		fs.writeFileSync(path.join(picPath, "/cam.jpg"),buffer);
+	});
+
+	socket.on('mapStreaming', (message) => {
+       		socket.to(roomName).emit('sendMapStreaming', message);
+        	//console.log(message);
+        	buffer = Buffer.from(message, "base64");
+        	fs.writeFileSync(path.join(picPath, "/../client/map.jpg"), buffer);
+    	});
+
+	socket.on('stop_createmap', () => {
+        	socket.to(roomName).emit('stopCreatemap')
+    	});
+
+    	socket.on('start_createmap', () => {
+        	socket.to(roomName).emit('startCreatemap')
+    	});
+
+	// MAP_AUTO
+	socket.on('mapAutoOnToServer',() => {
+		socket.to(roomName).emit('mapAutoOn')
+	});
+
+	socket.on('mapAutoOffToServer', () => {
+		socket.to(roomName).emit('mapAutoOff')
+	});
+
+	socket.on('humanDetectToServer', (message) => {
+        	socket.to(roomName).emit('humanDetect', message);
+		buffer = Buffer.from(message, "base64");
+	        fs.writeFileSync(path.join(picPath, "/../client/human.jpg"), buffer);
+      	});
+	
+	socket.on('backpackStreaming', (message) => {
+        	socket.to(roomName).emit('sendBackpackStreaming', message);
+        	buffer = Buffer.from(message, "base64");
+        	fs.writeFileSync(path.join(picPath, "/../client/backpack.jpg"), buffer);
+	});
+
+	socket.on('walletStreaming', (message) => {
+        	socket.to(roomName).emit('sendWalletStreaming', message);
+        	buffer = Buffer.from(message, "base64");
+	        fs.writeFileSync(path.join(picPath, "/../client/wallet.jpg"), buffer);
+	});
+
+    	socket.on('keyStreaming', (message) => {
+        	socket.to(roomName).emit('sendKeyStreaming', message);
+	        buffer = Buffer.from(message, "base64");
+	        fs.writeFileSync(path.join(picPath, "/../client/key.jpg"), buffer);
+    	});
+
+	socket.on('remoteStreaming', (message) => {
+        	socket.to(roomName).emit('sendRemoteStreaming', message);
+        	buffer = Buffer.from(message, "base64");
+	        fs.writeFileSync(path.join(picPath, "/../client/remote.jpg"), buffer);
 	});
 })
 
