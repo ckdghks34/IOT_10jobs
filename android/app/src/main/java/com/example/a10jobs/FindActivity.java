@@ -57,19 +57,19 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch(i){
                     case 0:
-                        socket.emit("PatrolOnToServer");
+                        socket.emit("PatrolOnToServer", 1);
                         socket.emit("findWalletToServer");
                         break;
                     case 1:
-                        socket.emit("PatrolOnToServer");
+                        socket.emit("PatrolOnToServer", 1);
                         socket.emit("findRemoteToServer");
                         break;
                     case 2:
-                        socket.emit("PatrolOnToServer");
+                        socket.emit("PatrolOnToServer", 1);
                         socket.emit("findKeyToServer");
                         break;
                     case 3:
-                        socket.emit("PatrolOnToServer");
+                        socket.emit("PatrolOnToServer", 1);
                         socket.emit("findBagToServer");
                         break;
                 }

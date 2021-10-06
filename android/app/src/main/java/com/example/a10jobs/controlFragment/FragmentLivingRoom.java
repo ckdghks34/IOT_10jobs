@@ -413,7 +413,7 @@ public class FragmentLivingRoom extends Fragment {
                             num = num.replace("}", "");
                             num = num.replace("{", "");
                             applianceStatus[i] = Integer.parseInt(num);
-//                            Log.v("기기상태", i + " : " + String.valueOf(applianceStatus[i]));
+                            Log.v("기기상태", i + " : " + String.valueOf(applianceStatus[i]));
                         }
                         if (applianceStatus[10] == 1) {
                             airconButton.setImageResource(R.drawable.power_on);

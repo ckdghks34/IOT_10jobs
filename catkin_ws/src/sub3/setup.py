@@ -36,6 +36,7 @@ setup(
             'a_star = sub3.a_star:main',
             'a_star_local_path = sub3.a_star_local_path:main',
             'client = sub3.client:main',
+            'wall_tracking = sub3.wall_tracking:main'
         ],
     },
 )
