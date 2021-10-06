@@ -114,7 +114,7 @@ public class FragmentRoom2 extends Fragment {
             @Override
             public void onClick(View view){
                 if(applianceStatus[14] == 2){
-                    Toast.makeText(getActivity(), "커튼을 엽니다!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "커튼을 닫습니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 1);
                         data.put("ctr_num", 14);
@@ -124,7 +124,7 @@ public class FragmentRoom2 extends Fragment {
                     }
                 }
                 else if(applianceStatus[14] == 1){
-                    Toast.makeText(getActivity(), "커튼을 닫습니다!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "커튼을 엽니다!", Toast.LENGTH_SHORT).show();
                     try {
                         data.put("ctr_cmd", 2);
                         data.put("ctr_num", 14);
