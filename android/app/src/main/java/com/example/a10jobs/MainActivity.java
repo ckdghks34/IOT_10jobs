@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     int num_page = 4;
     CircleIndicator3 mIndicator;
     int data;
+    Boolean check = true;
     long lastTime = 0;
     long deleyTime = 5000;
 
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         socket.on("sendBotStatus", onStatus);
+        socket.on("sendPatrolStatus", onPatrolStatus);
         socket.on("humanDetect", getImg);
 
         socket.connect();
@@ -182,11 +184,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                         if(isChecked){
                             socket.emit("PatrolOnToServer", 1);
-                            btn_crime.setBackgroundColor(Color.GREEN);
+                            btn_crime.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_corner2));
                             Log.d("check", "방범모드 on");
                         }else{
                             socket.emit("PatrolOffToServer", 0);
                             Log.d("check", "방범모드 off");
+                            btn_crime.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_corner));
                         }
                     }
                 }
@@ -232,6 +235,30 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     };
+
+    private Emitter.Listener onPatrolStatus = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(check){
+                        if(args[0].equals("On")) {
+                            btn_crime.setChecked(true);
+                            btn_crime.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_corner2));
+                        }else{
+                            btn_crime.setChecked(false);
+                            btn_crime.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_corner));
+                        }
+                        check = false;
+                    }
+
+
+                }
+            });
+        }
+    };
+
 
     private Emitter.Listener getImg = new Emitter.Listener() {
         @Override
