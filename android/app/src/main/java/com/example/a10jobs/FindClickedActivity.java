@@ -74,7 +74,7 @@ public class FindClickedActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                socket.emit("PatrolOffToServer");
+                socket.emit("PatrolOffToServer", 0);
                 onBackPressed();
             }
         });

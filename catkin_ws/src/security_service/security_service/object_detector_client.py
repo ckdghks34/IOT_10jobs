@@ -11,8 +11,8 @@ from rclpy.node import Node
 from sensor_msgs.msg import CompressedImage
 
 sio = socketio.Client()
-global auto_switch
-auto_switch = 0
+global search_switch
+search_switch = 0
 flag = False
 
 @sio.event
@@ -25,32 +25,32 @@ def disconnect():
 
 @sio.on('findWallet')
 def findWallet(data):
-    global auto_switch
-    auto_switch = 1
+    global search_switch
+    search_switch = 1
     print('지갑찾기')
 
 @sio.on('findBag')
 def findBackpack(data):
     print('가방찾기')
-    global auto_switch
-    auto_switch = 2
+    global search_switch
+    search_switch = 2
 
 @sio.on('findKey')
 def findKey(data):
     print('키 찾기')
-    global auto_switch
-    auto_switch = 3
+    global search_switch
+    search_switch = 3
 
 @sio.on('findRemote')
 def findRemote(data):
     print('리모컨 찾기')
-    global auto_switch
-    auto_switch = 4
+    global search_switch
+    search_switch = 4
 
 @sio.on('patrolOff')
 def patrol_on():
-    global auto_switch
-    auto_switch = 0
+    global search_switch
+    search_switch = 0
 
 
 def non_maximum_supression(bboxes, threshold=0.5):
@@ -208,26 +208,26 @@ class ObjectDetectorToServer(Node):
 
         
         # 물건 찾기 실행했을 때
-        if auto_switch:
+        if search_switch:
             # 지갑 찾기
-            if auto_switch == 1 and self.wal_detected and flag:
+            if search_switch == 1 and self.wal_detected and flag:
                 self.byte_data = cv2.imencode('.jpg', self.img_bgr*255)[1].tobytes()
                 b64data = base64.b64encode(self.byte_data)
                 sio.emit('walletStreaming', b64data.decode( 'utf-8' ) )
             # 가방 찾기
-            elif auto_switch == 2 and self.bp_detected and flag:
+            elif search_switch == 2 and self.bp_detected and flag:
                 # cv2.imwrite('../web/client/backpack.jpg', self.img_bgr)
                 self.byte_data = cv2.imencode('.jpg', self.img_bgr*255)[1].tobytes()
                 b64data = base64.b64encode(self.byte_data)
                 sio.emit('backpackStreaming', b64data.decode( 'utf-8' ) )
             # 키 찾기
-            elif auto_switch == 3 and self.key_detected and flag:
+            elif search_switch == 3 and self.key_detected and flag:
                 # cv2.imwrite('../web/client/key.jpg', self.img_bgr)
                 self.byte_data = cv2.imencode('.jpg', self.img_bgr*255)[1].tobytes()
                 b64data = base64.b64encode(self.byte_data)
                 sio.emit('keyStreaming', b64data.decode( 'utf-8' ) )
             # 리모콘 찾기
-            elif auto_switch == 4 and self.rc_detected and flag:
+            elif search_switch == 4 and self.rc_detected and flag:
                 # cv2.imwrite('../web/client/wallet.jpg', self.img_bgr)
                 self.byte_data = cv2.imencode('.jpg', self.img_bgr*255)[1].tobytes()
                 b64data = base64.b64encode(self.byte_data)
