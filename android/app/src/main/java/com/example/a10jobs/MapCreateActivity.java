@@ -106,6 +106,8 @@ public class MapCreateActivity extends AppCompatActivity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         socket.emit("stop_createmap");
+
+                        switchAuto.setChecked(false);
                     }
                 });
                 dlg.setNegativeButton("취소",new DialogInterface.OnClickListener(){
@@ -204,6 +206,7 @@ public class MapCreateActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d("map", "들어옴");
                     String data = (String)args[0];
                     bitmap = StringToBitmap(data);
                     mapImg.setImageBitmap(bitmap);

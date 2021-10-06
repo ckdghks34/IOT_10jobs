@@ -9,6 +9,7 @@ import base64
 
 from rclpy.node import Node
 from sensor_msgs.msg import CompressedImage
+from std_msgs.msg import String
 
 sio = socketio.Client()
 
@@ -72,7 +73,7 @@ class HumanDetectorToServer(Node):
             '/image_jpeg/compressed',
             self.img_callback,
             10)
-
+        self.map_publisher = self.create_publisher(String, '/patrol_string', 10)
         self.byte_data = None
 
         self.img_bgr = None
@@ -123,8 +124,8 @@ class HumanDetectorToServer(Node):
         else:
             self.human_detected = False
 
-        cv2.imshow("detection result", self.img_bgr)
-        cv2.waitKey(1)
+        # cv2.imshow("detection result", self.img_bgr)
+        # cv2.waitKey(1)
 
         
     def timer_callback(self):
@@ -144,7 +145,8 @@ class HumanDetectorToServer(Node):
                 sio.emit('humanDetectToServer', b64data.decode( 'utf-8' ) )
 
                 print('찾음')
-
+            
+            sio.emit('streaming', b64data.decode( 'utf-8' ) )
             # if self.human_detected:
 
             #     str_to_web = "house intruder detected"
