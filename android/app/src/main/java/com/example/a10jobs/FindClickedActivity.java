@@ -58,16 +58,16 @@ public class FindClickedActivity extends AppCompatActivity {
 
         switch(intent.getStringExtra("title")){
             case "지갑 찾기":
-                socket.on("findWallet", onWallet);
+                socket.on("sendWalletStreaming", onWallet);
                 break;
             case "리모컨 찾기":
-                socket.on("findRemote", onRemote);
+                socket.on("sendRemoteStreaming", onRemote);
                 break;
             case "열쇠 찾기":
-                socket.on("findKey", onKey);
+                socket.on("sendKeyStreaming", onKey);
                 break;
             case "가방 찾기":
-                socket.on("findBag", onBag);
+                socket.on("sendBackpackStreaming", onBag);
                 break;
         }
 
@@ -142,6 +142,7 @@ public class FindClickedActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d("rkrkrk", "run: 가방찾음");
                     // JSon 형태로 받을 수 있음
                     String data = (String)args[0];
                     bitmap = StringToBitmap(data);
