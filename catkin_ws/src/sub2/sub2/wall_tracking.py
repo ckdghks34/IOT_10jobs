@@ -110,7 +110,7 @@ class wallTracking(Node):
 
 
     def change_state(self,state):
-        print("change_state")
+        # print("change_state")
 
         global state_, state_dict_
         if state is not state_:
@@ -118,7 +118,7 @@ class wallTracking(Node):
             state_ = state
 
     def take_action(self):
-        print("take_action")
+        # print("take_action")
         global regions_
         regions = regions_
 
@@ -127,13 +127,13 @@ class wallTracking(Node):
         
         self.state_description = ''
         
-        d = 0.6
+        d = 0.62
         
-        print('regions[left] : ', regions['left'])
-        print('regions[fleft] : ', regions['fleft'])
-        print('regions[front] : ', regions['front'])
-        print('regions[fright] : ', regions['fright'])
-        print('regions[right] : ', regions['right'])
+        # print('regions[left] : ', regions['left'])
+        # print('regions[fleft] : ', regions['fleft'])
+        # print('regions[front] : ', regions['front'])
+        # print('regions[fright] : ', regions['fright'])
+        # print('regions[right] : ', regions['right'])
 
         
         if regions['front'] > d and regions['fright'] > d and regions['fleft'] > d:
@@ -163,6 +163,7 @@ class wallTracking(Node):
         else:
             self.state_description = 'unknown case'
             print(regions)
+            
         # if regions['front'] > d and regions['fleft'] > d:
         #     self.state_description = 'case 1 - nothing'
         #     self.change_state(0)
@@ -273,10 +274,11 @@ class wallTracking(Node):
         self.status_msg=msg
 
     def mapauto_callback(self,msg):
-        if autoMode_state == True and msg.data[0] == False :
-            self.cmd_msg.linear.x = 0
-            self.cmd_msg.angular.z = 0
-            self.cmd_pub.publish(cmd_msg)
+        # print('mapauto_callback / msg : ',msg.data[0])
+        if self.autoMode_state == True and msg.data[0] == False :
+            self.cmd_msg.linear.x = 0.0
+            self.cmd_msg.angular.z = 0.0
+            self.cmd_pub.publish(self.cmd_msg)
 
         self.autoMode_state = msg.data[0]
     
