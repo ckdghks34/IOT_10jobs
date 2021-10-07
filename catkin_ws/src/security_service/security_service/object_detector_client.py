@@ -11,6 +11,9 @@ from rclpy.node import Node
 from sensor_msgs.msg import CompressedImage
 
 sio = socketio.Client()
+global search_switch
+search_switch = 0
+flag = False
 
 @sio.event
 def connect():
@@ -20,45 +23,75 @@ def connect():
 def disconnect():
     print('disconnected from server')
 
-# def non_maximum_supression(bboxes, threshold=0.5):
+@sio.on('findWallet')
+def findWallet(data):
+    global search_switch
+    search_switch = 1
+    print('지갑찾기')
+
+@sio.on('findBag')
+def findBackpack(data):
+    print('가방찾기')
+    global search_switch
+    search_switch = 2
+
+@sio.on('findKey')
+def findKey(data):
+    print('키 찾기')
+    global search_switch
+    search_switch = 3
+
+@sio.on('findRemote')
+def findRemote(data):
+    print('리모컨 찾기')
+    global search_switch
+    search_switch = 4
+
+@sio.on('patrolOff')
+def patrol_on():
+    global search_switch
+    search_switch = 0
+
+
+def non_maximum_supression(bboxes, threshold=0.5):
     
-#     bboxes = sorted(bboxes, key=lambda detections: detections[3],
-#             reverse=True)
-#     new_bboxes=[]
+    bboxes = sorted(bboxes, key=lambda detections: detections[3],
+            reverse=True)
+    new_bboxes=[]
     
-#     new_bboxes.append(bboxes[0])
+    new_bboxes.append(bboxes[0])
     
-#     bboxes.pop(0)
+    bboxes.pop(0)
 
-#     for _, bbox in enumerate(bboxes):
+    for _, bbox in enumerate(bboxes):
 
-#         for new_bbox in new_bboxes:
+        for new_bbox in new_bboxes:
 
-#             x1_tl = bbox[0]
-#             x2_tl = new_bbox[0]
-#             x1_br = bbox[0] + bbox[2]
-#             x2_br = new_bbox[0] + new_bbox[2]
-#             y1_tl = bbox[1]
-#             y2_tl = new_bbox[1]
-#             y1_br = bbox[1] + bbox[3]
-#             y2_br = new_bbox[1] + new_bbox[3]
+            x1_tl = bbox[0]
+            x2_tl = new_bbox[0]
+            x1_br = bbox[0] + bbox[2]
+            x2_br = new_bbox[0] + new_bbox[2]
+            y1_tl = bbox[1]
+            y2_tl = new_bbox[1]
+            y1_br = bbox[1] + bbox[3]
+            y2_br = new_bbox[1] + new_bbox[3]
             
-#             x_overlap = max(0, min(x1_br, x2_br)-max(x1_tl, x2_tl))
-#             y_overlap = max(0, min(y1_br, y2_br)-max(y1_tl, y2_tl))
-#             overlap_area = x_overlap * y_overlap
+            x_overlap = max(0, min(x1_br, x2_br)-max(x1_tl, x2_tl))
+            y_overlap = max(0, min(y1_br, y2_br)-max(y1_tl, y2_tl))
+            overlap_area = x_overlap * y_overlap
             
-#             area_1 = bbox[2] * new_bbox[3]
-#             area_2 = new_bbox[2] * new_bbox[3]
+            area_1 = bbox[2] * new_bbox[3]
+            area_2 = new_bbox[2] * new_bbox[3]
             
-#             total_area = area_1 + area_2 - overlap_area
+            total_area = area_1 + area_2 - overlap_area
 
-#             overlap_area = overlap_area / float(total_area)
+            overlap_area = overlap_area / float(total_area)
 
-#             if overlap_area < threshold:
+            if overlap_area < threshold:
                 
-#                 new_bboxes.append(bbox)
+                new_bboxes.append(bbox)
 
-#     return new_bboxes
+    return new_bboxes
 
 
 
@@ -87,15 +120,15 @@ class ObjectDetectorToServer(Node):
         self.bp_detected = False
         self.rc_detected = False
 
-        self.dir_img = os.path.join("C:\\Users\\multicampus\\Desktop\\catkin_ws\\src\\ros2_smart_home\\security_service\\web\\client", "detect_object.png")
+        self.dir_img = os.path.join("C:\\Users\\user\\Desktop\\catkin_ws\\src\\security_service\\web\\client", "detect.png")
 
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
 
         # self.pedes_detector = cv2.HOGDescriptor()
         # self.pedes_detector.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
         
-        sio.connect('http://127.0.0.1:12001')
-
+        # sio.connect('http://127.0.0.1:12001')
+        sio.connect('http://j5d201.p.ssafy.io:12001')
         cv2.imwrite(self.dir_img, np.zeros((240, 320, 3)).astype(np.uint8))
 
 
@@ -109,7 +142,9 @@ class ObjectDetectorToServer(Node):
   
 
     def find_bbox(self):
-    
+        global flag
+
+        # print(flag)
         """
         # 로직 3. bgr 이미지의 binarization
         # 지갑, 키 등의 물체에 대한 bgr 값을 알고, 이 값 범위에 해당되는
@@ -172,10 +207,37 @@ class ObjectDetectorToServer(Node):
             self.key_detected = False
 
         
+        # 물건 찾기 실행했을 때
+        if search_switch:
+            # 지갑 찾기
+            if search_switch == 1 and self.wal_detected and flag:
+                self.byte_data = cv2.imencode('.jpg', self.img_bgr*255)[1].tobytes()
+                b64data = base64.b64encode(self.byte_data)
+                sio.emit('walletStreaming', b64data.decode( 'utf-8' ) )
+            # 가방 찾기
+            elif search_switch == 2 and self.bp_detected and flag:
+                # cv2.imwrite('../web/client/backpack.jpg', self.img_bgr)
+                self.byte_data = cv2.imencode('.jpg', self.img_bgr*255)[1].tobytes()
+                b64data = base64.b64encode(self.byte_data)
+                sio.emit('backpackStreaming', b64data.decode( 'utf-8' ) )
+            # 키 찾기
+            elif search_switch == 3 and self.key_detected and flag:
+                # cv2.imwrite('../web/client/key.jpg', self.img_bgr)
+                self.byte_data = cv2.imencode('.jpg', self.img_bgr*255)[1].tobytes()
+                b64data = base64.b64encode(self.byte_data)
+                sio.emit('keyStreaming', b64data.decode( 'utf-8' ) )
+            # 리모콘 찾기
+            elif search_switch == 4 and self.rc_detected and flag:
+                # cv2.imwrite('../web/client/wallet.jpg', self.img_bgr)
+                self.byte_data = cv2.imencode('.jpg', self.img_bgr*255)[1].tobytes()
+                b64data = base64.b64encode(self.byte_data)
+                sio.emit('remoteStreaming', b64data.decode( 'utf-8' ) )
 
 
 
-        print(contours_bp)
+        # print(contours_bp)
+        # if contours_bp:
+        #     cv2.imwrite()
 
         """
         # 로직 5. 물체의 bounding box 좌표 찾기
@@ -191,7 +253,7 @@ class ObjectDetectorToServer(Node):
 
 
     def find_cnt(self, contours):
-
+        global flag
         # print("좌표가 있나?")
 
         """
@@ -203,6 +265,12 @@ class ObjectDetectorToServer(Node):
         for cnt in contours:
             cnt = cnt.reshape( len(cnt) ,2).T
             x, y, w, h = min(cnt[0]), min(cnt[1]), max(cnt[0]), max(cnt[1])
+            # print(x)
+            if x >=100 and x <= 500:
+                flag = True
+            else:
+                flag = False
+            # print(x)
 
             cv2.rectangle(self.img_bgr, (x, y), (w, h), (0,0,255), 1 )
 
@@ -287,4 +355,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-

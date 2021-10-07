@@ -82,7 +82,7 @@ class PatrolCtrlFromServer(Node):
         self.cmd_msg=Twist()
 
         self.subscription = self.create_subscription(Odometry,'/odom',self.odom_callback,10)
-        self.path_sub = self.create_subscription(Path,'/global_path',self.path_callback,10)
+        self.path_sub = self.create_subscription(Path,'/global_path2',self.path_callback,10)
 
         self.timer_period = 0.05
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
@@ -249,6 +249,7 @@ class PatrolCtrlFromServer(Node):
                 self.turtlebot_stop()
 
             self.cmd_publisher.publish(self.cmd_msg)
+        # sio.emit('PatrolStatus', 1)
 
 
 

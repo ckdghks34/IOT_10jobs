@@ -4,6 +4,7 @@ import os
 import rclpy
 import socketio
 import base64
+import json
 
 from rclpy.node import Node
 from geometry_msgs.msg import Twist,Point
@@ -41,70 +42,70 @@ def connect():
 # 로직 2. 데이터 수신 콜백함수
 @sio.on('AirConditionerOn')
 def aircon_on(data):
-    global m_control_cmd
+    global m_control_cmd, m_control_num
     m_control_cmd = data['ctr_cmd']
     m_control_num = data['ctr_num']
     print('message received with ', data)
 
 @sio.on('AirConditionerOff')
 def aircon_off(data):
-    global m_control_cmd
+    global m_control_cmd, m_control_num
     m_control_cmd = data['ctr_cmd']
     m_control_num = data['ctr_num']
     print('message received with ', data)
 
 @sio.on('AirCleanerOn')
 def aircleaner_on(data):
-    global m_control_cmd
+    global m_control_cmd, m_control_num
     m_control_cmd = data['ctr_cmd']
     m_control_num = data['ctr_num']
     print('message received with ', data)
 
 @sio.on('AirCleanerOff')
 def aircleaner_on(data):
-    global m_control_cmd
+    global m_control_cmd, m_control_num
     m_control_cmd = data['ctr_cmd']
     m_control_num = data['ctr_num']
     print('message received with ', data)
 
 @sio.on('TvOn')
 def tv_on(data):
-    global m_control_cmd
+    global m_control_cmd, m_control_num
     m_control_cmd = data['ctr_cmd']
     m_control_num = data['ctr_num']
     print('message received with ', data)
 
 @sio.on('TvOff')
 def tv_off(data):
-    global m_control_cmd
+    global m_control_cmd, m_control_num
     m_control_cmd = data['ctr_cmd']
     m_control_num = data['ctr_num']
     print('message received with ', data)
 
 @sio.on('LightOn')
 def light_on(data):
-    global m_control_cmd
+    global m_control_cmd, m_control_num
     m_control_cmd = data['ctr_cmd']
     m_control_num = data['ctr_num']
     print('message received with ', data)
 
 @sio.on('LightOff')
 def light_off(data):
-    global m_control_cmd
+    global m_control_cmd, m_control_num
     m_control_cmd = data['ctr_cmd']
     m_control_num = data['ctr_num']
     print('message received with ', data)
 
 @sio.on('CurtainOn')
 def curtain_on(data):
-    global m_control_cmd
+    global m_control_cmd, m_control_num
     m_control_cmd = data['ctr_cmd']
     m_control_num = data['ctr_num']
     print('message received with ', data)
 
 @sio.on('CurtainOff')
 def curtain_off(data):
-    global m_control_cmd
+    global m_control_cmd, m_control_num
     m_control_cmd = data['ctr_cmd']
     m_control_num = data['ctr_num']
     print('message received with ', data)
@@ -125,7 +126,7 @@ def get_global_num():
     return m_control_num
 
 def reset_global_num():
-    global m_control_cmd
+    global m_control_num
     m_control_num = 0
 
 class ControllFromServer(Node):
@@ -152,7 +153,6 @@ class ControllFromServer(Node):
         for i in range(17):
             self.app_control_msg.data.append(0)
 
-
         self.turtlebot_status_msg=TurtlebotStatus()
         self.envir_status_msg=EnviromentStatus()
         self.app_status_msg=Int8MultiArray()
@@ -161,8 +161,6 @@ class ControllFromServer(Node):
         self.is_envir_status=False
 
         sio.connect("http://j5d201.p.ssafy.io:12001")
-
-
 
         self.m_control_interval = 10
         self.m_control_iter = 0
@@ -177,14 +175,18 @@ class ControllFromServer(Node):
         self.len_wp = None
         self.check_1_wp = False
 
-        sio.emit('sendTime','TEST')
-        sio.emit('sendWeather',self.envir_status_msg.weather)
-        sio.emit('sendTemperature', self.envir_status_msg.temperature)
+        # sio.emit('sendTime','TEST')
+        # sio.emit('sendWeather',self.envir_status_msg.weather)
+        # sio.emit('sendTemperature', self.envir_status_msg.temperature)
+        # sio.emit('BotStatus', self.turtlebot_status_msg.battery_percentage)
+        # M = dict(zip(range(0, len(self.app_status_msg.data)),self.app_status_msg.data))
+        # sio.emit('ApplianceStatus', json.dumps(M))
 
 
     def listener_callback(self, msg):
         self.is_turtlebot_status=True
         self.turtlebot_status_msg=msg
+        sio.emit('BotStatus', self.turtlebot_status_msg.battery_percentage)
 
     def envir_callback(self, msg):
         self.is_envir_status=True
@@ -193,6 +195,8 @@ class ControllFromServer(Node):
     def app_callback(self, msg):
         self.is_app_status=True
         self.app_status_msg=msg  
+        M = dict(zip(range(0, len(self.app_status_msg.data)),self.app_status_msg.data))
+        sio.emit('ApplianceStatus', json.dumps(M))
 
     def app_all_on(self):
         for i in range(17):
@@ -247,7 +251,7 @@ class ControllFromServer(Node):
         ctrl_cmd = get_global_var()
         # m_control_num 리턴 (가전제품 번호 : 0 ~ 16)
         ctrl_num = get_global_num()
-        
+  
         if ctrl_cmd == 1:       
             self.ctr_status = 1
             self.ctr_num = ctrl_num
@@ -271,12 +275,16 @@ class ControllFromServer(Node):
         self.cmd_publisher.publish(self.cmd_msg)
 
         if ctrl_cmd != 0: 
+            print(self.app_status_msg.data)
             if self.app_status_msg.data[self.ctr_num] == self.ctr_status:
                 print(self.app_status_msg.data)
-                if self.ctr_status == 1:
+                if self.app_status_msg.data[self.ctr_num] == 1:
+                    print('On')
                     sio.emit(self.iot_status[self.ctr_num], 'On')
-                elif self.ctr_status == 2:
+                elif self.app_status_msg.data[self.ctr_num] == 2:
+                    print('Off')
                     sio.emit(self.iot_status[self.ctr_num], 'Off')
+
                 self.ctr_num = 0
                 self.ctr_status = 0
                 # m_control_cmd을 0으로 리셋 
@@ -304,7 +312,9 @@ class ControllFromServer(Node):
 # sio.connect("http://127.0.0.1:12001")
 
 # 로직 4. 데이터 송신
-# sio.emit('sendTime','TEST')
+# sio.emit('BotStatus', self.turtlebot_status_msg.battery_percentage)
+# sio.emit('ApplianceStatus', json.dumps(self.app_status_msg.data))
+
 # sio.emit('sendWeather','TEST')
 # sio.emit('sendTemperature','TEST')
 

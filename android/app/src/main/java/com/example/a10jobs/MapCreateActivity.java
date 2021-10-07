@@ -40,10 +40,10 @@ public class MapCreateActivity extends AppCompatActivity {
     Switch switchAuto;
 
     String url = "http://j5d201.p.ssafy.io:12001";
-    Socket msocket;
+    Socket socket;
     {
         try{
-            msocket = IO.socket(url);
+            socket = IO.socket(url);
         } catch(URISyntaxException e){
             e.printStackTrace();
         }
@@ -54,7 +54,7 @@ public class MapCreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_create);
         mapImg = (ImageView) findViewById(R.id.map_img);
-        msocket.connect();
+        socket.connect();
 
         btn_start = (Button) findViewById(R.id.btn_start);
         btn_stop = (Button) findViewById(R.id.btn_stop);
@@ -74,7 +74,7 @@ public class MapCreateActivity extends AppCompatActivity {
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                msocket.emit("start_createmap");
+                socket.emit("start_createmap");
                 btn_start.setVisibility(btn_start.GONE);
                 btn_stop.setVisibility(btn_stop.VISIBLE);
                 switchAuto.setVisibility(switchAuto.VISIBLE);
@@ -105,7 +105,9 @@ public class MapCreateActivity extends AppCompatActivity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        msocket.emit("stop_createmap");
+                        socket.emit("stop_createmap");
+
+                        switchAuto.setChecked(false);
                     }
                 });
                 dlg.setNegativeButton("취소",new DialogInterface.OnClickListener(){
@@ -119,6 +121,8 @@ public class MapCreateActivity extends AppCompatActivity {
 //                btn_start.setVisibility(btn_stop.VISIBLE);
             }
         });
+
+
         switchAuto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -127,17 +131,41 @@ public class MapCreateActivity extends AppCompatActivity {
                 // 스위치 버튼이 체크되었는지 검사하여 텍스트뷰에 각 경우에 맞게 출력합니다.
                 if (isChecked){
                     Log.d("check","옵션 활성화");
-                    msocket.emit("mapAutoOffToServer");
+                    socket.emit("mapAutoOnToServer");
+
                 }else{
                     Log.d("check","옵션 비활성화");
-                    msocket.emit("mapAutoOnToServer");
+                    socket.emit("mapAutoOffToServer");
                 }
             }
         });
-        
-        msocket.on("sendMapStreaming", getImg);
+
+        socket.on("sendMapStreaming", getImg);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        socket.off("sendMapStreaming");
+        socket.disconnect();
+//        Log.v("msg", "pause 소켓 통신 해제");
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        socket.on("sendMapStreaming", getImg);
+        socket.connect();
+//        Log.v("msg", "restart 배터리 소켓 재연결");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        socket.off("sendMapStreaming");
+        socket.disconnect();
+//        Log.v("msg", "destroy 소켓 통신 해제");
+    }
 
     ImageButton.OnTouchListener onTouchListener = new View.OnTouchListener(){
         @Override
@@ -148,19 +176,19 @@ public class MapCreateActivity extends AppCompatActivity {
 //                  view.setBackgroundColor(Color.parseColor("#757575"));
 //                  왼-1/앞-2/뒤-3/오-4
                     if(view == btnUp){
-                        msocket.emit("gostraightToServer", 2);
+                        socket.emit("gostraightToServer", 2);
                         Log.v("click", "up");
                     }
                     else if(view == btnDown){
-                        msocket.emit("gobackToServer", 3);
+                        socket.emit("gobackToServer", 3);
                         Log.v("click", "down");
                     }
                     else if(view == btnLeft){
-                        msocket.emit("turnleftToServer", 1);
+                        socket.emit("turnleftToServer", 1);
                         Log.v("click", "left");
                     }
                     else if(view == btnRight){
-                        msocket.emit("turnrightToServer", 4);
+                        socket.emit("turnrightToServer", 4);
                         Log.v("click", "right");
                     }
                     break;
@@ -178,6 +206,7 @@ public class MapCreateActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d("map", "들어옴");
                     String data = (String)args[0];
                     bitmap = StringToBitmap(data);
                     mapImg.setImageBitmap(bitmap);

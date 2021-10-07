@@ -99,10 +99,9 @@ class pathPub(Node):
     def __init__(self):
         super().__init__('path_pub')
         # 로직 1. publisher, subscriber 만들기
-        self.global_path_pub = self.create_publisher(Path, 'global_path', 10)
+        self.global_path_pub = self.create_publisher(Path, 'global_path2', 10)
         self.local_path_pub = self.create_publisher(Path, 'local_path', 10)
         self.subscription = self.create_subscription(Odometry,'/odom',self.listener_callback,10)
-        self.lidar_sub= self.create_subscription(Odometry,'/odom',self.listener_callback,10)
         self.odom_msg=Odometry()
         self.is_odom=False
         #전역경로 메시지
@@ -173,7 +172,7 @@ class pathPub(Node):
                         tmp_pose.pose.position.y=self.global_path_msg.poses[num].pose.position.y
                         tmp_pose.pose.orientation.w=1.0
                         local_path_msg.poses.append(tmp_pose)
-            self.local_path_pub.publish(local_path_msg)
+            # self.local_path_pub.publish(local_path_msg)
         # 로직 7. global_path 업데이트 주기 재설정
         if self.count%10==0 :
             self.global_path_pub.publish(self.global_path_msg)
