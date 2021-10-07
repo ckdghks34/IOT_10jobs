@@ -82,6 +82,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist,PoseStamped
 from squaternion import Quaternion
 from nav_msgs.msg import Odometry,Path
+from std_msgs.msg import Int8MultiArray
 from math import pi,cos,sin,sqrt
 import tf2_ros
 import os
@@ -102,6 +103,7 @@ class pathPub(Node):
         self.global_path_pub = self.create_publisher(Path, 'global_path2', 10)
         self.local_path_pub = self.create_publisher(Path, 'local_path', 10)
         self.subscription = self.create_subscription(Odometry,'/odom',self.listener_callback,10)
+        # self.patrol_status = self.create_subscription(Int8MultiArray, '/patrol_status', self.patrol_callback, 10)
         self.odom_msg=Odometry()
         self.is_odom=False
         #전역경로 메시지
@@ -133,16 +135,23 @@ class pathPub(Node):
         self.timer = self.create_timer(time_period, self.timer_callback)
         self.local_path_size=20 
         self.count=0
+        # self.is_patrol = 0
+
+
     def listener_callback(self,msg):
         self.is_odom=True
         self.odom_msg=msg
+
+    # def patrol_callback(self, msg):
+    #     self.is_patrol = msg.data[0]
+    #     print(msg.data[0])
+    
     def timer_callback(self):
         if self.is_odom ==True:
             local_path_msg=Path()
             local_path_msg.header.frame_id='/map'
             x=self.odom_msg.pose.pose.position.x
             y=self.odom_msg.pose.pose.position.y
-            print(x,y)
             current_waypoint=-1
             '''
             로직 5. global_path 중 로봇과 가장 가까운 포인트 계산
@@ -174,7 +183,7 @@ class pathPub(Node):
                         local_path_msg.poses.append(tmp_pose)
             # self.local_path_pub.publish(local_path_msg)
         # 로직 7. global_path 업데이트 주기 재설정
-        if self.count%10==0 :
+        if self.count%10==0:
             self.global_path_pub.publish(self.global_path_msg)
         self.count+=1       
 def main(args=None):

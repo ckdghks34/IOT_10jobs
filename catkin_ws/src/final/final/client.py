@@ -219,12 +219,17 @@ def reset_global_num():
 @sio.on('patrolOn')
 def patrol_on(data):
     global auto_switch
+    global map_Auto
     auto_switch = data
+    map_Auto = True
 
 @sio.on('patrolOff')
 def patrol_on(data):
     global auto_switch
+    global map_Auto
+
     auto_switch = data
+    map_Auto = False
 
 
 ## 물건찾기 관련
@@ -313,6 +318,9 @@ class clientFromServer(Node):
         
         # iot 제품의 위치를 publish
         self.pose_pub = self.create_publisher(Twist, 'iot_pose', 10)
+
+        # 방범모드 상태를 publish
+        # self.patrol_status = self.create_publisher(Int8MultiArray, 'patrol_status', 10)
 
 
         ## 메시지 수신을 위한 subscriber
@@ -474,12 +482,12 @@ class clientFromServer(Node):
     # 오른쪽
     def turtlebot_cw_rot(self) :
         self.cmd_msg.linear.x=0.0
-        self.cmd_msg.angular.z=1.0
+        self.cmd_msg.angular.z=0.3
 
     # 왼쪽
     def turtlebot_cww_rot(self) :
         self.cmd_msg.linear.x=0.0
-        self.cmd_msg.angular.z=-1.0
+        self.cmd_msg.angular.z=-0.3
 
     # 방범모드 실행시 시작점 찾기
     def search_start_point(self) :
@@ -686,9 +694,16 @@ class clientFromServer(Node):
 
         ## 터틀봇 조작관련
 
+        
+
             
         robot_cmd = get_robot_var()
         _,auto_switch = get_global_var()
+
+        # patrol_msg = Int8MultiArray()
+        # patrol_msg.data = [auto_switch]
+        # self.patrol_status.publish(patrol_msg)
+
         if auto_switch == 0:
 
             sio.emit('PatrolStatus', 'Off')
@@ -744,53 +759,53 @@ class clientFromServer(Node):
 
             sio.emit('PatrolStatus', 'On')
 
-            if self.is_odom == True and self.is_path==True:
+            # if self.is_odom == True and self.is_path==True:
 
-                if not self.check_1_wp: 
+            #     if not self.check_1_wp: 
                     
-                    self.search_start_point()
+            #         self.search_start_point()
 
-                rotated_point=Point()
-                robot_pose_x=self.odom_msg.pose.pose.position.x
-                robot_pose_y=self.odom_msg.pose.pose.position.y
+            #     rotated_point=Point()
+            #     robot_pose_x=self.odom_msg.pose.pose.position.x
+            #     robot_pose_y=self.odom_msg.pose.pose.position.y
 
-                waypoint = self.path_msg.poses[self.idx_wp]
+            #     waypoint = self.path_msg.poses[self.idx_wp]
 
-                self.current_point=waypoint.pose.position
+            #     self.current_point=waypoint.pose.position
 
-                dx= self.current_point.x - robot_pose_x
-                dy= self.current_point.y - robot_pose_y
-                rotated_point.x=cos(self.robot_yaw)*dx + sin(self.robot_yaw)*dy
-                rotated_point.y= -sin(self.robot_yaw)*dx + cos(self.robot_yaw)*dy
+            #     dx= self.current_point.x - robot_pose_x
+            #     dy= self.current_point.y - robot_pose_y
+            #     rotated_point.x=cos(self.robot_yaw)*dx + sin(self.robot_yaw)*dy
+            #     rotated_point.y= -sin(self.robot_yaw)*dx + cos(self.robot_yaw)*dy
 
-                theta=atan2(rotated_point.y,rotated_point.x)
+            #     theta=atan2(rotated_point.y,rotated_point.x)
 
-                dis=sqrt(pow(rotated_point.x,2)+pow(rotated_point.y,2))
+            #     dis=sqrt(pow(rotated_point.x,2)+pow(rotated_point.y,2))
 
-                print(dis)
+            #     print(dis)
 
-                if abs(theta) < pi/10:
+            #     if abs(theta) < pi/10:
                     
-                    self.cmd_msg.linear.x=dis*2
-                    self.cmd_msg.angular.z=-theta*0.3
+            #         self.cmd_msg.linear.x=dis*2
+            #         self.cmd_msg.angular.z=-theta*0.3
                 
-                else:
+            #     else:
                     
-                    self.cmd_msg.linear.x=0.0
-                    self.cmd_msg.angular.z=-theta*0.3
+            #         self.cmd_msg.linear.x=0.0
+            #         self.cmd_msg.angular.z=-theta*0.3
 
-                if dis <= self.lfd and  self.idx_wp < self.len_wp-1:
+            #     if dis <= self.lfd and  self.idx_wp < self.len_wp-1:
 
-                    self.idx_wp += 1
+            #         self.idx_wp += 1
 
-                elif dis <= self.lfd and  self.idx_wp == self.len_wp-1:
+            #     elif dis <= self.lfd and  self.idx_wp == self.len_wp-1:
 
-                    self.idx_wp = 0
-            else:
+            #         self.idx_wp = 0
+            # else:
 
-                self.turtlebot_stop()
+            #     self.turtlebot_stop()
 
-            self.cmd_publisher.publish(self.cmd_msg)
+            # self.cmd_publisher.publish(self.cmd_msg)
         
         ## iot 조작 관련
         # m_control_cmd 리턴 (켜는지 끄는지 : 1 또는 2)

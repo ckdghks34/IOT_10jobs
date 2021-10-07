@@ -1,6 +1,9 @@
 package com.example.a10jobs;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +19,7 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.core.view.ViewCompat;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     Boolean check = true;
     long lastTime = 0;
     long deleyTime = 5000;
+    NotificationCompat.Builder mBuilder;
+    NotificationManager mNotificationManager;
 
     String url = "http://j5d201.p.ssafy.io:12001";
     Socket socket;
@@ -100,6 +106,22 @@ public class MainActivity extends AppCompatActivity {
                 mIndicator.animatePageSelected(position%num_page);
             }
         });
+        Bitmap mLargeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.appicon);
+        PendingIntent mPendingIntent = PendingIntent.getActivity(
+                MainActivity.this,
+                0,
+                new Intent(getApplicationContext(), PatrolActivity.class),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        mBuilder =
+                new NotificationCompat.Builder(MainActivity.this)
+                .setSmallIcon(R.drawable.robot)
+                .setContentTitle("침입자 발생")
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setLargeIcon(mLargeIcon)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setContentIntent(mPendingIntent);
 
         final float pageMargin= getResources().getDimensionPixelOffset(R.dimen.pageMargin);
         final float pageOffset = getResources().getDimensionPixelOffset(R.dimen.offset);
@@ -272,17 +294,17 @@ public class MainActivity extends AppCompatActivity {
                         bitmap = StringToBitmap(data);
                         Log.d("save", "저장");
                         saveBitmapToJpeg(bitmap);
+                        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                        mNotificationManager.notify(0, mBuilder.build());
                     } else {
                         if(lastTime + deleyTime < System.currentTimeMillis()) {
                             lastTime = System.currentTimeMillis();
                             bitmap = StringToBitmap(data);
                             saveBitmapToJpeg(bitmap);
                             Log.d("save", "저장");
+                            mNotificationManager.notify(0, mBuilder.build());
                         }
                     }
-
-
-
                 }
             });
         }

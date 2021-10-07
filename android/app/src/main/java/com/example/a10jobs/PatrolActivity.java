@@ -52,7 +52,7 @@ public class PatrolActivity extends AppCompatActivity {
         PatrolItem log[] = new PatrolItem[humans.size()];
 
 
-        for(int i=0; i < humans.size(); i++) {
+        for(int i=humans.size() - 1; i > -1; i--) {
             final int INDEX;
             INDEX = i;
             String path = getCacheDir() + "/" + humans.get(INDEX);
