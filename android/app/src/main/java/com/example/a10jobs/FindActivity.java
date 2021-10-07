@@ -2,6 +2,7 @@ package com.example.a10jobs;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 public class FindActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ArrayList<FindItem> data = null;
-    String url = getString(R.string.url);       // 서버 url 주기
+    String url = "http://j5d201.p.ssafy.io:12001";       // 서버 url 주기
     Socket socket;
     {
         try{
@@ -38,10 +39,10 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
         data = new ArrayList<>();
 
 //        물건 입력
-        FindItem wal = new FindItem(R.drawable.testimg, "지갑 찾기", "날짜 / 시간 표시");
-        FindItem rc = new FindItem(R.drawable.testimg, "리모컨 찾기", "날짜 / 시간 표시");
-        FindItem key = new FindItem(R.drawable.testimg, "열쇠 찾기", "날짜 / 시간 표시");
-        FindItem bp = new FindItem(R.drawable.testimg, "가방 찾기", "날짜 / 시간 표시");
+        FindItem wal = new FindItem(R.drawable.testimg, "지갑 찾기", "지갑을 찾고 있습니다.");
+        FindItem rc = new FindItem(R.drawable.testimg, "리모컨 찾기", "리모컨을 찾고 있습니다.");
+        FindItem key = new FindItem(R.drawable.testimg, "열쇠 찾기", "열쇠를 찾고 있습니다.");
+        FindItem bp = new FindItem(R.drawable.testimg, "가방 찾기", "가방을 찾고 있습니다.");
 
         data.add(wal);
         data.add(rc);
@@ -54,32 +55,52 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                switch(i){
+                    case 0:
+                        socket.emit("PatrolOnToServer", 1);
+                        socket.emit("findWalletToServer");
+                        break;
+                    case 1:
+                        socket.emit("PatrolOnToServer", 1);
+                        socket.emit("findRemoteToServer");
+                        break;
+                    case 2:
+                        socket.emit("PatrolOnToServer", 1);
+                        socket.emit("findKeyToServer");
+                        break;
+                    case 3:
+                        socket.emit("PatrolOnToServer", 1);
+                        socket.emit("findBagToServer");
+                        break;
+                }
+
+
                 Intent intent = new Intent(getApplicationContext(), FindClickedActivity.class);
                 intent.putExtra("title",data.get(i).getTitle());
                 intent.putExtra("img",data.get(i).getImg());
                 intent.putExtra("date",data.get(i).getDate());
-                startActivity(intent);
-                
+
+
                 // item별로 보내는 소켓이 다름
-                switch(i){
-                    case 0:
-                        socket.emit("findWalletToServer");
-                        break;
-                    case 1:
-                        socket.emit("findRemoteToServer");
-                        break;
-                    case 2:
-                        socket.emit("findKeyToServer");
-                        break;
-                    case 3:
-                        socket.emit("findBagToServer");
-                        break;
-                }
+
+                startActivity(intent);
             }
         });
 
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.socket.disconnect();
+//        Log.d("socket connection ", "disconnect");
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.socket.connect();
+//        Log.d("socket connection ", "Reconnect");
     }
 
     @Override

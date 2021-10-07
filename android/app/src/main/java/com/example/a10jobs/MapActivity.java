@@ -32,16 +32,12 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        File file = new File(getCacheDir().toString());
+
+        File[] files = file.listFiles();
+
         mapImg = (ImageView) findViewById(R.id.map_img);
         btn_newMap = (Button) findViewById(R.id.btn_newmap);
-        btn_newMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteCache(getCacheDir());
-                Intent intent = new Intent(getApplicationContext(), MapCreateActivity.class);
-                startActivity(intent);
-            }
-        });
         btn_newMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,7 +47,15 @@ public class MapActivity extends AppCompatActivity {
                 dlg.setIcon(R.drawable.robot); // 아이콘 설정
                 dlg.setPositiveButton("확인",new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteCache(getCacheDir());
+                        for(File tempFile : files) {
+
+                            Log.d("MyTag",tempFile.getName());
+
+                            //human 이 들어가 있는 파일명을 찾습니다.
+                            if(tempFile.getName().contains("map")) {
+                                tempFile.delete();
+                            }
+                        }
                         Intent intent = new Intent(getApplicationContext(), MapCreateActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -66,12 +70,10 @@ public class MapActivity extends AppCompatActivity {
                 dlg.show();
             }
         });
-        //blackJin 이 들어간 파일들을 저장할 배열 입니다.
+        //map 이 들어간 파일들을 저장할 배열 입니다.
         ArrayList<String> map = new ArrayList<>();
 
-        File file = new File(getCacheDir().toString());
 
-        File[] files = file.listFiles();
 
         for(File tempFile : files) {
 
@@ -100,27 +102,4 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
-    //캐시삭제
-    private boolean deleteCache(File dir) {
-
-        try {
-            //param File이 Null이 아니여야 하고 & 디렉토리인지 확인
-            if (dir != null && dir.isDirectory()) {
-                //디렉토리 내 파일 리스트 호출
-                String[] children = dir.list();
-                //파일 리스트를 반복문으로 호출
-                for (String child : children) {
-                    //파일 리스트중 디렉토리가 존재할 수 있기 때문에 재귀호출
-                    boolean isSuccess = deleteCache(new File(dir, child));
-                    if (!isSuccess) {
-                        return false;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Log.w("TAG", "deleteCache Error!", e);
-        }
-
-        return dir.delete();
-    }
 }

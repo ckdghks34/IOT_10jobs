@@ -1,17 +1,25 @@
 package com.example.a10jobs;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.core.view.ViewCompat;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -20,27 +28,35 @@ import com.example.a10jobs.Fragment.MyAdapter;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
-import com.nex3z.notificationbadge.NotificationBadge;
 
 import org.aviran.cookiebar2.CookieBar;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Random;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import me.relex.circleindicator.CircleIndicator3;
 
 
 public class MainActivity extends AppCompatActivity {
     Activity activity = this;
-    Button btn_map, btn_control, btn_watch, btn_find, btn_status;
+    Button btn_map, btn_control, btn_watch, btn_find, btn_patrol_log;
+    ImageButton battery_status;
     ToggleButton btn_crime;
-    NotificationBadge badge;
     ViewPager2 mPager;
+    Bitmap bitmap;
     FragmentStateAdapter pagerAdapter;
     int num_page = 4;
     CircleIndicator3 mIndicator;
     int data;
+    Boolean check = true;
+    long lastTime = 0;
+    long deleyTime = 5000;
+    NotificationCompat.Builder mBuilder;
+    NotificationManager mNotificationManager;
 
     String url = "http://j5d201.p.ssafy.io:12001";
     Socket socket;
@@ -59,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         socket.on("sendBotStatus", onStatus);
+        socket.on("sendPatrolStatus", onPatrolStatus);
+        socket.on("humanDetect", getImg);
+
         socket.connect();
 
         mPager = findViewById(R.id.viewpager);
@@ -87,6 +106,22 @@ public class MainActivity extends AppCompatActivity {
                 mIndicator.animatePageSelected(position%num_page);
             }
         });
+        Bitmap mLargeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.appicon);
+        PendingIntent mPendingIntent = PendingIntent.getActivity(
+                MainActivity.this,
+                0,
+                new Intent(getApplicationContext(), PatrolActivity.class),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        mBuilder =
+                new NotificationCompat.Builder(MainActivity.this)
+                .setSmallIcon(R.drawable.robot)
+                .setContentTitle("침입자 발생")
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setLargeIcon(mLargeIcon)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setContentIntent(mPendingIntent);
 
         final float pageMargin= getResources().getDimensionPixelOffset(R.dimen.pageMargin);
         final float pageOffset = getResources().getDimensionPixelOffset(R.dimen.offset);
@@ -112,9 +147,8 @@ public class MainActivity extends AppCompatActivity {
         btn_watch = (Button) findViewById(R.id.btn_watch);
         btn_crime = (ToggleButton) findViewById(R.id.btn_crime);
         btn_find = (Button) findViewById(R.id.btn_find);
-        btn_status = (Button) findViewById(R.id.btn_status);
-        badge = findViewById(R.id.badge);
-        badge.setNumber(2);
+        btn_patrol_log = (Button) findViewById(R.id.btn_patrol_log);
+        battery_status = (ImageButton) findViewById(R.id.battery_status);
 
         btn_map.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,19 +178,70 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        btn_status.setOnClickListener(new View.OnClickListener() {
+        btn_patrol_log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), PatrolActivity.class);        // 어디 Activity로 갈지만 바꿔주세요!!
+                startActivity(intent);
+            }
+        });
+        battery_status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                socket.on("sendBotStatus", onStatus);
                 CookieBar.build(activity)
                         .setTitle("터틀봇 배터리")
                         .setMessage(data + "%입니다")
                         .setIcon(R.drawable.ic_settings_white_48dp)
                         .setIconAnimation(R.animator.iconspin)
                         .setBackgroundColor(R.color.navy)
-                        .setCookiePosition(CookieBar.BOTTOM)  // Cookie will be displayed at the bottom
+                        .setCookiePosition(CookieBar.TOP)  // Cookie will be displayed at the bottom
+                        .setDuration(5000)
                         .show();                              // of the screen
             }
         });
+        btn_crime.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if(isChecked){
+                            socket.emit("PatrolOnToServer", 1);
+                            btn_crime.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_corner2));
+                            Log.d("check", "방범모드 on");
+                        }else{
+                            socket.emit("PatrolOffToServer", 0);
+                            Log.d("check", "방범모드 off");
+                            btn_crime.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_corner));
+                        }
+                    }
+                }
+        );
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        socket.off("sendBotStatus");
+        socket.disconnect();
+        Log.v("msg", "pause 소켓 통신 해제");
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        socket.on("sendBotStatus", onStatus);
+        socket.connect();
+        Log.v("msg", "restart 배터리 소켓 재연결");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        socket.off("sendBotStatus");
+        socket.disconnect();
+        Log.v("msg", "destroy 소켓 통신 해제");
     }
 
     // 리스너 -> 이벤트를 보냈을 때 이 리스너가 실행됨
@@ -167,11 +252,110 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     data = 100 - (int)args[0];
-                    Log.v("data", String.valueOf(100 - data));
+//                    Log.v("data", String.valueOf(100 - data));
                 }
             });
         }
     };
 
-}
+    private Emitter.Listener onPatrolStatus = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(check){
+                        if(args[0].equals("On")) {
+                            btn_crime.setChecked(true);
+                            btn_crime.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_corner2));
+                        }else{
+                            btn_crime.setChecked(false);
+                            btn_crime.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_corner));
+                        }
+                        check = false;
+                    }
 
+
+                }
+            });
+        }
+    };
+
+
+    private Emitter.Listener getImg = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String data = (String)args[0];
+                    if(lastTime == 0) {
+                        lastTime = System.currentTimeMillis();
+                        bitmap = StringToBitmap(data);
+                        Log.d("save", "저장");
+                        saveBitmapToJpeg(bitmap);
+                        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                        mNotificationManager.notify(0, mBuilder.build());
+                    } else {
+                        if(lastTime + deleyTime < System.currentTimeMillis()) {
+                            lastTime = System.currentTimeMillis();
+                            bitmap = StringToBitmap(data);
+                            saveBitmapToJpeg(bitmap);
+                            Log.d("save", "저장");
+                            mNotificationManager.notify(0, mBuilder.build());
+                        }
+                    }
+                }
+            });
+        }
+    };
+    private void saveBitmapToJpeg(Bitmap bitmap) {
+        // 내부 저장소 캐시 경로를 받아온다
+        File storage = getCacheDir();
+        Log.d("test", "" + storage);
+
+        // 현재시간 가져오기
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd hh:mm");
+        String getTime = dateFormat.format(date);
+
+
+        // 저장할 파일 이름
+        String fileName = getTime + " human.jpg";
+
+        // storage에 파일 인스턴스를 생성한다
+        File tempFile = new File(storage, fileName);
+        try {
+            // 자동으로 빈 파일을 생성합니다.
+            tempFile.createNewFile();
+
+            // 파일을 쓸 수 있는 스트림을 준비합니다.
+            FileOutputStream out = new FileOutputStream(tempFile);
+
+            // compress 함수를 사용해 스트림에 비트맵을 저장합니다.
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+            // 스트림 사용후 닫아줍니다.
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            Log.e("MyTag","FileNotFoundException : " + e.getMessage());
+        } catch (IOException e) {
+            Log.e("MyTag","IOException : " + e.getMessage());
+        }
+
+    }
+
+    public static Bitmap StringToBitmap(String encodedString){
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
+}
