@@ -140,7 +140,6 @@ public class FragmentRoomTmp extends Fragment {
                         if (applianceStatus[0] == 1) {
                             hallway_lightButton.setImageResource(R.drawable.power_on);
                             hallway_light.setText("켜짐");
-                            hallway_lightImg.setImageResource(R.drawable.hallway_on);
                         } else if (applianceStatus[0] == 2) {
                             hallway_lightButton.setImageResource(R.drawable.power_off);
                             hallway_light.setText("꺼짐");
