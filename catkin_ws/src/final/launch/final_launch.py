@@ -23,15 +23,10 @@ def generate_launch_description():
             node_executable='udp_to_laser',
             node_name='udp_to_laser'
         ),
-        Node(
-            package='final',
-            node_executable='path_pub',
-            node_name='path_pub'
-        ),
         # Node(
-        #     package='security_service',
-        #     node_executable='object_detector_client',
-        #     node_name='object_detector_client'
+        #     package='final',
+        #     node_executable='path_pub',
+        #     node_name='path_pub'
         # ),
         Node(
             package='final',

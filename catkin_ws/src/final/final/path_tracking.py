@@ -58,7 +58,7 @@ class followTheCarrot(Node):
 
             if len(self.path_msg.poses)> 1:
                 self.is_look_forward_point= False
-                self.is_check=True
+                self.is_check=1
                 # 로봇의 현재 위치를 나타내는 변수
                 robot_pose_x=self.odom_msg.pose.pose.position.x
                 robot_pose_y=self.odom_msg.pose.pose.position.y
@@ -133,13 +133,16 @@ class followTheCarrot(Node):
                     self.cmd_msg.angular.z=out_rad_vel                    
             else :
                 print("no found forward point")
-                self.is_check=False
+                if (self.is_check == 1):
+                    self.is_check = 2
                 self.cmd_msg.linear.x=0.0
                 self.cmd_msg.angular.z=0.0
 
-            if (self.is_check):
-                self.cmd_pub.publish(self.cmd_msg)
-
+            # if (self.is_check == 1):
+            self.cmd_pub.publish(self.cmd_msg)
+            # elif (self.is_check == 2):
+            #     self.cmd_pub.publish(self.cmd_msg)
+            #     self.is_check = 3
             
 
     def odom_callback(self, msg):
