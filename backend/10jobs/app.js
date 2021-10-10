@@ -120,22 +120,27 @@ io.on('connection', socket =>{
 	// --------------
 	
 	socket.on('makeMapToServer', (data) => {
+		console.log('receive makeMapToServer');
 		socket.to(roomName).emit('makeMap', data);
 	});
 
     	socket.on('turnleftToServer', (data) => {
+		console.log('receive turnleftToServer');
         	socket.to(roomName).emit('turnleft', data);
     	});
 
     	socket.on('gostraightToServer', (data) => {
+		console.log('receive gostraightToServer');
         	socket.to(roomName).emit('gostraight', data);
     	});
 
     	socket.on('turnrightToServer', (data) => {
+		console.log('receive turnrightToServer');
         	socket.to(roomName).emit('turnright', data);
     	});
 
 	socket.on('gobackToServer', (data) => {
+		console.log('receive gobackToServer');
 		socket.to(roomName).emit('goback', data);
 	});
 
@@ -256,6 +261,7 @@ io.on('connection', socket =>{
 
 	// 전달받은 이미지를 jpg 파일로 저장
 	socket.on('streaming', (message) => {
+		//console.log('receive streaming');
 		socket.to(roomName).emit('sendStreaming', message);
 
 		buffer = Buffer.from(message, "base64");
@@ -263,6 +269,7 @@ io.on('connection', socket =>{
 	});
 
 	socket.on('mapStreaming', (message) => {
+		console.log('receive mapStreaming');
        		socket.to(roomName).emit('sendMapStreaming', message);
         	//console.log(message);
         	buffer = Buffer.from(message, "base64");
@@ -270,47 +277,56 @@ io.on('connection', socket =>{
     	});
 
 	socket.on('stop_createmap', () => {
+		console.log('receive stop_createmap');
         	socket.to(roomName).emit('stopCreatemap')
     	});
 
     	socket.on('start_createmap', () => {
+		console.log('receive start_createmap');
         	socket.to(roomName).emit('startCreatemap')
     	});
 
 	// MAP_AUTO
 	socket.on('mapAutoOnToServer',() => {
+		console.log('receive mapAutoOnToServer');
 		socket.to(roomName).emit('mapAutoOn')
 	});
 
 	socket.on('mapAutoOffToServer', () => {
+		console.log('receive mapAutoOffToServer');
 		socket.to(roomName).emit('mapAutoOff')
 	});
 
 	socket.on('humanDetectToServer', (message) => {
+		console.log('receive humanDetectToServer');
         	socket.to(roomName).emit('humanDetect', message);
 		buffer = Buffer.from(message, "base64");
 	        fs.writeFileSync(path.join(picPath, "/../client/human.jpg"), buffer);
       	});
 	
 	socket.on('backpackStreaming', (message) => {
+		console.log('receive backpackStreaming');
         	socket.to(roomName).emit('sendBackpackStreaming', message);
         	buffer = Buffer.from(message, "base64");
         	fs.writeFileSync(path.join(picPath, "/../client/backpack.jpg"), buffer);
 	});
 
 	socket.on('walletStreaming', (message) => {
+		console.log('receive walletStreaming');
         	socket.to(roomName).emit('sendWalletStreaming', message);
         	buffer = Buffer.from(message, "base64");
 	        fs.writeFileSync(path.join(picPath, "/../client/wallet.jpg"), buffer);
 	});
 
     	socket.on('keyStreaming', (message) => {
+		console.log('receive keyStreaming');
         	socket.to(roomName).emit('sendKeyStreaming', message);
 	        buffer = Buffer.from(message, "base64");
 	        fs.writeFileSync(path.join(picPath, "/../client/key.jpg"), buffer);
     	});
 
 	socket.on('remoteStreaming', (message) => {
+		console.log('receive remoteStreaming');
         	socket.to(roomName).emit('sendRemoteStreaming', message);
         	buffer = Buffer.from(message, "base64");
 	        fs.writeFileSync(path.join(picPath, "/../client/remote.jpg"), buffer);
