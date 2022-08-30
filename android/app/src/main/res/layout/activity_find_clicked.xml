@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    tools:context=".FindClickedActivity">
+
+
+    <TextView
+        android:id="@+id/findclicked_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/paybooc"
+        android:text="oo찾기"
+        android:textColor="@color/mainColor"
+        android:textSize="24sp"
+
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/findcliked_img"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        tools:srcCompat="@drawable/testimg" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/findcliked_img_lottie"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="49993-search.json"
+        app:lottie_loop="true" />
+
+    <TextView
+        android:id="@+id/findcliked_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/paybooc"
+        android:gravity="center"
+        android:text="물건을 찾고 있어요"
+        android:textColor="@color/mainColor"
+
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/finishbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="종료" />
+
+</LinearLayout>

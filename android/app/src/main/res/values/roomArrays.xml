@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="room">
+        <item>거실</item>
+        <item>방1</item>
+        <item>방2</item>
+        <item>방3</item>
+        <item>방4</item>
+        <item>현관/주방</item>
+    </string-array>
+</resources>

@@ -141,6 +141,10 @@ cython_debug/
 install/
 log/
 build/
+node_modules/
+
+**/.idea/
+strings.xml
 
 # android
 *.iml
@@ -165,7 +169,6 @@ local.properties
 
 ### Android ###
 # Built application files
-*.apk
 *.aar
 *.ap_
 *.aab
@@ -376,4 +379,5 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
+node_modules
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,android
